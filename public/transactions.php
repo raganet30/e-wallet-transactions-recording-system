@@ -38,7 +38,7 @@
                                         <option value="Cash">Cash</option>
                                     </select>
                                 </div>
-                                <div class="col-md-3">
+                                <!-- <div class="col-md-3">
                                     <label class="form-label">Status</label>
                                     <select class="form-select" id="statusFilter">
                                         <option value="">All Status</option>
@@ -46,7 +46,7 @@
                                         <option value="pending">Pending</option>
                                         <option value="failed">Failed</option>
                                     </select>
-                                </div>
+                                </div> -->
                                 <div class="col-md-3 d-flex align-items-end">
                                     <button class="btn btn-outline-secondary w-100" id="resetFilters">
                                         <i class="bi bi-arrow-clockwise me-2"></i>Reset Filters
@@ -238,7 +238,7 @@
 
         </div>
     </div>
-
+<?php include '../views/footer.php'; ?>
     <script>
         ///demo script for datatable
 // Initialize DataTable
@@ -360,7 +360,7 @@
     </script>
 
     <script src="../assets/js/script.js"></script>
-    <?php include '../views/footer.php'; ?>
+    
 </body>
 
 </html>
