@@ -10,7 +10,7 @@
 <footer class="footer" id="footer">
     <div class="footer-content">
         <div class="footer-copyright">
-            © 2025 E-Wallet Transaction Recording System. All rights reserved.
+            © 2022 E-Wallet Transaction Recording System v2.0 | All rights reserved.
         </div>
         <div class="footer-links">
             <a href="#">Privacy Policy</a>

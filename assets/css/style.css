@@ -1,4 +1,5 @@
  /* style for e-wallet transaction recording system */
+ /* style for e-wallet transaction recording system */
  body {
      background: #e8f1ff;
      transition: margin-left 0.3s ease;
@@ -159,6 +160,36 @@
      margin-left: 70px;
  }
 
+
+
+
+
+ /* Content area */
+ .content {
+     margin-left: 250px;
+     padding: 20px;
+     transition: margin-left 0.3s ease;
+     min-height: 100vh;
+ }
+
+ .content.collapsed {
+     margin-left: 70px;
+ }
+
+ .navbar {
+     background: white;
+     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+     position: sticky;
+     top: 0;
+     z-index: 999;
+     margin-left: 250px;
+     transition: margin-left 0.3s ease;
+ }
+
+ .navbar.collapsed {
+     margin-left: 70px;
+ }
+
  /* Demo content */
  .demo-content {
      background: white;
@@ -222,9 +253,140 @@
      text-decoration: underline;
  }
 
-  .badge-gcash { background-color: #0c7c59; color: white; }
-        .badge-maya { background-color: #00a3e0; color: white; }
-        .badge-cash { background-color: #6c757d; color: white; }
-        .status-completed { color: #28a745; }
-        .status-pending { color: #ffc107; }
-        .status-failed { color: #dc3545; }
+ .badge-gcash {
+     background-color: #00a3e0;
+     color: white;
+ }
+
+ .badge-maya {
+     background-color: #0c7c59;
+     color: white;
+ }
+
+ .badge-cash {
+     background-color: #6c757d;
+     color: white;
+ }
+
+ .status-completed {
+     color: #28a745;
+ }
+
+ .status-pending {
+     color: #ffc107;
+ }
+
+ .status-failed {
+     color: #dc3545;
+ }
+
+
+ .badge-active {
+     background-color: #28a745;
+     color: white;
+ }
+
+ .badge-inactive {
+     background-color: #6c757d;
+     color: white;
+ }
+
+
+ .cash-card {
+     border: 2px solid #e9ecef;
+     border-radius: 15px;
+     transition: all 0.3s ease;
+ }
+
+ .cash-card:hover {
+     border-color: #007bff;
+     box-shadow: 0 5px 15px rgba(0, 0, 0, .1);
+ }
+
+ .cash-amount {
+     font-size: 3.5rem;
+     font-weight: 700;
+     color: #28a745;
+ }
+
+ .cash-info {
+     background-color: #f8f9fa;
+     border-radius: 10px;
+     padding: 15px;
+ }
+
+ .edit-btn {
+     min-width: 100px;
+ }
+
+ .history-card {
+     border-left: 4px solid #007bff;
+ }
+
+ .form-control-lg {
+     font-size: 2rem;
+     font-weight: 600;
+     text-align: center;
+ }
+
+
+
+ .badge-login {
+     background-color: #007bff;
+     color: white;
+ }
+
+ .badge-adjustment {
+     background-color: #28a745;
+     color: white;
+ }
+
+ .badge-transaction {
+     background-color: #17a2b8;
+     color: white;
+ }
+
+ .badge-wallet {
+     background-color: #6f42c1;
+     color: white;
+ }
+
+ .badge-security {
+     background-color: #dc3545;
+     color: white;
+ }
+
+ .badge-system {
+     background-color: #6c757d;
+     color: white;
+ }
+
+ .filter-card {
+     background-color: #f8f9fa;
+     border-radius: 10px;
+ }
+
+ .action-cell {
+     max-width: 300px;
+ }
+
+ .log-icon {
+     width: 40px;
+     height: 40px;
+     display: flex;
+     align-items: center;
+     justify-content: center;
+     border-radius: 8px;
+     margin-right: 10px;
+ }
+
+ .table th {
+     font-weight: 600;
+     background-color: #f8f9fa;
+ }
+
+ .dataTables_wrapper .dataTables_filter {
+     float: none !important;
+     text-align: left !important;
+     margin-bottom: 15px;
+ }
