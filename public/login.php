@@ -11,15 +11,15 @@
     <div class="login-card">
         <h4 class="text-center mb-3"><i class="bi bi-shield-lock-fill text-primary"></i>Login</h4>
 
-        <form action="dashboard.php" method="POST">
+        <form action="dashboard" method="POST">
             <div class="mb-3">
                 <label class="form-label">Username</label>
-                <input type="text" class="form-control" name="username" required>
+                <input type="text" class="form-control" name="username">
             </div>
 
             <div class="mb-3">
                 <label class="form-label">Password</label>
-                <input type="password" class="form-control" name="password" required>
+                <input type="password" class="form-control" name="password">
             </div>
             <span><u>Forgot your password? Contact Admin.</u></span>
     

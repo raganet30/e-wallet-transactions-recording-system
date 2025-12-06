@@ -9,43 +9,43 @@
         <i class="bi bi-building"></i> <span>Main Branch Panel</span>
     </h5>
 
-    <a href="dashboard.php" class="menu-item active">
+    <a href="dashboard" class="menu-item active">
         <i class="bi bi-speedometer2"></i> <span class="menu-text">Dashboard</span>
     </a>
 
-    <a href="transactions.php" class="menu-item">
+    <a href="transactions" class="menu-item">
         <i class="bi bi-cash-stack"></i> <span class="menu-text">Transactions</span>
     </a>
 
-    <a href="e-wallets.php" class="menu-item">
+    <a href="e-wallets" class="menu-item">
         <i class="bi bi-wallet2"></i> <span class="menu-text">E-Wallet Accounts</span>
     </a>
 
-    <a href="cash_on_hand.php" class="menu-item">
+    <a href="cash_on_hand" class="menu-item">
         <i class="bi bi-currency-dollar"></i> <span class="menu-text">Cash on Hand</span>
     </a>
 
     <!-- Audit Log -->
-    <a href="audit_logs.php" class="menu-item">
+    <a href="audit_logs" class="menu-item">
         <i class="bi bi-clock-history"></i> <span class="menu-text">Audit Logs</span>
     </a>
 
-    <a href="reports.php" class="menu-item">
+    <a href="reports" class="menu-item">
         <i class="bi bi-journal-text"></i> <span class="menu-text">Reports</span>
     </a>
 
     <!-- Branches -->
-    <a href="branches.php" class="menu-item">
+    <a href="branches" class="menu-item">
         <i class="bi bi-building"></i> <span class="menu-text">Branches</span>
     </a>
 
     <!-- Users -->
-    <a href="users.php" class="menu-item">
+    <a href="users" class="menu-item">
         <i class="bi bi-people"></i> <span class="menu-text">Users</span>
     </a>
 
 
-    <!-- <a href="settings.php" class="menu-item">
+    <!-- <a href="settings" class="menu-item">
         <i class="bi bi-gear"></i> <span class="menu-text">Settings</span>
     </a> -->
 </div>
