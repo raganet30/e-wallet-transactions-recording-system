@@ -1,3 +1,3 @@
 <?php
-    echo "This is a test.";
+    echo "Test deploy.";
 ?>
