@@ -188,13 +188,19 @@
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label">Amount</label>
-                                    <input type="number" class="form-control" name="amount" step="0.01" min="0"
-                                        required>
+                                    <div class="input-group">
+                                        <span class="input-group-text">₱</span>
+                                        <input type="number" class="form-control" name="amount" step="0.01" min="0"
+                                            required>
+                                    </div>
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label">Transaction Fee</label>
-                                    <input type="number" class="form-control" name="transaction_charge" step="0.01"
-                                        min="0" required>
+                                    <div class="input-group">
+                                        <span class="input-group-text">₱</span>
+                                        <input type="number" class="form-control" name="transaction_charge" step="0.01"
+                                            min="0" required>
+                                    </div>
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label">Transaction Fee thru</label>
@@ -211,7 +217,7 @@
 
                                     <div class="form-check form-check-inline">
                                         <input class="form-check-input" type="radio" name="transaction_type"
-                                            id="cash-in" value="cash-in" required>
+                                            id="cash-in" value="Cash-in" required>
                                         <label class="form-check-label" for="cash-in">
                                             Cash In
                                         </label>
@@ -219,7 +225,7 @@
 
                                     <div class="form-check form-check-inline">
                                         <input class="form-check-input" type="radio" name="transaction_type"
-                                            id="cash-out" value="cash-out" required>
+                                            id="cash-out" value="Cash-out" required>
                                         <label class="form-check-label" for="cash-out">
                                             Cash Out
                                         </label>
@@ -237,7 +243,7 @@
                 </div>
             </div>
 
-            <!-- Add Transaction Confirmation Modal -->
+
             <!-- Add Transaction Confirmation Modal -->
             <div class="modal fade" id="confirmAddModal" tabindex="-1">
                 <div class="modal-dialog">
@@ -254,8 +260,11 @@
                                 <li class="list-group-item"><strong>Reference No:</strong> <span
                                         id="c_reference"></span></li>
                                 <li class="list-group-item"><strong>Amount:</strong> ₱<span id="c_amount"></span></li>
-                                <li class="list-group-item"><strong>Charge:</strong> ₱<span id="c_charge"></span></li>
-                                <li class="list-group-item"><strong>Transaction Fee Thru:</strong> <span
+                                <li class="list-group-item"><strong>Transaction Fee:</strong> ₱<span
+                                        id="c_charge"></span></li>
+                                <!-- total -->
+                                <li class="list-group-item"><strong>Total:</strong> ₱<span id="c_total"></span></li>
+                                <li class="list-group-item"><strong>Transaction Fee thru:</strong> <span
                                         id="c_feeThru"></span></li>
                                 <li class="list-group-item"><strong>Transaction Type:</strong> <span
                                         id="c_transType"></span></li>
@@ -329,18 +338,44 @@
     </div>
     <?php include '../views/footer.php'; ?>
 
-    <!-- DataTables CSS -->
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
-    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.1/css/buttons.bootstrap5.min.css">
+    <script>
+        function formatMoney(input) {
+            let value = input.value.replace(/,/g, "");
 
-    <!-- DataTables JS -->
-    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
-    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.bootstrap5.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.print.min.js"></script>
+            if (value === "") {
+                input.dataset.raw = "";
+                return;
+            }
+
+            // Save raw value for backend
+            input.dataset.raw = value;
+
+            // Format with commas
+            input.value = Number(value).toLocaleString("en-US", {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            });
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            const amountField = document.querySelector("input[name='amount']");
+            const chargeField = document.querySelector("input[name='transaction_charge']");
+
+            // Switch to text to allow commas
+            amountField.type = "text";
+            chargeField.type = "text";
+
+            amountField.addEventListener("input", () => formatMoney(amountField));
+            chargeField.addEventListener("input", () => formatMoney(chargeField));
+
+            // Before submitting: replace displayed value with raw number
+            document.getElementById("addTransactionForm").addEventListener("submit", (e) => {
+                amountField.value = amountField.dataset.raw || "";
+                chargeField.value = chargeField.dataset.raw || "";
+            });
+        });
+    </script>
+
 
     <script src="../assets/js/script.js"></script>
     <script>
@@ -422,12 +457,29 @@
             let type = document.querySelector("input[name='transaction_type']:checked")?.value;
 
             // Fill confirmation modal values
-            document.getElementById("c_eWallet").innerText = ew;
-            document.getElementById("c_reference").innerText = ref !== "" ? ref : "(none)";
-            document.getElementById("c_amount").innerText = parseFloat(amt).toFixed(2);
-            document.getElementById("c_charge").innerText = parseFloat(charge).toFixed(2);
-            document.getElementById("c_feeThru").innerText = thru;
-            document.getElementById("c_transType").innerText = type === "cash-in" ? "Cash In" : "Cash Out";
+            const form = new FormData(this);
+
+            document.getElementById("c_eWallet").innerText = form.get("e_wallet_type");
+            document.getElementById("c_reference").innerText = form.get("reference_no");
+            const amountRaw = form.get("amount").replace(/,/g, "");
+            const chargeRaw = form.get("transaction_charge").replace(/,/g, "");
+
+            document.getElementById("c_amount").innerText =
+                Number(amountRaw).toLocaleString("en-US", { minimumFractionDigits: 2 });
+
+            document.getElementById("c_charge").innerText =
+                Number(chargeRaw).toLocaleString("en-US", { minimumFractionDigits: 2 });
+
+                // total
+            const totalRaw = parseFloat(amountRaw) + parseFloat(chargeRaw);
+            document.getElementById("c_total").innerText =
+                Number(totalRaw).toLocaleString("en-US", { minimumFractionDigits: 2 });
+            document.getElementById("c_feeThru").innerText = form.get("transaction_fee_thru");
+            document.getElementById("c_transType").innerText = form.get("transaction_type");
+
+
+
+
 
             // Hide add form modal → show confirmation modal
             addModal.hide();
@@ -444,6 +496,8 @@
             confirmModal.hide();
             setTimeout(() => addModal.show(), 300);
         });
+
+
 
 
 

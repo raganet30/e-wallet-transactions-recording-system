@@ -6,7 +6,7 @@
     </button>
 
     <h5 class="text-center mb-4">
-        <i class="bi bi-building"></i> <span>Branch Panel</span>
+        <i class="bi bi-building"></i> <span>Main Branch Panel</span>
     </h5>
 
     <a href="dashboard.php" class="menu-item active">
@@ -34,9 +34,20 @@
         <i class="bi bi-journal-text"></i> <span class="menu-text">Reports</span>
     </a>
 
-    <a href="settings.php" class="menu-item">
-        <i class="bi bi-gear"></i> <span class="menu-text">Settings</span>
+    <!-- Branches -->
+    <a href="branches.php" class="menu-item">
+        <i class="bi bi-building"></i> <span class="menu-text">Branches</span>
     </a>
+
+    <!-- Users -->
+    <a href="users.php" class="menu-item">
+        <i class="bi bi-people"></i> <span class="menu-text">Users</span>
+    </a>
+
+
+    <!-- <a href="settings.php" class="menu-item">
+        <i class="bi bi-gear"></i> <span class="menu-text">Settings</span>
+    </a> -->
 </div>
 
 <script>

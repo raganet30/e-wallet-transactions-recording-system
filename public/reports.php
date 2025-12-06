@@ -24,7 +24,7 @@
                             <div class="row g-3 align-items-end">
 
                                 <!-- Report Type -->
-                                <div class="col-md-3">
+                                <div class="col-md-2">
                                     <label class="form-label fw-medium">Report Type</label>
                                     <select class="form-select" id="reportType">
                                         <option value="daily" selected>Daily Report</option>
@@ -34,26 +34,21 @@
                                 </div>
 
                                 <!-- Date / Month / Custom Range -->
-                                <div class="col-md-3">
-                                    <label class="form-label fw-medium">Date / Range</label>
-
-                                    <!-- Daily -->
-                                    <input type="date" class="form-control" id="reportDate"
-                                        value="<?php echo date('Y-m-d'); ?>">
-
-                                    <!-- Monthly -->
-                                    <input type="month" class="form-control mt-2 d-none" id="reportMonth"
-                                        value="<?php echo date('Y-m'); ?>">
-
-                                    <!-- Custom Range -->
-                                    <div id="customRangeContainer" class="d-none mt-2">
-                                        <input type="date" class="form-control mb-2" id="dateFrom">
+                                <div class="col-md-2">
+                                    <label class="form-label fw-medium">Date From</label>
+                                    <div id="dateInputContainer">
+                                        <input type="date" class="form-control" id="dateFrom">
+                                        </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="form-label fw-medium">Date To</label>
+                                    <div id="dateInputContainer">
                                         <input type="date" class="form-control" id="dateTo">
-                                    </div>
+                                        </div>
                                 </div>
 
                                 <!-- Transaction Type -->
-                                <div class="col-md-3">
+                                <div class="col-md-2">
                                     <label class="form-label fw-medium">Transaction Type</label>
                                     <select class="form-select" id="transactionType">
                                         <option value="" selected>All Types</option>
@@ -65,7 +60,7 @@
 
                                 <!-- Fee Method -->
                                 <div class="col-md-2">
-                                    <label for="feeThru" class="form-label fw-medium">Fee Collection</label>
+                                    <label for="feeThru" class="form-label fw-medium">Transaction Fee Thru</label>
                                     <select class="form-select" id="feeThru">
                                         <option value="">All Methods</option>
                                         <option value="Cash">Cash</option>

@@ -390,3 +390,32 @@
      text-align: left !important;
      margin-bottom: 15px;
  }
+
+
+ /* enlarge form text input  */
+ /* Enlarge all input & select text inside modal */
+#addTransactionModal .form-control,
+#addTransactionModal .form-select {
+    font-size: 1.2rem;
+    padding: 10px 12px;
+    font-weight: 500;
+}
+
+/* Enlarge labels as well */
+#addTransactionModal .form-label {
+    font-size: 1.1rem;
+}
+
+/* Enlarge confirmation modal list */
+#confirmAddModal .list-group-item {
+    font-size: 1.25rem;       /* Bigger text */
+    padding: 14px 18px;       /* More breathing room */
+}
+
+#confirmAddModal .list-group-item strong {
+    font-size: 1.28rem;
+}
+
+#confirmAddModal .list-group-item span {
+    font-weight: 600;
+}
