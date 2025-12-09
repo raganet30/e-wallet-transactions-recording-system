@@ -19,3 +19,13 @@
         </div>
     </div>
 </footer>
+
+<script>
+    const footer = document.getElementById('footer');
+    const hamburgerBtn = document.getElementById('hamburgerBtn');
+
+    hamburgerBtn.addEventListener('click', () => {
+        footer.classList.toggle('collapsed');
+    });
+
+</script>

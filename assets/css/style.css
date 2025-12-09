@@ -22,237 +22,193 @@
  .btn-primary:hover {
      background-color: #1f6fe0;
  }
+/* SIDEBAR */
+.sidebar {
+    width: 250px;
+    background: #3f8cff;
+    min-height: 100vh;
+    padding-top: 20px;
+    color: white;
+    transition: all 0.3s ease;
+    overflow-x: hidden;
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 1000;
+}
 
- /* Sidebar styles */
- .sidebar {
-     width: 250px;
-     background: #3f8cff;
-     min-height: 100vh;
-     padding-top: 20px;
-     color: white;
-     transition: all 0.3s ease;
-     overflow-x: hidden;
-     position: fixed;
-     left: 0;
-     top: 0;
-     z-index: 1000;
- }
+.sidebar.collapsed {
+    width: 70px;
+}
 
- .sidebar.collapsed {
-     width: 70px;
- }
+.sidebar a {
+    color: white;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
 
- .sidebar a {
-     color: white;
-     text-decoration: none;
-     transition: all 0.3s ease;
- }
+.sidebar a.active {
+    background: rgba(255, 255, 255, 0.2);
+}
 
- .sidebar a.active {
-     background: rgba(255, 255, 255, 0.2);
- }
+.sidebar .menu-item {
+    padding: 12px 20px;
+    display: flex;
+    align-items: center;
+    border-radius: 6px;
+    margin-bottom: 5px;
+    white-space: nowrap;
+}
 
- .sidebar .menu-item {
-     padding: 12px 20px;
-     display: flex;
-     align-items: center;
-     border-radius: 6px;
-     margin-bottom: 5px;
-     white-space: nowrap;
- }
+.sidebar .menu-item:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
 
- .sidebar .menu-item:hover {
-     background: rgba(255, 255, 255, 0.1);
- }
+.sidebar .menu-item i {
+    font-size: 1.2rem;
+    margin-right: 12px;
+    min-width: 24px;
+    text-align: center;
+}
 
- .sidebar .menu-item i {
-     font-size: 1.2rem;
-     margin-right: 12px;
-     min-width: 24px;
-     text-align: center;
- }
+.sidebar.collapsed .menu-item i {
+    margin-right: 0;
+}
 
- .sidebar.collapsed .menu-item i {
-     margin-right: 0;
- }
+.sidebar .menu-text {
+    transition: opacity 0.3s ease;
+    opacity: 1;
+}
 
- .sidebar .menu-text {
-     transition: opacity 0.3s ease;
-     opacity: 1;
- }
+.sidebar.collapsed .menu-text {
+    opacity: 0;
+    width: 0;
+    overflow: hidden;
+}
 
- .sidebar.collapsed .menu-text {
-     opacity: 0;
-     width: 0;
-     overflow: hidden;
- }
+/* Sidebar Header */
+.sidebar h5 {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 0 20px 20px 20px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    margin-top: 50px;
+    transition: all 0.3s ease;
+}
 
- .sidebar h5 {
-     display: flex;
-     align-items: center;
-     justify-content: flex-start;
-     padding: 0 20px 20px 20px;
-     margin-bottom: 20px;
-     border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-     transition: all 0.3s ease;
-     margin-top: 50px;
- }
+.sidebar.collapsed h5 {
+    justify-content: center;
+    padding: 0 10px 20px 10px;
+}
 
- .sidebar.collapsed h5 {
-     justify-content: center;
-     padding: 0 10px 20px 10px;
- }
+.sidebar h5 span {
+    margin-left: 10px;
+    transition: all 0.3s ease;
+}
 
- .sidebar h5 span {
-     margin-left: 10px;
-     transition: all 0.3s ease;
- }
+.sidebar.collapsed h5 span {
+    opacity: 0;
+    width: 0;
+    overflow: hidden;
+}
 
- .sidebar.collapsed h5 span {
-     opacity: 0;
-     width: 0;
-     overflow: hidden;
- }
+/* HAMBURGER */
+.hamburger-btn {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    background: transparent;
+    border: none;
+    color: white;
+    font-size: 1.8rem;
+    cursor: pointer;
+    padding: 5px;
+    z-index: 1001;
+    transition: all 0.3s ease;
+}
 
- /* Hamburger button */
- .hamburger-btn {
-     position: absolute;
-     top: 15px;
-     left: 15px;
-     background: transparent;
-     border: none;
-     color: white;
-     font-size: 1.8rem;
-     cursor: pointer;
-     padding: 5px;
-     z-index: 1001;
-     transition: all 0.3s ease;
- }
+.hamburger-btn:hover {
+    color: rgba(255, 255, 255, 0.8);
+    transform: scale(1.1);
+}
 
- .hamburger-btn:hover {
-     color: rgba(255, 255, 255, 0.8);
-     transform: scale(1.1);
- }
+/* CONTENT */
+.content {
+    margin-left: 250px;
+    padding: 20px;
+    transition: margin-left 0.3s ease;
+    min-height: 100vh;
+}
 
- /* Content area */
- .content {
-     margin-left: 250px;
-     padding: 20px;
-     transition: margin-left 0.3s ease;
-     min-height: 100vh;
- }
+.content.collapsed {
+    margin-left: 70px;
+}
 
- .content.collapsed {
-     margin-left: 70px;
- }
+/* NAVBAR */
+.navbar {
+    background: white;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    position: sticky;
+    top: 0;
+    z-index: 999;
+    margin-left: 250px;
+    transition: margin-left 0.3s ease;
+}
 
- .navbar {
-     background: white;
-     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-     position: sticky;
-     top: 0;
-     z-index: 999;
-     margin-left: 250px;
-     transition: margin-left 0.3s ease;
- }
+.navbar.collapsed {
+    margin-left: 70px;
+}
 
- .navbar.collapsed {
-     margin-left: 70px;
- }
+/* FOOTER */
+.footer {
+    background: #3f8cff;
+    color: white;
+    padding: 15px 0;
+    text-align: center;
+    position: fixed;
+    bottom: 0;
+    left: 250px; /* match expanded sidebar */
+    width: calc(100% - 250px);
+    z-index: 1000;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
 
+/* Collapsed sidebar footer */
+.footer.collapsed {
+    left: 70px;
+    width: calc(100% - 70px);
+}
 
+/* FOOTER CONTENT */
+.footer-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+    font-size: 0.9rem;
+}
 
+.footer-links {
+    display: flex;
+    gap: 20px;
+}
 
+.footer-links a {
+    color: white;
+    text-decoration: none;
+    transition: opacity 0.2s;
+}
 
- /* Content area */
- .content {
-     margin-left: 250px;
-     padding: 20px;
-     transition: margin-left 0.3s ease;
-     min-height: 100vh;
- }
-
- .content.collapsed {
-     margin-left: 70px;
- }
-
- .navbar {
-     background: white;
-     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-     position: sticky;
-     top: 0;
-     z-index: 999;
-     margin-left: 250px;
-     transition: margin-left 0.3s ease;
- }
-
- .navbar.collapsed {
-     margin-left: 70px;
- }
-
- /* Demo content */
- .demo-content {
-     background: white;
-     padding: 20px;
-     border-radius: 10px;
-     margin-top: 20px;
-     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
- }
+.footer-links a:hover {
+    opacity: 0.8;
+    text-decoration: underline;
+}
 
 
- /* Footer styles */
- .footer {
-     background: #3f8cff;
-     color: white;
-     padding: 15px 0;
-     text-align: center;
-     width: 100%;
-     position: fixed;
-     bottom: 0;
-     left: 0;
-     z-index: 1000;
-     box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
- }
-
- /* Adjust for collapsed sidebar */
- .footer.collapsed {
-     left: 70px;
-     width: calc(100% - 70px);
-     transition: all 0.3s ease;
- }
-
- /* Default when sidebar expanded */
- .footer {
-     left: 250px;
-     width: calc(100% - 250px);
-     transition: all 0.3s ease;
- }
-
- /* Footer content */
- .footer-content {
-     display: flex;
-     justify-content: space-between;
-     align-items: center;
-     padding: 0 20px;
-     font-size: 0.9rem;
- }
-
- .footer-links {
-     display: flex;
-     gap: 20px;
- }
-
- .footer-links a {
-     color: white;
-     text-decoration: none;
-     transition: opacity 0.2s;
- }
-
- .footer-links a:hover {
-     opacity: 0.8;
-     text-decoration: underline;
- }
-
+ /* badges */
  .badge-gcash {
      background-color: #00a3e0;
      color: white;

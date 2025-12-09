@@ -1,3 +1,5 @@
 <?php
-    echo "Test deploy.";
+ 
+ echo password_hash("admin", PASSWORD_DEFAULT);
+
 ?>

@@ -35,7 +35,7 @@
 
                 </li>
                 <li>
-                    <a class="dropdown-item text-danger" href="login.php">
+                    <a class="dropdown-item text-danger" href="../processes/logout.php">
                         <i class="bi bi-box-arrow-right me-2"></i>Logout
                     </a>
                 </li>
