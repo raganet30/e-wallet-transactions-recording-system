@@ -12,6 +12,8 @@
     <!-- Custom CSS -->
     <link rel="stylesheet" href="../assets/css/style.css">
 
+    <!-- favicon -->
+    <link rel="icon" type="image/png" href="../assets/images/e-wallet.png">
 </head>
 
 <nav class="navbar" id="navbar">

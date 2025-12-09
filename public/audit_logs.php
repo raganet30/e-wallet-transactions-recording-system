@@ -1,3 +1,6 @@
+<?php
+    require '../config/session_checker.php';
+?>
 <!DOCTYPE html>
 <html lang="en">
 
