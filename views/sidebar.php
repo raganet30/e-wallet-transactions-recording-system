@@ -1,3 +1,7 @@
+<?php
+require '../config/helpers.php';
+
+?>
 <!-- Sidebar with Hamburger Button -->
 <div class="sidebar position-fixed" id="sidebar">
     <!-- Hamburger Button -->
@@ -6,7 +10,16 @@
     </button>
 
     <h5 class="text-center mb-4">
-        <i class="bi bi-building"></i> <span>Main Branch Panel</span>
+        <i class="bi bi-building"></i> <span>
+            <?php
+            // show branch name
+            if ($_SESSION['role'] === 'super_admin') {
+                echo "SUPER ADMIN PANEL";
+            } else {
+                echo htmlspecialchars(currentBranchName());
+            }
+            ?>
+        </span>
     </h5>
 
     <a href="dashboard" class="menu-item active">
@@ -34,16 +47,20 @@
         <i class="bi bi-journal-text"></i> <span class="menu-text">Reports</span>
     </a>
 
-    <!-- Branches -->
-    <a href="branches" class="menu-item">
-        <i class="bi bi-building"></i> <span class="menu-text">Branches</span>
-    </a>
 
-    <!-- Users -->
-    <a href="users" class="menu-item">
-        <i class="bi bi-people"></i> <span class="menu-text">Users</span>
-    </a>
+    <!-- show only if user is super_admin -->
+    <?php if (currentRole() === 'super_admin'): ?>
 
+        <!-- Branches -->
+        <a href="branches" class="menu-item">
+            <i class="bi bi-building"></i> <span class="menu-text">Branches</span>
+        </a>
+
+        <!-- Users -->
+        <a href="users" class="menu-item">
+            <i class="bi bi-people"></i> <span class="menu-text">Users</span>
+        </a>
+    <?php endif; ?>
 
     <!-- <a href="settings" class="menu-item">
         <i class="bi bi-gear"></i> <span class="menu-text">Settings</span>

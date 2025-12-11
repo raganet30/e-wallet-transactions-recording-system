@@ -1,5 +1,5 @@
 <?php
-    require '../config/session_checker.php';
+require '../config/session_checker.php';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -9,9 +9,9 @@
 
     <!-- Main Content Area -->
     <?php include '../views/header.php'; ?>
-
     <div class="content" id="mainContent">
         <div class="container-fluid">
+            <div id="globalAlertArea"></div>
 
             <!-- Page Header with Add User Button -->
             <div class="d-flex justify-content-between align-items-center mb-4">
@@ -30,6 +30,7 @@
                                 <tr>
                                     <th>No.</th>
                                     <th>Name</th>
+                                    <th>Branch</th>
                                     <th>Username</th>
                                     <th>Role</th>
                                     <th>Status</th>
@@ -38,39 +39,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <!-- Example Data Rows, replace with PHP loop -->
-                                <tr>
-                                    <td>1</td>
-                                    <td>John Doe</td>
-                                    <td>johndoe</td>
-                                    <td>Admin</td>
-                                    <td><span class="badge bg-success">Active</span></td>
-                                    <td>2025-12-06</td>
-                                    <td>
-                                        <button class="btn btn-sm btn-outline-primary edit-btn" data-id="1">
-                                            <i class="bi bi-pencil-square"></i> Edit
-                                        </button>
-                                        <button class="btn btn-sm btn-outline-warning toggle-status-btn" data-id="1">
-                                            <i class="bi bi-toggle-on"></i> Deactivate
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>2</td>
-                                    <td>Jane Smith</td>
-                                    <td>janesmith</td>
-                                    <td>User</td>
-                                    <td><span class="badge bg-danger">Inactive</span></td>
-                                    <td>2025-11-20</td>
-                                    <td>
-                                        <button class="btn btn-sm btn-outline-primary edit-btn" data-id="2">
-                                            <i class="bi bi-pencil-square"></i> Edit
-                                        </button>
-                                        <button class="btn btn-sm btn-outline-success toggle-status-btn" data-id="2">
-                                            <i class="bi bi-toggle-off"></i> Activate
-                                        </button>
-                                    </td>
-                                </tr>
+
                             </tbody>
                         </table>
                     </div>
@@ -80,6 +49,22 @@
         </div>
     </div>
 
+    <?php
+    require '../config/db.php';
+
+    // Fetch branches
+    $branches = [];
+    try {
+        $stmt = $con->prepare("SELECT id, branch_name FROM branches ORDER BY branch_name ASC");
+        $stmt->execute();
+        $result = $stmt->get_result();
+        while ($row = $result->fetch_assoc()) {
+            $branches[] = $row;
+        }
+    } catch (Throwable $e) {
+        error_log('Error fetching branches: ' . $e->getMessage());
+    }
+    ?>
     <!-- Add User Modal -->
     <div class="modal fade" id="addUserModal" tabindex="-1">
         <div class="modal-dialog">
@@ -89,15 +74,32 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
+                    <!-- Alert area for messages -->
+                    <div id="addUserAlertArea"></div>
+
                     <form id="addUserForm">
                         <div class="mb-3">
                             <label class="form-label">Full Name</label>
                             <input type="text" class="form-control" name="name" required>
                         </div>
+
+                        <!-- Branch selector -->
+                        <div class="mb-3">
+                            <label class="form-label">Branch</label>
+                            <select class="form-select" name="branch_id" required>
+                                <option value="">Select Branch</option>
+                                <?php foreach ($branches as $branch): ?>
+                                    <option value="<?= $branch['id'] ?>"><?= htmlspecialchars($branch['branch_name']) ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+
                         <div class="mb-3">
                             <label class="form-label">Username</label>
                             <input type="text" class="form-control" name="username" required>
                         </div>
+
                         <div class="mb-3">
                             <label class="form-label">Role</label>
                             <select class="form-select" name="role" required>
@@ -106,10 +108,12 @@
                                 <option value="Cashier">Cashier</option>
                             </select>
                         </div>
+
                         <div class="mb-3">
                             <label class="form-label">Password</label>
                             <input type="password" class="form-control" name="password" required>
                         </div>
+
                         <div class="mb-3">
                             <label class="form-label">Confirm Password</label>
                             <input type="password" class="form-control" name="confirm_password" required>
@@ -124,6 +128,7 @@
         </div>
     </div>
 
+
     <!-- Edit User Modal -->
     <div class="modal fade" id="editUserModal" tabindex="-1">
         <div class="modal-dialog">
@@ -134,32 +139,44 @@
                 </div>
                 <div class="modal-body">
                     <form id="editUserForm">
-                        <input type="hidden" name="user_id" id="editUserId">
+                        <input type="hidden" name="user_id" id="edit_user_id">
                         <div class="mb-3">
                             <label class="form-label">Full Name</label>
                             <input type="text" class="form-control" name="name" id="editName" required>
                         </div>
+                        <!-- Branch selector -->
+                        <div class="mb-3">
+                            <label class="form-label">Branch</label>
+                            <select class="form-select" name="edit_branch_id" required>
+                                <option value="">Select Branch</option>
+                                <?php foreach ($branches as $branch): ?>
+                                    <option value="<?= $branch['id'] ?>"><?= htmlspecialchars($branch['branch_name']) ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
                         <div class="mb-3">
                             <label class="form-label">Username</label>
-                            <input type="text" class="form-control" name="username" id="editUsername" required>
+                            <input type="text" class="form-control" name="username" id="edit_username" required>
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Role</label>
                             <select class="form-select" name="role" id="editRole" required>
                                 <option value="">Select Role</option>
-                                <option value="Admin">Admin</option>
-                                <option value="Cashier">Cashier</option>
+                                <option value="admin">Admin</option>
+                                <option value="cashier">Cashier</option>
                             </select>
                         </div>
+
                         <div class="mb-3">
                             <label class="form-label">Password</label>
-                            <input type="password" class="form-control" name="password" id="editPassword"
+                            <input type="password" class="form-control" name="password" id="edit_password"
                                 placeholder="Leave blank to keep current">
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Confirm Password</label>
-                            <input type="password" class="form-control" name="confirm_password" id="editConfirmPassword"
-                                placeholder="Leave blank to keep current">
+                            <input type="password" class="form-control" name="confirm_password"
+                                id="edit_confirm_password" placeholder="Leave blank to keep current">
                         </div>
                     </form>
                 </div>
@@ -190,55 +207,233 @@
             </div>
         </div>
     </div>
-
+    <?php include '../views/footer.php'; ?>
     <script>
-        // Edit User button click
-        document.querySelectorAll(".edit-btn").forEach(btn => {
-            btn.addEventListener("click", function () {
-                const row = this.closest("tr");
-                const id = this.dataset.id;
-                const name = row.children[1].innerText;
-                const username = row.children[2].innerText;
-                const role = row.children[3].innerText;
-
-                document.getElementById("editUserId").value = id;
-                document.getElementById("editName").value = name;
-                document.getElementById("editUsername").value = username;
-                document.getElementById("editRole").value = role;
-
-                const editModal = new bootstrap.Modal(document.getElementById("editUserModal"));
-                editModal.show();
+        // fetch and populate users table
+        $(document).ready(function () {
+            $('#usersTable').DataTable({
+                "processing": true,
+                "ajax": {
+                    "url": "../api/get_users.php",
+                    "type": "POST"
+                }
             });
         });
 
-        // Toggle Status button click
-        document.querySelectorAll(".toggle-status-btn").forEach(btn => {
-            btn.addEventListener("click", function () {
-                const row = this.closest("tr");
-                const id = this.dataset.id;
-                const statusText = row.children[4].innerText;
-                const action = statusText === "Active" ? "deactivate" : "activate";
 
-                document.getElementById("toggleUserId").value = id;
-                document.getElementById("statusMessage").innerText = `Are you sure you want to ${action} this user?`;
 
-                const toggleModal = new bootstrap.Modal(document.getElementById("toggleStatusModal"));
-                toggleModal.show();
+        // Add Users
+        $("#addUserForm").on("submit", function (e) {
+            e.preventDefault();
+
+            $.ajax({
+                url: "../processes/add_users.php",
+                type: "POST",
+                data: $(this).serialize(),
+                dataType: "json",
+                success: function (response) {
+
+                    // Build alert box
+                    let alertBox = `
+                <div class="alert alert-${response.status === 'success' ? 'success' : 'danger'} alert-dismissible fade show" role="alert">
+                    ${response.message}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            `;
+
+                    // Close modal first, then show alert
+                    $("#addUserModal").modal("hide");
+
+                    // If success → reset form + reload table
+                    if (response.status === "success") {
+                        $("#addUserForm")[0].reset();
+                        $("#usersTable").DataTable().ajax.reload();
+                    }
+
+                    // Show alert after modal closes
+                    setTimeout(() => {
+                        $("#globalAlertArea").html(alertBox);
+
+                        // Auto-dismiss alert
+                        setTimeout(() => {
+                            $(".alert").alert('close');
+                        }, 3000);
+                    }, 300);
+                }
             });
         });
 
-        // Confirm status change
-        document.getElementById("confirmToggleStatus").addEventListener("click", function () {
-            const id = document.getElementById("toggleUserId").value;
-            // Perform AJAX request to update status in DB
-            console.log("Status change confirmed for user ID:", id);
-            // Close modal after action
-            bootstrap.Modal.getInstance(document.getElementById("toggleStatusModal")).hide();
+
+        // edit user
+        $(document).ready(function () {
+            // Open Edit User Modal and populate data
+            $('#usersTable').on('click', '.edit-btn', function () {
+                let userId = $(this).data('id');
+
+                $.ajax({
+                    url: '../api/select_user.php',
+                    type: 'GET',
+                    data: { id: userId },
+                    dataType: 'json',
+                    success: function (response) {
+                        if (response.status === 'success') {
+                            let user = response.data;
+                            $('#edit_user_id').val(user.id);
+                            $('#editName').val(user.name);
+                            $('#edit_username').val(user.username);
+                            $('#editRole').val(user.role.trim().toLowerCase());
+                            $('select[name="edit_branch_id"]').val(user.branch_id);
+                            $('#edit_password, #edit_confirm_password').val('');
+                            $('#editUserModal').modal('show');
+
+
+                        } else {
+                            alert(response.message);
+
+                        }
+                    }
+                });
+            });
+
+            // Handle Edit Form Submission
+            $('#editUserForm').on('submit', function (e) {
+                e.preventDefault();
+                $.ajax({
+                    url: '../processes/edit_user.php',
+                    type: 'POST',
+                    data: $(this).serialize(),
+                    dataType: 'json',
+                    success: function (response) {
+                        let alertBox = `
+                    <div class="alert alert-${response.status === 'success' ? 'success' : 'danger'} alert-dismissible fade show" role="alert">
+                        ${response.message}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                `;
+                        $('#editUserModal').modal('hide');
+
+                        // Show alert after modal closes
+                        setTimeout(() => {
+                            $("#globalAlertArea").html(alertBox);
+
+                            // Auto-dismiss alert
+                            setTimeout(() => {
+                                $(".alert").alert('close');
+                            }, 3000);
+                        }, 300);
+
+                        if (response.status === 'success') {
+                            $('#usersTable').DataTable().ajax.reload();
+
+                        }
+                    }
+                });
+            });
         });
+
+
+        // activate/deactivate user
+        $(document).ready(function () {
+            // Open toggle status modal
+            $('#usersTable').on('click', '.toggle-status-btn', function () {
+                let userId = $(this).data('id');
+                let isActive = $(this).find('i').hasClass('bi-toggle-on'); // true if currently active
+
+                // Set hidden input and message
+                $('#toggleUserId').val(userId);
+                $('#statusMessage').text(
+                    isActive
+                        ? "Are you sure you want to deactivate this user?"
+                        : "Are you sure you want to activate this user?"
+                );
+
+                // Update modal button color (optional)
+                $('#confirmToggleStatus')
+                    .removeClass('btn-warning btn-success')
+                    .addClass(isActive ? 'btn-warning' : 'btn-success')
+                    .text(isActive ? 'Deactivate' : 'Activate');
+
+                // Show modal
+                $('#toggleStatusModal').modal('show');
+            });
+
+            // Confirm status change
+            $('#confirmToggleStatus').on('click', function () {
+                let userId = $('#toggleUserId').val();
+
+                $.ajax({
+                    url: '../processes/toggle_user_status.php',
+                    type: 'POST',
+                    data: { id: userId },
+                    dataType: 'json',
+                    success: function (response) {
+                        $('#toggleStatusModal').modal('hide'); // close modal first
+
+                        let alertBox = '';
+
+                        if (response.success) {
+                            alertBox = `
+                                        <div class="alert alert-success alert-dismissible fade show mt-2" role="alert">
+                                            User status updated successfully!
+                                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                                        </div>
+                                    `;
+
+                            // Show alert after modal is fully closed
+                            setTimeout(() => {
+                                $("#globalAlertArea").html(alertBox);
+                                 $("#usersTable").DataTable().ajax.reload();
+                                // Auto-dismiss
+                                setTimeout(() => {
+                                    $(".alert").alert('close');
+                                }, 3000);
+                            }, 300);
+
+                        } else {
+                            alertBox = `
+                                        <div class="alert alert-danger alert-dismissible fade show mt-2" role="alert">
+                                            ${response.message || 'Failed to update status.'}
+                                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                                        </div>
+                                    `;
+
+                            setTimeout(() => {
+                                $("#globalAlertArea").html(alertBox);
+
+                                setTimeout(() => {
+                                    $(".alert").alert('close');
+                                }, 3000);
+                            }, 300);
+                        }
+                    },
+
+                    error: function () {
+                        $('#toggleStatusModal').modal('hide');
+
+                        let alertBox = `
+                                        <div class="alert alert-danger alert-dismissible fade show mt-2" role="alert">
+                                            An error occurred while updating status.
+                                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                                        </div>
+                                    `;
+
+                        setTimeout(() => {
+                            $("#globalAlertArea").html(alertBox);
+
+                            setTimeout(() => {
+                                $(".alert").alert('close');
+                            }, 3000);
+                        }, 300);
+                    }
+
+                });
+            });
+        });
+
 
     </script>
     <script src="../assets/js/script.js"></script>
-    <?php include '../views/footer.php'; ?>
+
 </body>
 
 </html>

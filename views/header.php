@@ -21,12 +21,15 @@
         <span class="navbar-brand">
             <i class="bi bi-wallet2 me-2"></i>E-Wallet Transaction Recording System
         </span>
+       
 
         <div class="dropdown">
             <button class="btn btn-light dropdown-toggle d-flex align-items-center" type="button" id="userMenu"
                 data-bs-toggle="dropdown" aria-expanded="false">
                 <i class="bi bi-person-circle me-2"></i>
-                <span>Admin</span>
+                <span>
+                    <?php echo htmlspecialchars($_SESSION['name'] ?? 'User'); ?>
+                </span>
             </button>
 
             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userMenu">

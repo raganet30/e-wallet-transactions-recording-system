@@ -22,190 +22,192 @@
  .btn-primary:hover {
      background-color: #1f6fe0;
  }
-/* SIDEBAR */
-.sidebar {
-    width: 250px;
-    background: #3f8cff;
-    min-height: 100vh;
-    padding-top: 20px;
-    color: white;
-    transition: all 0.3s ease;
-    overflow-x: hidden;
-    position: fixed;
-    left: 0;
-    top: 0;
-    z-index: 1000;
-}
 
-.sidebar.collapsed {
-    width: 70px;
-}
+ /* SIDEBAR */
+ .sidebar {
+     width: 250px;
+     background: #3f8cff;
+     min-height: 100vh;
+     padding-top: 20px;
+     color: white;
+     transition: all 0.3s ease;
+     overflow-x: hidden;
+     position: fixed;
+     left: 0;
+     top: 0;
+     z-index: 1000;
+ }
 
-.sidebar a {
-    color: white;
-    text-decoration: none;
-    transition: all 0.3s ease;
-}
+ .sidebar.collapsed {
+     width: 70px;
+ }
 
-.sidebar a.active {
-    background: rgba(255, 255, 255, 0.2);
-}
+ .sidebar a {
+     color: white;
+     text-decoration: none;
+     transition: all 0.3s ease;
+ }
 
-.sidebar .menu-item {
-    padding: 12px 20px;
-    display: flex;
-    align-items: center;
-    border-radius: 6px;
-    margin-bottom: 5px;
-    white-space: nowrap;
-}
+ .sidebar a.active {
+     background: rgba(255, 255, 255, 0.2);
+ }
 
-.sidebar .menu-item:hover {
-    background: rgba(255, 255, 255, 0.1);
-}
+ .sidebar .menu-item {
+     padding: 12px 20px;
+     display: flex;
+     align-items: center;
+     border-radius: 6px;
+     margin-bottom: 5px;
+     white-space: nowrap;
+ }
 
-.sidebar .menu-item i {
-    font-size: 1.2rem;
-    margin-right: 12px;
-    min-width: 24px;
-    text-align: center;
-}
+ .sidebar .menu-item:hover {
+     background: rgba(255, 255, 255, 0.1);
+ }
 
-.sidebar.collapsed .menu-item i {
-    margin-right: 0;
-}
+ .sidebar .menu-item i {
+     font-size: 1.2rem;
+     margin-right: 12px;
+     min-width: 24px;
+     text-align: center;
+ }
 
-.sidebar .menu-text {
-    transition: opacity 0.3s ease;
-    opacity: 1;
-}
+ .sidebar.collapsed .menu-item i {
+     margin-right: 0;
+ }
 
-.sidebar.collapsed .menu-text {
-    opacity: 0;
-    width: 0;
-    overflow: hidden;
-}
+ .sidebar .menu-text {
+     transition: opacity 0.3s ease;
+     opacity: 1;
+ }
 
-/* Sidebar Header */
-.sidebar h5 {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    padding: 0 20px 20px 20px;
-    margin-bottom: 20px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-    margin-top: 50px;
-    transition: all 0.3s ease;
-}
+ .sidebar.collapsed .menu-text {
+     opacity: 0;
+     width: 0;
+     overflow: hidden;
+ }
 
-.sidebar.collapsed h5 {
-    justify-content: center;
-    padding: 0 10px 20px 10px;
-}
+ /* Sidebar Header */
+ .sidebar h5 {
+     display: flex;
+     align-items: center;
+     justify-content: flex-start;
+     padding: 0 20px 20px 20px;
+     margin-bottom: 20px;
+     border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+     margin-top: 50px;
+     transition: all 0.3s ease;
+ }
 
-.sidebar h5 span {
-    margin-left: 10px;
-    transition: all 0.3s ease;
-}
+ .sidebar.collapsed h5 {
+     justify-content: center;
+     padding: 0 10px 20px 10px;
+ }
 
-.sidebar.collapsed h5 span {
-    opacity: 0;
-    width: 0;
-    overflow: hidden;
-}
+ .sidebar h5 span {
+     margin-left: 10px;
+     transition: all 0.3s ease;
+ }
 
-/* HAMBURGER */
-.hamburger-btn {
-    position: absolute;
-    top: 15px;
-    left: 15px;
-    background: transparent;
-    border: none;
-    color: white;
-    font-size: 1.8rem;
-    cursor: pointer;
-    padding: 5px;
-    z-index: 1001;
-    transition: all 0.3s ease;
-}
+ .sidebar.collapsed h5 span {
+     opacity: 0;
+     width: 0;
+     overflow: hidden;
+ }
 
-.hamburger-btn:hover {
-    color: rgba(255, 255, 255, 0.8);
-    transform: scale(1.1);
-}
+ /* HAMBURGER */
+ .hamburger-btn {
+     position: absolute;
+     top: 15px;
+     left: 15px;
+     background: transparent;
+     border: none;
+     color: white;
+     font-size: 1.8rem;
+     cursor: pointer;
+     padding: 5px;
+     z-index: 1001;
+     transition: all 0.3s ease;
+ }
 
-/* CONTENT */
-.content {
-    margin-left: 250px;
-    padding: 20px;
-    transition: margin-left 0.3s ease;
-    min-height: 100vh;
-}
+ .hamburger-btn:hover {
+     color: rgba(255, 255, 255, 0.8);
+     transform: scale(1.1);
+ }
 
-.content.collapsed {
-    margin-left: 70px;
-}
+ /* CONTENT */
+ .content {
+     margin-left: 250px;
+     padding: 20px;
+     transition: margin-left 0.3s ease;
+     min-height: 100vh;
+ }
 
-/* NAVBAR */
-.navbar {
-    background: white;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-    position: sticky;
-    top: 0;
-    z-index: 999;
-    margin-left: 250px;
-    transition: margin-left 0.3s ease;
-}
+ .content.collapsed {
+     margin-left: 70px;
+ }
 
-.navbar.collapsed {
-    margin-left: 70px;
-}
+ /* NAVBAR */
+ .navbar {
+     background: white;
+     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+     position: sticky;
+     top: 0;
+     z-index: 999;
+     margin-left: 250px;
+     transition: margin-left 0.3s ease;
+ }
 
-/* FOOTER */
-.footer {
-    background: #3f8cff;
-    color: white;
-    padding: 15px 0;
-    text-align: center;
-    position: fixed;
-    bottom: 0;
-    left: 250px; /* match expanded sidebar */
-    width: calc(100% - 250px);
-    z-index: 1000;
-    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
-    transition: all 0.3s ease;
-}
+ .navbar.collapsed {
+     margin-left: 70px;
+ }
 
-/* Collapsed sidebar footer */
-.footer.collapsed {
-    left: 70px;
-    width: calc(100% - 70px);
-}
+ /* FOOTER */
+ .footer {
+     background: #3f8cff;
+     color: white;
+     padding: 15px 0;
+     text-align: center;
+     position: fixed;
+     bottom: 0;
+     left: 250px;
+     /* match expanded sidebar */
+     width: calc(100% - 250px);
+     z-index: 1000;
+     box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+     transition: all 0.3s ease;
+ }
 
-/* FOOTER CONTENT */
-.footer-content {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 20px;
-    font-size: 0.9rem;
-}
+ /* Collapsed sidebar footer */
+ .footer.collapsed {
+     left: 70px;
+     width: calc(100% - 70px);
+ }
 
-.footer-links {
-    display: flex;
-    gap: 20px;
-}
+ /* FOOTER CONTENT */
+ .footer-content {
+     display: flex;
+     justify-content: space-between;
+     align-items: center;
+     padding: 0 20px;
+     font-size: 0.9rem;
+ }
 
-.footer-links a {
-    color: white;
-    text-decoration: none;
-    transition: opacity 0.2s;
-}
+ .footer-links {
+     display: flex;
+     gap: 20px;
+ }
 
-.footer-links a:hover {
-    opacity: 0.8;
-    text-decoration: underline;
-}
+ .footer-links a {
+     color: white;
+     text-decoration: none;
+     transition: opacity 0.2s;
+ }
+
+ .footer-links a:hover {
+     opacity: 0.8;
+     text-decoration: underline;
+ }
 
 
  /* badges */
@@ -350,28 +352,38 @@
 
  /* enlarge form text input  */
  /* Enlarge all input & select text inside modal */
-#addTransactionModal .form-control,
-#addTransactionModal .form-select {
-    font-size: 1.2rem;
-    padding: 10px 12px;
-    font-weight: 500;
-}
+ #addTransactionModal .form-control,
+ #addTransactionModal .form-select {
+     font-size: 1.2rem;
+     padding: 10px 12px;
+     font-weight: 500;
+ }
 
-/* Enlarge labels as well */
-#addTransactionModal .form-label {
-    font-size: 1.1rem;
-}
+ /* Enlarge labels as well */
+ #addTransactionModal .form-label {
+     font-size: 1.1rem;
+ }
 
-/* Enlarge confirmation modal list */
-#confirmAddModal .list-group-item {
-    font-size: 1.25rem;       /* Bigger text */
-    padding: 14px 18px;       /* More breathing room */
-}
+ /* Enlarge confirmation modal list */
+ #confirmAddModal .list-group-item {
+     font-size: 1.25rem;
+     /* Bigger text */
+     padding: 14px 18px;
+     /* More breathing room */
+ }
 
-#confirmAddModal .list-group-item strong {
-    font-size: 1.28rem;
-}
+ #confirmAddModal .list-group-item strong {
+     font-size: 1.28rem;
+ }
 
-#confirmAddModal .list-group-item span {
-    font-weight: 600;
-}
+ #confirmAddModal .list-group-item span {
+     font-weight: 600;
+ }
+
+ #globalAlertArea {
+     position: fixed;
+     top: 20px;
+     right: 20px;
+     width: 400px;
+     z-index: 1050;
+ }
