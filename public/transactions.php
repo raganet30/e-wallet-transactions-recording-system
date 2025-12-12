@@ -1,5 +1,5 @@
 <?php
-    require '../config/session_checker.php';
+require '../config/session_checker.php';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -41,15 +41,7 @@
                                     <option value="Maya">Maya</option>
                                 </select>
                             </div>
-                            <!-- <div class="col-md-3">
-                                    <label class="form-label">Status</label>
-                                    <select class="form-select" id="statusFilter">
-                                        <option value="">All Status</option>
-                                        <option value="completed">Completed</option>
-                                        <option value="pending">Pending</option>
-                                        <option value="failed">Failed</option>
-                                    </select>
-                                </div> -->
+
                             <div class="col-md-3 d-flex align-items-end">
                                 <button class="btn btn-outline-secondary w-100" id="resetFilters">
                                     <i class="bi bi-arrow-clockwise me-2"></i>Reset Filters
@@ -170,7 +162,7 @@
 
             <!-- Add Transaction Modal -->
             <div class="modal fade" id="addTransactionModal" tabindex="-1">
-                <div class="modal-dialog">
+                <div class="modal-dialog modal-dialog-scrollable modal-lg">
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title">Add New Transaction</h5>
@@ -178,74 +170,102 @@
                         </div>
                         <div class="modal-body">
                             <form id="addTransactionForm">
-                                <div class="mb-3">
-                                    <label class="form-label">E-wallet Type</label>
-                                    <select class="form-select" name="e_wallet_type" required>
-                                        <option value="">Select Type</option>
-                                        <option value="GCash">GCash</option>
-                                        <option value="Maya">Maya</option>
-                                    </select>
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label">Reference Number</label>
-                                    <input type="text" class="form-control" name="reference_no">
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label">Amount</label>
-                                    <div class="input-group">
-                                        <span class="input-group-text">₱</span>
-                                        <input type="number" class="form-control" name="amount" step="0.01" min="0"
-                                            required>
-                                    </div>
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label">Transaction Fee</label>
-                                    <div class="input-group">
-                                        <span class="input-group-text">₱</span>
-                                        <input type="number" class="form-control" name="transaction_charge" step="0.01"
-                                            min="0" required>
-                                    </div>
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label">Transaction Fee thru</label>
-                                    <select class="form-select" name="transaction_fee_thru" required>
-                                        <option value="">Select Type</option>
-                                        <option value="GCash">GCash</option>
-                                        <option value="Maya">Maya</option>
-                                        <option value="Cash">Cash</option>
-                                    </select>
-                                </div>
-                                <!-- cash-in / cash-out radio button  -->
-                                <div class="mb-3">
-                                    <label class="form-label">Transaction Type: </label>
-
-                                    <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" name="transaction_type"
-                                            id="cash-in" value="Cash-in" required>
-                                        <label class="form-check-label" for="cash-in">
-                                            Cash In
-                                        </label>
+                                <div class="row g-3">
+                                    <!-- E-wallet Account -->
+                                    <div class="col-md-6">
+                                        <label class="form-label">E-wallet Account</label>
+                                        <select class="form-select" name="e_wallet_account" required>
+                                            <option value="">Select E-wallet Account</option>
+                                            <!-- fetch the e-wallets based on users branch_id -->
+                                        </select>
                                     </div>
 
-                                    <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" name="transaction_type"
-                                            id="cash-out" value="Cash-out" required>
-                                        <label class="form-check-label" for="cash-out">
-                                            Cash Out
-                                        </label>
+                                    <!-- Reference Number -->
+                                    <div class="col-md-6">
+                                        <label class="form-label">Reference Number</label>
+                                        <input type="text" class="form-control" name="reference_no">
                                     </div>
-                                </div>
 
+                                    <!-- Transaction Fee Thru -->
+                                    <div class="col-md-6">
+                                        <label class="form-label">Transaction Fee Thru</label>
+                                        <select class="form-select" name="transaction_fee_thru" required>
+                                            <option value="">Select Type</option>
+                                            <option value="GCash">GCash</option>
+                                            <option value="Maya">Maya</option>
+                                            <option value="Cash">Cash</option>
+                                        </select>
+                                    </div>
+
+                                    <!-- Transaction Type -->
+                                    <div class="col-md-6">
+                                        <label class="form-label d-block">Transaction Type</label>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="transaction_type"
+                                                id="cash-in" value="Cash-in" required>
+                                            <label class="form-check-label" for="cash-in">Cash In</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="transaction_type"
+                                                id="cash-out" value="Cash-out" required>
+                                            <label class="form-check-label" for="cash-out">Cash Out</label>
+                                        </div>
+                                    </div>
+
+                                    <!-- Amount -->
+                                    <div class="col-md-6">
+                                        <label class="form-label">Amount</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text">₱</span>
+                                            <input type="number" class="form-control" name="amount" step="0.01" min="0"
+                                                required>
+                                        </div>
+                                    </div>
+
+                                    <!-- Transaction Fee -->
+                                    <div class="col-md-6">
+                                        <label class="form-label">Transaction Fee</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text">₱</span>
+                                            <input type="number" class="form-control" name="transaction_charge"
+                                                step="0.01" min="0" required>
+                                        </div>
+                                    </div>
+
+                                    <!-- Tendered Amount -->
+                                    <div class="col-md-6">
+                                        <label class="form-label">Tendered Amount</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text">₱</span>
+                                            <input type="number" class="form-control" name="tendered_amount" step="0.01"
+                                                min="0" required>
+                                        </div>
+                                    </div>
+
+                                    <!-- Change -->
+                                    <div class="col-md-6">
+                                        <label class="form-label">Change</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text">₱</span>
+                                            <input type="number" class="form-control" name="change_amount" step="0.01"
+                                                min="0" readonly>
+                                        </div>
+                                    </div>
+
+
+
+                                </div>
                             </form>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                            <button type="submit" form="addTransactionForm" class="btn btn-primary">Save
-                                Transaction</button>
+                            <button type="submit" form="addTransactionForm" class="btn btn-primary">Save</button>
                         </div>
                     </div>
                 </div>
             </div>
+
+
 
 
             <!-- Add Transaction Confirmation Modal -->
@@ -268,6 +288,10 @@
                                         id="c_charge"></span></li>
                                 <!-- total -->
                                 <li class="list-group-item"><strong>Total:</strong> ₱<span id="c_total"></span></li>
+                                <li class="list-group-item"><strong>Tendered Amount:</strong> ₱<span
+                                        id="c_tendered"></span></li>
+                                <li class="list-group-item"><strong>Change:</strong> ₱<span id="c_change"></span></li>
+
                                 <li class="list-group-item"><strong>Transaction Fee thru:</strong> <span
                                         id="c_feeThru"></span></li>
                                 <li class="list-group-item"><strong>Transaction Type:</strong> <span
@@ -285,7 +309,7 @@
 
 
 
-            <!-- View Transaction Modal -->
+      
             <!-- View Transaction Modal -->
             <div class="modal fade" id="viewTransactionModal" tabindex="-1">
                 <div class="modal-dialog modal-dialog-centered">
@@ -303,8 +327,9 @@
                                 <li class="list-group-item"><strong>Type:</strong> <span id="viewEwallet"></span></li>
                                 <li class="list-group-item"><strong>Amount:</strong> ₱<span id="viewAmount"></span></li>
                                 <li class="list-group-item"><strong>Charge:</strong> ₱<span id="viewCharge"></span></li>
-                                <li class="list-group-item"><strong>Total:</strong> ₱<span id="viewTotal"></span></li>
-                                <li class="list-group-item"><strong>Payment Mode:</strong> <span
+
+                                <li class="list-group-item"><strong>Change:</strong> ₱<span id="c_change"></span></li>
+                                <li class="list-group-item"><strong>Payment Thru:</strong> <span
                                         id="viewPaymentMode"></span></li>
                             </ul>
 
@@ -343,187 +368,138 @@
     <?php include '../views/footer.php'; ?>
     <?php include '../views/scripts.php'; ?>
     <script>
-        function formatMoney(input) {
-            let value = input.value.replace(/,/g, "");
+        $(document).ready(function () {
 
-            if (value === "") {
-                input.dataset.raw = "";
-                return;
+            // Fetch e-wallet accounts for this branch and populate selector
+            function loadEwalletAccounts() {
+                $.ajax({
+                    url: "../api/fetch_e-wallets.php",
+                    dataType: "json",
+                    success: function (response) {
+                        const $selector = $('select[name="e_wallet_account"]');
+                        $selector.empty().append('<option value="">Select E-wallet Account</option>');
+                        if (response.data && response.data.length) {
+                            response.data.forEach(wallet => {
+                                $selector.append(`<option value="${wallet.id}" data-name="${wallet.account_name}">${wallet.account_name} (${wallet.account_number})</option>`);
+                            });
+                        }
+                    },
+                    error: function () {
+                        alert("Failed to load e-wallet accounts.");
+                    }
+                });
             }
 
-            // Save raw value for backend
-            input.dataset.raw = value;
+            loadEwalletAccounts(); // populate on modal open
 
-            // Format with commas
-            input.value = Number(value).toLocaleString("en-US", {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2
+            // Auto-adjust Transaction Fee Thru options based on selected wallet
+            $('select[name="e_wallet_account"]').on('change', function () {
+                const selectedOption = $(this).find('option:selected');
+                const walletName = selectedOption.data('name');
+                const $feeThru = $('select[name="transaction_fee_thru"]');
+                $feeThru.empty().append('<option value="">Select Type</option>');
+
+                if (!walletName) return;
+
+                if (walletName.toLowerCase() === 'gcash') {
+                    $feeThru.append('<option value="GCash">GCash</option>');
+                    $feeThru.append('<option value="Cash">Cash</option>');
+                } else if (walletName.toLowerCase() === 'maya') {
+                    $feeThru.append('<option value="Maya">Maya</option>');
+                    $feeThru.append('<option value="Cash">Cash</option>');
+                } else {
+                    $feeThru.append('<option value="Cash">Cash</option>');
+                }
+
+                $feeThru.val(''); // reset selection
             });
-        }
 
-        document.addEventListener("DOMContentLoaded", () => {
-            const amountField = document.querySelector("input[name='amount']");
-            const chargeField = document.querySelector("input[name='transaction_charge']");
+            // Function to calculate change based on transaction type
+            function calculateChange() {
+                const amount = parseFloat($('input[name="amount"]').val()) || 0;
+                const charge = parseFloat($('input[name="transaction_charge"]').val()) || 0;
+                const tendered = parseFloat($('input[name="tendered_amount"]').val()) || 0;
+                const transType = $('input[name="transaction_type"]:checked').val();
 
-            // Switch to text to allow commas
-            amountField.type = "text";
-            chargeField.type = "text";
+                let change = 0;
 
-            amountField.addEventListener("input", () => formatMoney(amountField));
-            chargeField.addEventListener("input", () => formatMoney(chargeField));
+                if (transType === "Cash-in") {
+                    // Cash-in: total = amount + transaction fee
+                    const total = amount + charge;
+                    change = tendered - total;
+                } else if (transType === "Cash-out") {
+                    // Cash-out: customer only pays transaction fee
+                    change = tendered - charge;
+                }
 
-            // Before submitting: replace displayed value with raw number
-            document.getElementById("addTransactionForm").addEventListener("submit", (e) => {
-                amountField.value = amountField.dataset.raw || "";
-                chargeField.value = chargeField.dataset.raw || "";
+                $('input[name="change_amount"]').val(change >= 0 ? change.toFixed(2) : 0);
+            }
+
+            // Trigger calculation when amount, charge, tendered amount, or transaction type changes
+            $('input[name="amount"], input[name="transaction_charge"], input[name="tendered_amount"], input[name="transaction_type"]').on('input change', calculateChange);
+
+            // Show confirmation modal on form submit
+            $('#addTransactionForm').on('submit', function (e) {
+                e.preventDefault();
+
+                // Get form values
+                const walletName = $('select[name="e_wallet_account"] option:selected').data('name') || '';
+                const referenceNo = $('input[name="reference_no"]').val();
+                const amount = parseFloat($('input[name="amount"]').val() || 0).toFixed(2);
+                const charge = parseFloat($('input[name="transaction_charge"]').val() || 0).toFixed(2);
+                const tendered = parseFloat($('input[name="tendered_amount"]').val() || 0).toFixed(2);
+                const change = parseFloat($('input[name="change_amount"]').val() || 0).toFixed(2);
+                const total = (parseFloat(amount) + parseFloat(charge)).toFixed(2);
+                const feeThru = $('select[name="transaction_fee_thru"]').val();
+                const transType = $('input[name="transaction_type"]:checked').val();
+
+                // Populate confirmation modal
+                $('#c_eWallet').text(walletName);
+                $('#c_reference').text(referenceNo);
+                $('#c_amount').text(amount);
+                $('#c_charge').text(charge);
+                $('#c_total').text(total);
+                $('#c_feeThru').text(feeThru);
+                $('#c_transType').text(transType);
+                $('#c_tendered').text(tendered);
+                $('#c_change').text(change);
+
+                // close add modal
+                $('#addTransactionModal').modal('hide');
+                // Show modal
+                $('#confirmAddModal').modal('show');
             });
+
+
+            // Final confirm save transaction
+            $('#confirmAddBtn').on('click', function () {
+                const formData = $('#addTransactionForm').serialize();
+                $.ajax({
+                    url: "../processes/add_transaction.php",
+                    type: "POST",
+                    data: formData,
+                    dataType: "json",
+                    success: function (response) {
+                        if (response.success) {
+                            $('#confirmAddModal, #addTransactionModal').modal('hide');
+                            alert("Transaction saved successfully.");
+                            // Optionally reload table or update dashboard
+                        } else {
+                            alert(response.message || "Failed to save transaction.");
+                        }
+                    },
+                    error: function () {
+                        alert("An error occurred while saving transaction.");
+                    }
+                });
+            });
+
         });
+
     </script>
 
 
     <script src="../assets/js/script.js"></script>
-    <script>
-        // =====================
-        // ADD TRANSACTION CONFIRMATION
-        // =====================
-
-        // Intercept form submit
-        document.getElementById("addTransactionForm").addEventListener("submit", function (e) {
-            e.preventDefault(); // prevent auto submit
-            let confirmModal = new bootstrap.Modal(document.getElementById("confirmAddModal"));
-            confirmModal.show();
-        });
-
-        // If user confirms
-        document.getElementById("confirmAddBtn").addEventListener("click", function () {
-            document.getElementById("addTransactionForm").submit();  // now submit
-        });
-
-
-        // =====================
-        // VIEW TRANSACTION
-        // =====================
-        document.querySelectorAll(".view-btn").forEach(btn => {
-            btn.addEventListener("click", function () {
-
-                let row = this.closest("tr");
-                document.getElementById("viewDate").innerText = row.children[1].innerText;
-                document.getElementById("viewRef").innerText = row.children[2].innerText;
-                document.getElementById("viewEwallet").innerText = row.children[3].innerText;
-                document.getElementById("viewAmount").innerText = row.children[4].innerText.replace("₱", "");
-                document.getElementById("viewCharge").innerText = row.children[5].innerText.replace("₱", "");
-                document.getElementById("viewTotal").innerText = row.children[6].innerText.replace("₱", "");
-                document.getElementById("viewPaymentMode").innerText = row.children[7].innerText;
-
-                let viewModal = new bootstrap.Modal(document.getElementById("viewTransactionModal"));
-                viewModal.show();
-            });
-        });
-
-
-        // =====================
-        // DELETE CONFIRMATION
-        // =====================
-        document.querySelectorAll(".delete-btn").forEach(btn => {
-            btn.addEventListener("click", function () {
-                document.getElementById("deleteTransactionId").value = this.dataset.id;
-                let deleteModal = new bootstrap.Modal(document.getElementById("deleteModal"));
-                deleteModal.show();
-            });
-        });
-
-        document.getElementById("confirmDelete").addEventListener("click", function () {
-            let id = document.getElementById("deleteTransactionId").value;
-            alert("Deleting transaction ID: " + id);
-
-            // TODO: AJAX or form submit here to delete record
-        });
-
-
-
-
-        // =====================
-        // ADD TRANSACTION CONFIRMATION + HIDE ADD FORM
-        // =====================
-
-        const addModal = new bootstrap.Modal(document.getElementById("addTransactionModal"));
-        const confirmModal = new bootstrap.Modal(document.getElementById("confirmAddModal"));
-
-        document.getElementById("addTransactionForm").addEventListener("submit", function (e) {
-            e.preventDefault(); // stop real submission
-
-            // Get form values
-            let ew = document.querySelector("[name='e_wallet_type']").value;
-            let ref = document.querySelector("[name='reference_no']").value;
-            let amt = document.querySelector("[name='amount']").value;
-            let charge = document.querySelector("[name='transaction_charge']").value;
-            let thru = document.querySelector("[name='transaction_fee_thru']").value;
-            let type = document.querySelector("input[name='transaction_type']:checked")?.value;
-
-            // Fill confirmation modal values
-            const form = new FormData(this);
-
-            document.getElementById("c_eWallet").innerText = form.get("e_wallet_type");
-            document.getElementById("c_reference").innerText = form.get("reference_no");
-            const amountRaw = form.get("amount").replace(/,/g, "");
-            const chargeRaw = form.get("transaction_charge").replace(/,/g, "");
-
-            document.getElementById("c_amount").innerText =
-                Number(amountRaw).toLocaleString("en-US", { minimumFractionDigits: 2 });
-
-            document.getElementById("c_charge").innerText =
-                Number(chargeRaw).toLocaleString("en-US", { minimumFractionDigits: 2 });
-
-                // total
-            const totalRaw = parseFloat(amountRaw) + parseFloat(chargeRaw);
-            document.getElementById("c_total").innerText =
-                Number(totalRaw).toLocaleString("en-US", { minimumFractionDigits: 2 });
-            document.getElementById("c_feeThru").innerText = form.get("transaction_fee_thru");
-            document.getElementById("c_transType").innerText = form.get("transaction_type");
-
-
-
-
-
-            // Hide add form modal → show confirmation modal
-            addModal.hide();
-            setTimeout(() => confirmModal.show(), 300); // slight delay for smooth animation
-        });
-
-        // Final confirmation → submit form
-        document.getElementById("confirmAddBtn").addEventListener("click", function () {
-            document.getElementById("addTransactionForm").submit();
-        });
-
-        // User clicks "Cancel" inside confirmation → go back to form
-        document.querySelector("#confirmAddModal .btn-secondary").addEventListener("click", function () {
-            confirmModal.hide();
-            setTimeout(() => addModal.show(), 300);
-        });
-
-
-
-
-
-
-        // Initialize DataTable with search and auto-compute totals
-        $(document).ready(function () {
-            var table = $('#transactionsTable').DataTable({
-                // DataTable already includes search functionality by default
-                paging: true,
-                searching: true, // This enables the search box
-                ordering: true,
-                info: true,
-                // lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
-                // // buttons: ['copy', 'csv', 'excel', 'pdf', 'print'],
-                // columnDefs: [
-                //     { targets: [4, 5, 6], className: 'dt-body-right' },
-                //     { targets: [8], orderable: false }
-                // ]
-            });
-        });
-
-    </script>
 
 
 </body>

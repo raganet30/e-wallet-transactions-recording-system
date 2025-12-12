@@ -119,3 +119,19 @@ function fetchCurrentBranchCoh($branchId) {
 
     return 0; // fallback
 }
+
+// get all branches
+function getAllBranches() {
+    global $con;
+
+    $branches = [];
+    $stmt = $con->prepare("SELECT id, branch_name FROM branches ORDER BY branch_name ASC");
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    while ($row = $result->fetch_assoc()) {
+        $branches[] = $row;
+    }
+
+    return $branches;
+}
