@@ -2,6 +2,7 @@
 
 <!DOCTYPE html>
 <html lang="en">
+<?php include '../views/head.php'; ?>
 
 <!-- Bootstrap 5 CSS -->
 <link rel="stylesheet" href="../assets/css/bootstrap.min.css">

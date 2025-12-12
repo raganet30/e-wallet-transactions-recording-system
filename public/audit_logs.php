@@ -3,6 +3,7 @@
 ?>
 <!DOCTYPE html>
 <html lang="en">
+<?php include '../views/head.php'; ?>
 
 <body>
     <?php include '../views/sidebar.php'; ?>
@@ -261,12 +262,9 @@
             </div>
         </div>
     </div>
+    <?php include '../views/scripts.php'; ?>
 
-    
-
-
-    <script src="../assets/js/script.js"></script>
-    <?php include '../views/footer.php'; ?>
+        <?php include '../views/footer.php'; ?>
 </body>
 
 </html>

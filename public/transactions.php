@@ -3,6 +3,7 @@
 ?>
 <!DOCTYPE html>
 <html lang="en">
+<?php include '../views/head.php'; ?>
 
 <body>
     <?php include '../views/sidebar.php'; ?>
@@ -340,7 +341,7 @@
     </div>
     </div>
     <?php include '../views/footer.php'; ?>
-
+    <?php include '../views/scripts.php'; ?>
     <script>
         function formatMoney(input) {
             let value = input.value.replace(/,/g, "");

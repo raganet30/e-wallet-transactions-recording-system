@@ -1,8 +1,9 @@
 <?php
-    require '../config/session_checker.php';
+require '../config/session_checker.php';
 ?>
 <!DOCTYPE html>
 <html lang="en">
+<?php include '../views/head.php'; ?>
 
 <body>
     <?php include '../views/sidebar.php'; ?>
@@ -11,6 +12,7 @@
     <?php include '../views/header.php'; ?>
 
     <div class="content" id="mainContent">
+        <div id="globalAlertArea"></div>
         <div class="container-fluid">
             <h1 class="mb-4">Cash On Hand</h1>
 
@@ -26,27 +28,30 @@
                         </div>
                         <div class="card-body text-center">
                             <div class="cash-amount mb-3" id="currentCashAmount">
-                                ₱15,250.00
+                                <!-- php code to fetch current branch coh from branches.coh-->
+                                <?php
+                                echo '₱' . number_format(fetchCurrentBranchCoh($_SESSION['branch_id']), 2);
+                                ?>
                             </div>
 
                             <div class="cash-info mb-4">
                                 <div class="row">
                                     <div class="col-6 text-start">
                                         <small class="text-muted d-block">Last Updated</small>
-                                        <div class="fw-medium" id="lastUpdatedDate">December 5, 2023</div>
+                                        <div class="fw-medium" id="lastUpdatedDate">-</div>
+                                        <small>
+                                            <i class="bi bi-info-circle me-1"></i>
+                                            <span id="lastUpdatedTime">-</span>
+                                        </small>
                                     </div>
                                     <div class="col-6 text-end">
                                         <small class="text-muted d-block">Updated By</small>
-                                        <div class="fw-medium" id="updatedBy">Admin User</div>
+                                        <div class="fw-medium" id="updatedBy">-</div>
                                     </div>
                                 </div>
-                                <div class="mt-2 text-muted">
-                                    <small>
-                                        <i class="bi bi-info-circle me-1"></i>
-                                        <span id="lastUpdatedTime">2:45 PM</span>
-                                    </small>
-                                </div>
+
                             </div>
+
 
                             <button class="btn btn-primary edit-btn" id="editCashBtn">
                                 <i class="bi bi-pencil-square me-1"></i> Edit Cash
@@ -58,24 +63,7 @@
                 <!-- Quick Stats -->
                 <div class="col-lg-4 col-xl-6 mt-4 mt-lg-0">
                     <div class="row">
-                        <!-- <div class="col-md-6 mb-3">
-                            <div class="card h-100">
-                                <div class="card-body text-center">
-                                    <div class="text-muted mb-2">Today's Change</div>
-                                    <div class="h4 text-success">+₱1,250.00</div>
-                                    <small class="text-muted">From yesterday</small>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <div class="card h-100">
-                                <div class="card-body text-center">
-                                    <div class="text-muted mb-2">Weekly Average</div>
-                                    <div class="h4 text-info">₱14,500.00</div>
-                                    <small class="text-muted">Last 7 days</small>
-                                </div>
-                            </div>
-                        </div> -->
+
                         <div class="col-12">
                             <div class="card">
                                 <div class="card-body">
@@ -83,30 +71,15 @@
                                         <i class="bi bi-clock-history me-2"></i>Recent Updates
                                     </h6>
                                     <div class="list-group list-group-flush" id="updateHistory">
-                                        <div class="list-group-item border-0 px-0 py-2">
-                                            <div class="d-flex w-100 justify-content-between">
-                                                <small>Adjusted to ₱15,250.00</small>
-                                                <small class="text-muted">Today, 2:45 PM</small>
-                                            </div>
-                                        </div>
-                                        <div class="list-group-item border-0 px-0 py-2">
-                                            <div class="d-flex w-100 justify-content-between">
-                                                <small>Adjusted to ₱14,000.00</small>
-                                                <small class="text-muted">Dec 4, 10:30 AM</small>
-                                            </div>
-                                        </div>
-                                        <div class="list-group-item border-0 px-0 py-2">
-                                            <div class="d-flex w-100 justify-content-between">
-                                                <small>Cash deposit ₱2,500.00</small>
-                                                <small class="text-muted">Dec 3, 3:15 PM</small>
-                                            </div>
-                                        </div>
+                                        <!-- fetch recent coh logs -->
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
+
+
             </div>
 
             <!-- Update History (Optional Expanded View) -->
@@ -136,34 +109,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <td>1</td>
-                                            <td>Dec 5, 2023 2:45 PM</td>
-                                            <td>Cash On Hand Ajustment</td>
-                                            <td>₱14,000.00</td>
-                                            <td>₱15,250.00</td>
-                                            <td>Admin User</td>
-                                            <td>Cash adjustment for reconciliation</td>
-                                        </tr>
-                                        <tr>
-                                            <td>2</td>
-                                            <td>Dec 4, 2023 10:30 AM</td>
-                                            <td>Cash On Hand Ajustment</td>
-                                            <td>₱13,500.00</td>
-                                            <td>₱14,000.00</td>
-                                            <td>Admin User</td>
-                                            <td>Daily cash count adjustment</td>
-                                        </tr>
-                                        <tr>
-                                            <td>3</td>
-                                            <td>Dec 3, 2023 3:15 PM</td>
-                                            <td>Cash Deposit</td>
-                                            <td>₱11,000.00</td>
-                                            <td>₱13,500.00</td>
-                                            <td>Admin User</td>
-                                            <td>Added cash from sales</td>
-                                        </tr>
-
+                                        <!-- populate coh logs -->
                                     </tbody>
                                 </table>
                             </div>
@@ -171,8 +117,10 @@
                     </div>
                 </div>
             </div>
+
         </div>
     </div>
+
     <!-- Edit Cash Modal -->
     <div class="modal fade" id="editCashModal" tabindex="-1" aria-labelledby="editCashModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
@@ -185,7 +133,7 @@
                     <form id="editCashForm">
                         <div class="mb-4 text-center">
                             <div class="text-muted mb-2">Current Amount</div>
-                            <div class="h3 text-primary" id="currentAmountDisplay">₱15,250.00</div>
+                            <div class="h3 text-primary" id="currentAmountDisplay"></div>
                         </div>
 
                         <div class="mb-3">
@@ -208,7 +156,7 @@
                                 <option value="cash_deposit">Cash Deposit</option>
                                 <option value="cash_withdrawal">Cash Withdrawal</option>
                                 <option value="error_correction">Error Correction</option>
-                                <option value="petty_cash">Petty Cash Replenishment</option>
+                                <option value="replenishment">Replenishment</option>
                                 <option value="other">Other</option>
                             </select>
                         </div>
@@ -219,13 +167,6 @@
                                 placeholder="Add any additional notes..."></textarea>
                         </div>
 
-                        <div class="mb-3">
-                            <label for="updateDate" class="form-label">Update Date & Time</label>
-                            <div class="input-group">
-                                <input type="datetime-local" class="form-control" id="updateDate"
-                                    value="<?php echo date('Y-m-d\TH:i'); ?>">
-                            </div>
-                        </div>
                     </form>
                 </div>
                 <div class="modal-footer">
@@ -237,134 +178,150 @@
     </div>
 
 
-    <script src="../assets/js/script.js"></script>
+    <?php include '../views/scripts.php'; ?>
     <?php include '../views/footer.php'; ?>
     <script>
-        $(document).ready(function () {
-            // Set current date and time
-            function updateDateTime() {
-                const now = new Date();
-                const options = {
-                    weekday: 'long',
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric',
-                    hour: '2-digit',
-                    minute: '2-digit'
-                };
-                const formattedDate = now.toLocaleDateString('en-US', options);
-                $('#lastUpdatedDate').text(formattedDate.split(',')[0] + ',' + formattedDate.split(',')[1]);
-                $('#lastUpdatedTime').text(now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }));
-            }
+     $(document).ready(function () {
 
-            // Initialize with current date/time
-            updateDateTime();
+    // --- Initialize COH DataTable ---
+    const cohTable = $("#historyDetails table").DataTable({
+        ajax: { url: "../api/fetch_coh_logs.php", dataSrc: "data" },
+        columns: [
+            { data: "no" }, { data: "datetime" }, { data: "type" },
+            { data: "previous_balance" }, { data: "new_balance" },
+            { data: "updated_by" }, { data: "remarks" }
+        ],
+        order: [[1, "desc"]],
+        pageLength: 10,
+        lengthChange: false,
+        responsive: true,
+        autoWidth: false,
+        scrollX: true
+    });
 
-            // Edit Cash Button Handler
-            $('#editCashBtn').on('click', function () {
-                const currentAmount = $('#currentCashAmount').text().replace('₱', '').replace(/,/g, '');
-                $('#currentAmountDisplay').text('₱' + parseFloat(currentAmount).toLocaleString('en-US', {
-                    minimumFractionDigits: 2,
-                    maximumFractionDigits: 2
-                }));
-                $('#newAmount').val(currentAmount);
-                $('#editCashModal').modal('show');
-            });
-
-            // Save Cash Handler
-            $('#saveCashBtn').on('click', function () {
-                const newAmount = parseFloat($('#newAmount').val()).toFixed(2);
-                const currentAmount = parseFloat($('#currentAmountDisplay').text().replace('₱', '').replace(/,/g, '')).toFixed(2);
-                const reason = $('#changeReason').val();
-                const remarks = $('#remarks').val();
-
-                if (!newAmount || newAmount < 0) {
-                    alert('Please enter a valid amount');
-                    return;
-                }
-
-                if (!reason) {
-                    alert('Please select a reason for the change');
-                    return;
-                }
-
-                // Calculate change
-                const change = parseFloat(newAmount) - parseFloat(currentAmount);
-
-                // Update the display
-                $('#currentCashAmount').text('₱' + parseFloat(newAmount).toLocaleString('en-US', {
-                    minimumFractionDigits: 2,
-                    maximumFractionDigits: 2
-                }));
-
-                // Update date and time
-                updateDateTime();
-
-                // Update history in the quick stats
-                const now = new Date();
-                const timeString = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
-                const dateString = now.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-
-                // Add to recent updates
-                $('#updateHistory').prepend(`
-                    <div class="list-group-item border-0 px-0 py-2">
-                        <div class="d-flex w-100 justify-content-between">
-                            <small>Adjusted to ₱${parseFloat(newAmount).toLocaleString('en-US', { minimumFractionDigits: 2 })}</small>
-                            <small class="text-muted">Today, ${timeString}</small>
-                        </div>
-                    </div>
-                `);
-
-                // Add to detailed history table
-                $('#historyDetails table tbody').prepend(`
-                    <tr>
-                        <td>${dateString}, ${now.getFullYear()} ${timeString}</td>
-                        <td>₱${parseFloat(currentAmount).toLocaleString('en-US', { minimumFractionDigits: 2 })}</td>
-                        <td>₱${parseFloat(newAmount).toLocaleString('en-US', { minimumFractionDigits: 2 })}</td>
-                        <td><span class="${change >= 0 ? 'text-success' : 'text-danger'}">${change >= 0 ? '+' : ''}₱${Math.abs(change).toLocaleString('en-US', { minimumFractionDigits: 2 })}</span></td>
-                        <td>${$('#updatedBy').text()}</td>
-                        <td>${remarks || reason.replace('_', ' ')}</td>
-                    </tr>
-                `);
-
-                // Update today's change
-                const todayChangeElement = $('.h4.text-success');
-                todayChangeElement.text((change >= 0 ? '+' : '-') + '₱' + Math.abs(change).toLocaleString('en-US', { minimumFractionDigits: 2 }));
-                if (change < 0) {
-                    todayChangeElement.removeClass('text-success').addClass('text-danger');
-                }
-
-                // Close modal and reset form
-                $('#editCashModal').modal('hide');
-                $('#editCashForm')[0].reset();
-
-                // Show success message
-                alert('Cash on hand updated successfully!');
-            });
-
-            // Toggle History Details
-            let historyExpanded = false;
-            $('#toggleHistory').on('click', function () {
-                if (historyExpanded) {
-                    $('#historyDetails').slideUp();
-                    $(this).html('<i class="bi bi-chevron-down"></i> Expand');
-                    $(this).removeClass('btn-secondary').addClass('btn-outline-secondary');
-                } else {
-                    $('#historyDetails').slideDown();
-                    $(this).html('<i class="bi bi-chevron-up"></i> Collapse');
-                    $(this).removeClass('btn-outline-secondary').addClass('btn-secondary');
-                }
-                historyExpanded = !historyExpanded;
-            });
-
-            // Format currency input
-            $('#newAmount').on('input', function () {
-                let value = $(this).val();
-                if (value && !isNaN(value)) {
-                    $(this).val(parseFloat(value).toFixed(2));
-                }
-            });
+    // --- Toggle expand ---
+    $("#toggleHistory").click(function() {
+        $("#historyDetails").slideToggle(400, function() {
+            cohTable.columns.adjust().draw();
         });
+        const icon = $(this).find("i");
+        if ($("#historyDetails").is(":visible")) {
+            icon.removeClass("bi-chevron-down").addClass("bi-chevron-up");
+            $(this).contents().filter(function(){ return this.nodeType === 3; }).first().replaceWith(" Collapse");
+        } else {
+            icon.removeClass("bi-chevron-up").addClass("bi-chevron-down");
+            $(this).contents().filter(function(){ return this.nodeType === 3; }).first().replaceWith(" Expand");
+        }
+    });
+
+    // --- Open Edit Cash Modal ---
+    $("#editCashBtn").click(function () {
+        $("#editCashForm")[0].reset();
+        $.ajax({
+            url: "../api/fetch_current_coh.php",
+            type: "GET",
+            dataType: "json",
+            success: function (response) {
+                if (response.success) {
+                    let currentCoh = parseFloat(response.current_coh) || 0;
+                    $("#currentAmountDisplay").text("₱" + currentCoh.toLocaleString("en-PH", { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
+                    $("#editCashModal").modal("show");
+                } else {
+                    alert(response.message || "Failed to fetch current COH.");
+                }
+            },
+            error: function () { alert("An error occurred while fetching current COH."); }
+        });
+    });
+
+    // --- Save Cash On Hand ---
+    $("#saveCashBtn").off('click').on('click', function () { // .off() ensures no duplicate bindings
+        const newAmount = parseFloat($("#newAmount").val());
+        const reason = $("#changeReason").val();
+        const remarks = $("#remarks").val();
+
+        if (!newAmount || !reason) {
+            alert("Please complete all required fields.");
+            return;
+        }
+
+        $.ajax({
+            url: "../processes/edit_current_coh.php",
+            type: "POST",
+            data: { newAmount, reason, remarks },
+            dataType: "json",
+            success: function (response) {
+                if (response.success) {
+                    $("#editCashModal").modal("hide");
+                   location.reload(); // Reload to reflect changes
+                } else {
+                    alert(response.message || "Failed to update Cash On Hand.");
+                }
+            },
+            error: function () { alert("An error occurred while saving."); }
+        });
+    });
+
+    // --- Last COH info ---
+    function loadLastCohInfo() {
+        $.ajax({
+            url: "../api/fetch_last_coh_log.php",
+            type: "GET",
+            dataType: "json",
+            success: function (response) {
+                if (response.success) {
+                    $("#lastUpdatedDate").text(response.date);
+                    $("#lastUpdatedTime").text(response.time);
+                    $("#updatedBy").text(response.updated_by);
+                } else {
+                    $("#lastUpdatedDate, #lastUpdatedTime, #updatedBy").text("-");
+                }
+            },
+            error: function () {
+                $("#lastUpdatedDate, #lastUpdatedTime, #updatedBy").text("-");
+            }
+        });
+    }
+
+    // --- Recent updates ---
+    function loadRecentUpdates() {
+        $.ajax({
+            url: "../api/fetch_recent_coh_logs.php",
+            type: "GET",
+            dataType: "json",
+            success: function (response) {
+                const $updateHistory = $("#updateHistory");
+                $updateHistory.empty();
+                if (response.success && response.logs.length > 0) {
+                    response.logs.forEach(log => {
+                        $updateHistory.append(`
+                            <div class="list-group-item border-0 px-0 py-2">
+                                <div class="d-flex w-100 justify-content-between mb-1">
+                                    <small>${log.description}</small>
+                                    <small class="text-muted">${log.datetime}</small>
+                                </div>
+                                <div class="text-muted small">
+                                    <i class="bi bi-person-circle me-1"></i>${log.updated_by}
+                                </div>
+                            </div>
+                        `);
+                    });
+                } else {
+                    $updateHistory.append(`<div class="list-group-item border-0 px-0 py-2"><small class="text-muted">No recent updates.</small></div>`);
+                }
+            },
+            error: function () {
+                $("#updateHistory").html(`<div class="list-group-item border-0 px-0 py-2"><small class="text-muted">Failed to load updates.</small></div>`);
+            }
+        });
+    }
+
+    // Call on page load
+    loadLastCohInfo();
+    loadRecentUpdates();
+
+});
+
     </script>
 
 </body>

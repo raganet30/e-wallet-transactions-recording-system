@@ -13,7 +13,7 @@
 
     <div class="content" id="mainContent">
         <div class="container-fluid">
-            <h1 class="mb-4">Settings</h1>
+            <h1 class="mb-4">Super Admin Dashboard</h1>
 
     
            

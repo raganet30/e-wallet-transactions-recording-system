@@ -2,7 +2,8 @@
 require '../config/helpers.php';
 
 session_start();
-    // addAuditLog(null, "User logged out", "logout");
+addLoginLogs('logout');
+
 session_unset();
 session_destroy();
 

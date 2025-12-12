@@ -1,8 +1,9 @@
 <?php
-    require '../config/session_checker.php';
+require '../config/session_checker.php';
 ?>
 <!DOCTYPE html>
 <html lang="en">
+<?php include '../views/head.php'; ?>
 
 <body>
     <?php include '../views/sidebar.php'; ?>
@@ -11,11 +12,12 @@
     <?php include '../views/header.php'; ?>
 
     <div class="content" id="mainContent">
+        <div id="globalAlertArea"></div>
         <h1 class="mb-4">Branches</h1>
 
         <!-- Add Branch Button -->
         <div class="mb-3 text-end">
-           
+
             <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addBranchModal">
                 <i class="bi bi-plus-circle me-2"></i>Add New Branch
             </button>
@@ -38,41 +40,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>1</td>
-                            <td>Main Branch</td>
-                            <td>Calbayog City</td>
-                            <td>₱10,000.00</td>
-                            <td><span class="badge bg-success">Active</span></td>
-                            <td>2025-12-05</td>
-                            <td>
-                                <button class="btn btn-sm btn-warning edit-branch" data-id="1" data-name="Main Branch"
-                                    data-status="Active">
-                                    <i class="bi bi-pencil-square"></i>
-                                </button>
-                                <button class="btn btn-sm btn-danger delete-branch" data-id="1">
-                                    <i class="bi bi-trash"></i>
-                                </button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>2</td>
-                            <td>2nd Branch</td>
-                            <td>Catbalogan City</td>
-                            <td>₱20,000.00</td>
-                            <td><span class="badge bg-success">Active</span></td>
-                            <td>2025-12-05</td>
-                            <td>
-                                <button class="btn btn-sm btn-warning edit-branch" data-id="1" data-name="Main Branch"
-                                    data-status="Active">
-                                    <i class="bi bi-pencil-square"></i>
-                                </button>
-                                <button class="btn btn-sm btn-danger delete-branch" data-id="1">
-                                    <i class="bi bi-trash"></i>
-                                </button>
-                            </td>
-                        </tr>
-
+                        <!-- Populate by AJAX -->
                     </tbody>
                 </table>
             </div>
@@ -102,18 +70,20 @@
                     </div>
 
                     <!-- Current COH -->
-                      <div class="mb-3">
+                    <div class="mb-3">
                         <label class="form-label">Current COH</label>
                         <input type="number" class="form-control" name="current_coh" required>
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label">Status</label>
-                        <select class="form-select" name="branch_status" required>
-                            <option value="Active">Active</option>
-                            <option value="Inactive">Inactive</option>
-                        </select>
+                        <label class="form-label">Status</label><br>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" name="branch_status" id="addStatusToggle"
+                                checked>
+                            <label class="form-check-label" for="addStatusToggle">Active</label>
+                        </div>
                     </div>
+
                 </div>
 
                 <div class="modal-footer">
@@ -123,6 +93,9 @@
             </form>
         </div>
     </div>
+
+
+
     <!-- Edit Branch Modal -->
     <div class="modal fade" id="editBranchModal" tabindex="-1">
         <div class="modal-dialog">
@@ -139,26 +112,27 @@
                         <label class="form-label">Branch Name</label>
                         <input type="text" class="form-control" name="edit_branch_name" required>
                     </div>
-                     <!-- Address -->
+                    <!-- Address -->
                     <div class="mb-3">
                         <label class="form-label">Address</label>
                         <input type="text" class="form-control" name="edit_branch_address" required>
                     </div>
 
                     <!-- Current COH -->
-                      <div class="mb-3">
+                    <div class="mb-3">
                         <label class="form-label">Current COH</label>
                         <input type="number" class="form-control" name="edit_current_coh" required>
                     </div>
 
-
                     <div class="mb-3">
-                        <label class="form-label">Status</label>
-                        <select class="form-select" name="edit_branch_status" required>
-                            <option value="Active">Active</option>
-                            <option value="Inactive">Inactive</option>
-                        </select>
+                        <label class="form-label">Status</label><br>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" name="edit_branch_status"
+                                id="editStatusToggle">
+                            <label class="form-check-label" for="editStatusToggle">Active</label>
+                        </div>
                     </div>
+
                 </div>
 
                 <div class="modal-footer">
@@ -169,29 +143,209 @@
         </div>
     </div>
 
+
+
+    <?php include '../views/scripts.php'; ?>
+
     <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            // Initialize DataTable
-            let table = new DataTable("#branchesTable");
+        // populate branches table
+        $(document).ready(function () {
+            $('#branchesTable').DataTable({
+                processing: true,
+                serverSide: false, // set to true if your fetch_branch.php supports server-side processing
+                ajax: {
+                    url: '../api/fetch_branches.php',
+                    type: 'GET',
+                    dataSrc: 'data' // your JSON key
+                },
+                columns: [
+                    {
+                        data: null,
+                        render: function (data, type, row, meta) {
+                            return meta.row + 1; // Auto numbering
+                        }
+                    },
+                    { data: 'branch_name' },
+                    { data: 'address' },
+                    {
+                        data: 'coh',
+                        render: function (data) {
+                            return '₱' + parseFloat(data).toLocaleString();
+                        }
+                    },
+                    {
+                        data: 'status',
+                        render: function (data) {
+                            let label = (data == 1) ? "Active" : "Inactive";
+                            let badge = (data == 1) ? "bg-success" : "bg-danger";
 
-            // Edit button click
-            document.addEventListener("click", function (e) {
-                if (e.target.classList.contains("edit-branch")) {
-                    let id = e.target.dataset.id;
-                    let name = e.target.dataset.name;
-                    let status = e.target.dataset.status;
+                            return `<span class="badge ${badge}">${label}</span>`;
+                        }
+                    },
+                    { data: 'date_created' },
+                    {
+                        data: null,
+                        render: function (data) {
+                            return `
+                      <button class="btn btn-sm btn-warning edit-branch"
+                                data-id="${data.id}"
+                                data-name="${data.branch_name}"
+                                data-address="${data.address}"
+                                data-coh="${data.coh}"
+                                data-status="${data.status}">
+                            <i class="bi bi-pencil-square"></i>
+                        </button>
+                    `;
+                        }
+                    }
+                ]
+            });
 
-                    document.querySelector("[name='branch_id']").value = id;
-                    document.querySelector("[name='edit_branch_name']").value = name;
-                    document.querySelector("[name='edit_branch_status']").value = status;
+            // optional: click events
+            $(document).on('click', '.edit-branch', function () {
+                let id = $(this).data('id');
+                let name = $(this).data('name');
+                let status = $(this).data('status');
+                console.log("Edit branch", id, name, status);
+                // open modal here...
+            });
 
-                    new bootstrap.Modal(document.getElementById("editBranchModal")).show();
+            $(document).on('click', '.delete-branch', function () {
+                let id = $(this).data('id');
+                console.log("Delete branch", id);
+                // delete confirmation here...
+            });
+        });
+
+
+        // add new branch 
+        // ADD BRANCH
+        $("#addBranchModal form").on("submit", function (e) {
+            e.preventDefault();
+
+            // Convert toggle to text
+            let isActive = $("#addStatusToggle").is(":checked") ? "Active" : "Inactive";
+            let form = new FormData(this);
+            form.set("branch_status", isActive);
+
+            $.ajax({
+                url: "../processes/add_branch.php",
+                type: "POST",
+                data: form,
+                processData: false,
+                contentType: false,
+
+                success: function (response) {
+                    if (response.success) {
+
+                        $("#addBranchModal").modal("hide");
+                        $("#addBranchModal form")[0].reset();
+
+                        $('#branchesTable').DataTable().ajax.reload(null, false);
+
+                        // Show global alert
+                        let alertHtml = `
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        ${response.message || "Branch added successfully."}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                `;
+                        $("#globalAlertArea").html(alertHtml);
+
+                        setTimeout(() => $(".alert").alert('close'), 3000);
+
+                    } else {
+                        alert(response.message || "Failed to add branch.");
+                    }
+                },
+
+                error: function () {
+                    alert("An error occurred while saving the branch.");
                 }
             });
         });
+
+
+        // edit branch
+        $(document).ready(function () {
+
+            // OPEN EDIT MODAL + POPULATE FIELDS
+            // OPEN EDIT MODAL
+            $(document).on("click", ".edit-branch", function () {
+
+                let id = $(this).data("id");
+                let name = $(this).data("name");
+                let address = $(this).data("address");
+                let coh = $(this).data("coh");
+                let status = $(this).data("status"); // 1 or 0
+
+                $("#editBranchModal [name='branch_id']").val(id);
+                $("#editBranchModal [name='edit_branch_name']").val(name);
+                $("#editBranchModal [name='edit_branch_address']").val(address);
+                $("#editBranchModal [name='edit_current_coh']").val(coh);
+
+                // Set toggle
+                if (status == 1) {
+                    $("#editStatusToggle").prop("checked", true);
+                } else {
+                    $("#editStatusToggle").prop("checked", false);
+                }
+
+                $("#editBranchModal").modal("show");
+            });
+
+            // UPDATE BRANCH AJAX
+            // UPDATE BRANCH
+            $("#editBranchModal form").on("submit", function (e) {
+                e.preventDefault();
+
+                let statusText = $("#editStatusToggle").is(":checked") ? "Active" : "Inactive";
+
+                let form = new FormData(this);
+                form.set("edit_branch_status", statusText);
+
+                $.ajax({
+                    url: "../processes/edit_branch.php",
+                    type: "POST",
+                    data: form,
+                    processData: false,
+                    contentType: false,
+
+                    success: function (response) {
+                        if (response.success) {
+
+                            $("#editBranchModal").modal("hide");
+
+                            $('#branchesTable').DataTable().ajax.reload(null, false);
+
+                            // Global alert
+                            let alertHtml = `
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        ${response.message || "Branch updated successfully."}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                `;
+                            $("#globalAlertArea").html(alertHtml);
+
+                            setTimeout(() => $(".alert").alert('close'), 3000);
+
+                        } else {
+                            alert(response.message || "Failed to update branch.");
+                        }
+                    },
+
+                    error: function () {
+                        alert("An error occurred during the update.");
+                    }
+                });
+            });
+
+
+        });
+
     </script>
 
-    <script src="../assets/js/script.js"></script>
+
     <?php include '../views/footer.php'; ?>
 </body>
 

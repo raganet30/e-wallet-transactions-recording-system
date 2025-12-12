@@ -3,6 +3,7 @@ require '../config/session_checker.php';
 ?>
 <!DOCTYPE html>
 <html lang="en">
+<?php include '../views/head.php'; ?>
 
 <body>
     <?php include '../views/sidebar.php'; ?>
@@ -208,6 +209,8 @@ require '../config/session_checker.php';
         </div>
     </div>
     <?php include '../views/footer.php'; ?>
+    <?php include '../views/scripts.php'; ?>
+
     <script>
         // fetch and populate users table
         $(document).ready(function () {
@@ -432,7 +435,6 @@ require '../config/session_checker.php';
 
 
     </script>
-    <script src="../assets/js/script.js"></script>
 
 </body>
 

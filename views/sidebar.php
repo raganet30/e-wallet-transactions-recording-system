@@ -17,6 +17,7 @@ require '../config/helpers.php';
                 echo "SUPER ADMIN PANEL";
             } else {
                 echo htmlspecialchars(currentBranchName());
+
             }
             ?>
         </span>
@@ -33,11 +34,11 @@ require '../config/helpers.php';
     <a href="e-wallets" class="menu-item">
         <i class="bi bi-wallet2"></i> <span class="menu-text">E-Wallet Accounts</span>
     </a>
-
-    <a href="cash_on_hand" class="menu-item">
-        <i class="bi bi-currency-dollar"></i> <span class="menu-text">Cash on Hand</span>
-    </a>
-
+    <?php if (currentRole() !== 'super_admin'): ?>
+        <a href="cash_on_hand" class="menu-item">
+            <i class="bi bi-currency-dollar"></i> <span class="menu-text">Cash on Hand</span>
+        </a>
+    <?php endif; ?>
     <!-- Audit Log -->
     <a href="audit_logs" class="menu-item">
         <i class="bi bi-clock-history"></i> <span class="menu-text">Audit Logs</span>
