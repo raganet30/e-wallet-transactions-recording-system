@@ -129,7 +129,7 @@ require '../config/session_checker.php';
                             const totalRow = `
                                 <hr>
                                 <div class="d-flex justify-content-between fw-bold">
-                                    <span>Total</span>
+                                    <span>Total E-wallet balance</span>
                                     <span>₱${totalBalance.toLocaleString("en-PH", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                                 </div>
                             `;

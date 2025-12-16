@@ -13,6 +13,7 @@ require '../config/session_checker.php';
 
     <div class="content" id="mainContent">
         <div class="container-fluid">
+            <div id="globalAlertArea"></div>
             <!-- <h1 class="mb-4">Transactions</h1> -->
             <!-- add new transactions button,  transactions datatable with actions : 'view, delete'  -->
 
@@ -71,7 +72,7 @@ require '../config/session_checker.php';
                                 </thead>
                                 <tbody>
                                     <!-- Sample data - replace with PHP/DB data -->
-                                    <tr>
+                                    <!-- <tr>
                                         <td>1</td>
                                         <td>2023-12-01 14:30</td>
                                         <td>0123456</td>
@@ -142,16 +143,16 @@ require '../config/session_checker.php';
                                                 <i class="bi bi-trash"></i>
                                             </button>
                                         </td>
-                                    </tr>
+                                    </tr> -->
                                 </tbody>
                                 <tfoot>
-                                    <tr>
+                                    <!-- <tr>
                                         <th colspan="4" class="text-end">Total:</th>
-                                        <th>₱8,000.00</th> <!-- Amount Total -->
-                                        <th>₱55.00</th> <!-- Fee Total -->
-                                        <th>₱8,055.00</th> <!-- Overall Total -->
-                                        <th colspan="2"></th> <!-- Spans the last 2 columns -->
-                                    </tr>
+                                        <th>₱8,000.00</th> 
+                                        <th>₱55.00</th> 
+                                        <th>₱8,055.00</th>
+                                        <th colspan="2"></th> 
+                                    </tr> -->
                                 </tfoot>
                             </table>
                         </div>
@@ -309,7 +310,7 @@ require '../config/session_checker.php';
 
 
 
-      
+
             <!-- View Transaction Modal -->
             <div class="modal fade" id="viewTransactionModal" tabindex="-1">
                 <div class="modal-dialog modal-dialog-centered">
@@ -482,14 +483,47 @@ require '../config/session_checker.php';
                     success: function (response) {
                         if (response.success) {
                             $('#confirmAddModal, #addTransactionModal').modal('hide');
-                            alert("Transaction saved successfully.");
+                            // alert("Transaction saved successfully.");
+
+                            // Show global alert
+                            let alertHtml = `
+                                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                    ${response.message || "Transaction added successfully."}
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                                </div>
+                            `;
+                            $("#globalAlertArea").html(alertHtml);
+
+                            setTimeout(() => $(".alert").alert('close'), 3000);
+
                             // Optionally reload table or update dashboard
                         } else {
-                            alert(response.message || "Failed to save transaction.");
+                            // alert(response.message || "Failed to save transaction.");
+                            let alertHtml = `
+                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                    ${response.message || "Failed to add transaction."}
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                                </div>
+                            `;
+
+                            $("#globalAlertArea").html(alertHtml);
+                            setTimeout(() => $(".alert").alert('close'), 3000);
+                            $('#confirmAddModal').modal('hide');
+
                         }
                     },
                     error: function () {
-                        alert("An error occurred while saving transaction.");
+                        // alert("An error occurred while saving transaction.");
+                        let alertHtml = `
+                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                An error occurred while adding transaction.
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                            </div>
+                        `;
+
+                        $("#globalAlertArea").html(alertHtml);
+                        setTimeout(() => $(".alert").alert('close'), 3000);
+                        $('#confirmAddModal').modal('hide');
                     }
                 });
             });
