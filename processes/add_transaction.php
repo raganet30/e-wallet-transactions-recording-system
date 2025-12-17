@@ -51,6 +51,9 @@ if (
 if ($type === 'Cash-in') {
     $total  = $amount + $charge;
     $change = $tendered - $total;
+    if ($change < 0) {
+        $change = 0;
+    }
 
     if (in_array($payment_thru, ['GCash', 'Maya'])) {
         // For e-wallet payments, tendered amount can be 0
@@ -59,6 +62,7 @@ if ($type === 'Cash-in') {
                 "success" => false,
                 "message" => "Invalid tendered amount."
             ]);
+            //  $change = 0;
             exit;
         }
     } else {
@@ -82,6 +86,7 @@ if ($type === 'Cash-in') {
                 "success" => false,
                 "message" => "Invalid tendered amount."
             ]);
+            // $change = 0;
             exit;
         }
     } else {
@@ -163,7 +168,7 @@ try {
             // payment thru same e-wallet
             // e-wallet - amount + fee
             // coh + amount
-            if ($wallet_balance < ($amount - $charge)) {
+            if ($wallet_balance < $amount - $charge) {
                 throw new Exception("Insufficient e-wallet balance.");
             }
             $new_wallet_balance = $wallet_balance - $amount + $charge;
@@ -203,7 +208,7 @@ try {
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0, NOW())
     ");
     $stmt->bind_param(
-        "iiisdddddds",
+        "iissdddddss",
         $branch_id,
         $user_id,
         $wallet_id,

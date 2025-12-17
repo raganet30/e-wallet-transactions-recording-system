@@ -62,6 +62,7 @@ require '../config/session_checker.php';
                                         <th>No</th>
                                         <th>Date</th>
                                         <th>Reference No.</th>
+                                        <th>E-wallet</th>
                                         <th>Type</th>
                                         <th>Amount</th>
                                         <th>Transaction Fee</th>
@@ -77,6 +78,7 @@ require '../config/session_checker.php';
                                         <td>2023-12-01 14:30</td>
                                         <td>0123456</td>
                                         <td><span class="badge badge-gcash">GCash</span></td>
+                                        <td>Cash-in</td>
                                         <td data-order="1500.00">₱1,500.00</td>
                                         <td data-order="15.00">₱15.00</td>
                                         <td data-order="1515.00">₱1,515.00</td>
@@ -86,60 +88,6 @@ require '../config/session_checker.php';
                                                 <i class="bi bi-eye"></i> View
                                             </button>
                                             <button class="btn btn-sm btn-outline-danger delete-btn" data-id="0123456">
-                                                <i class="bi bi-trash"></i>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>2</td>
-                                        <td>2023-12-01 11:30</td>
-                                        <td>0123547</td>
-                                        <td><span class="badge badge-gcash">GCash</span></td>
-                                        <td data-order="500.00">₱500.00</td>
-                                        <td data-order="10.00">₱10.00</td>
-                                        <td data-order="510.00">₱510.00</td>
-                                        <td>GCash</td>
-                                        <td>
-                                            <button class="btn btn-sm btn-outline-primary view-btn" data-id="123547">
-                                                <i class="bi bi-eye"></i> View
-                                            </button>
-                                            <button class="btn btn-sm btn-outline-danger delete-btn" data-id="123547">
-                                                <i class="bi bi-trash"></i>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>3</td>
-                                        <td>2023-12-02 15:30</td>
-                                        <td>ABCD123</td>
-                                        <td><span class="badge badge-maya">Maya</span></td>
-                                        <td data-order="2500.00">₱2,500.00</td>
-                                        <td data-order="15.00">₱15.00</td>
-                                        <td data-order="2515.00">₱2,515.00</td>
-                                        <td>Cash</td>
-                                        <td>
-                                            <button class="btn btn-sm btn-outline-primary view-btn" data-id="ABCD123">
-                                                <i class="bi bi-eye"></i> View
-                                            </button>
-                                            <button class="btn btn-sm btn-outline-danger delete-btn" data-id="ABCD123">
-                                                <i class="bi bi-trash"></i>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>4</td>
-                                        <td>2023-12-02 15:30</td>
-                                        <td>ABCD124</td>
-                                        <td><span class="badge badge-maya">Maya</span></td>
-                                        <td data-order="3500.00">₱3,500.00</td>
-                                        <td data-order="15.00">₱15.00</td>
-                                        <td data-order="3515.00">₱3,515.00</td>
-                                        <td>Maya</td>
-                                        <td>
-                                            <button class="btn btn-sm btn-outline-primary view-btn" data-id="ABCD124">
-                                                <i class="bi bi-eye"></i> View
-                                            </button>
-                                            <button class="btn btn-sm btn-outline-danger delete-btn" data-id="ABCD124">
                                                 <i class="bi bi-trash"></i>
                                             </button>
                                         </td>
@@ -158,6 +106,8 @@ require '../config/session_checker.php';
                         </div>
                     </div>
                 </div>
+
+
             </div>
 
 
@@ -192,9 +142,10 @@ require '../config/session_checker.php';
                                         <label class="form-label">Transaction Fee Thru</label>
                                         <select class="form-select" name="transaction_fee_thru" required>
                                             <option value="">Select Type</option>
+                                            <option value="Cash">Cash</option>
                                             <option value="GCash">GCash</option>
                                             <option value="Maya">Maya</option>
-                                            <option value="Cash">Cash</option>
+
                                         </select>
                                     </div>
 
@@ -325,10 +276,11 @@ require '../config/session_checker.php';
                                 <li class="list-group-item"><strong>Date:</strong> <span id="viewDate"></span></li>
                                 <li class="list-group-item"><strong>Reference No:</strong> <span id="viewRef"></span>
                                 </li>
-                                <li class="list-group-item"><strong>Type:</strong> <span id="viewEwallet"></span></li>
+                                <li class="list-group-item"><strong>E-wallet:</strong> <span id="viewEwallet"></span>
+                                </li>
+                                <li class="list-group-item"><strong>Type:</strong> <span id="viewType"></span></li>
                                 <li class="list-group-item"><strong>Amount:</strong> ₱<span id="viewAmount"></span></li>
                                 <li class="list-group-item"><strong>Charge:</strong> ₱<span id="viewCharge"></span></li>
-
                                 <li class="list-group-item"><strong>Change:</strong> ₱<span id="c_change"></span></li>
                                 <li class="list-group-item"><strong>Payment Thru:</strong> <span
                                         id="viewPaymentMode"></span></li>
@@ -392,7 +344,6 @@ require '../config/session_checker.php';
             }
 
             loadEwalletAccounts(); // populate on modal open
-
             // Auto-adjust Transaction Fee Thru options based on selected wallet
             $('select[name="e_wallet_account"]').on('change', function () {
                 const selectedOption = $(this).find('option:selected');
@@ -412,8 +363,28 @@ require '../config/session_checker.php';
                     $feeThru.append('<option value="Cash">Cash</option>');
                 }
 
-                $feeThru.val(''); // reset selection
+                $feeThru.val('');
+                handleTenderedState();
             });
+
+            //  NEW: Handle tendered amount behavior
+            function handleTenderedState() {
+                const transType = $('input[name="transaction_type"]:checked').val();
+                const feeThru = $('select[name="transaction_fee_thru"]').val();
+                const $tendered = $('input[name="tendered_amount"]');
+
+                if (
+                    (transType === 'Cash-in' || transType === 'Cash-out') &&
+                    feeThru &&
+                    feeThru !== 'Cash'
+                ) {
+                    $tendered.val(0).prop('readonly', true);
+                } else {
+                    $tendered.prop('readonly', false);
+                }
+
+                calculateChange();
+            }
 
             // Function to calculate change based on transaction type
             function calculateChange() {
@@ -433,11 +404,15 @@ require '../config/session_checker.php';
                     change = tendered - charge;
                 }
 
-                $('input[name="change_amount"]').val(change >= 0 ? change.toFixed(2) : 0);
+                $('input[name="change_amount"]').val(change >= 0 ? change.toFixed(2) : '0.00');
             }
 
-            // Trigger calculation when amount, charge, tendered amount, or transaction type changes
-            $('input[name="amount"], input[name="transaction_charge"], input[name="tendered_amount"], input[name="transaction_type"]').on('input change', calculateChange);
+            // Trigger calculation & tendered logic
+            $('input[name="amount"], input[name="transaction_charge"], input[name="tendered_amount"]')
+                .on('input', calculateChange);
+
+            $('input[name="transaction_type"]').on('change', handleTenderedState);
+            $('select[name="transaction_fee_thru"]').on('change', handleTenderedState);
 
             // Show confirmation modal on form submit
             $('#addTransactionForm').on('submit', function (e) {
@@ -497,6 +472,11 @@ require '../config/session_checker.php';
                             setTimeout(() => $(".alert").alert('close'), 3000);
 
                             // Optionally reload table or update dashboard
+                            // reset form modals
+                            $('#addTransactionForm')[0].reset();
+                            $('#addTransactionModal').modal('hide');
+
+
                         } else {
                             // alert(response.message || "Failed to save transaction.");
                             let alertHtml = `
@@ -529,6 +509,86 @@ require '../config/session_checker.php';
             });
 
         });
+
+
+
+        // populate transactions datatable
+        $(document).ready(function () {
+
+            const table = $('#transactionsTable').DataTable({
+                processing: true,
+                serverSide: false,
+                ajax: {
+                    url: '../api/fetch_transactions.php',
+                    type: 'GET',
+                    dataSrc: 'data' //  REQUIRED
+                },
+                order: [[1, 'desc']],
+                columns: [
+                    { data: null, render: (d, t, r, m) => m.row + 1 },
+                    { data: 'created_at' },
+                    { data: 'reference_no' },
+                    {
+
+                        data: 'wallet_name',
+                        render: d => {
+                            if (!d) return '';
+                            const badgeClass = d.toLowerCase() === 'gcash' ? 'bg-info' : d.toLowerCase() === 'maya' ? 'bg-success' : 'bg-secondary';
+                            return `<span class="badge ${badgeClass}">${d}</span>`;
+                        }
+
+                    },
+                    { data: 'type' },
+                    {
+                        data: 'amount',
+                        render: (d, t) => t === 'sort' ? d : '₱' + Number(d).toLocaleString(undefined, { minimumFractionDigits: 2 })
+                    },
+                    {
+                        data: 'charge',
+                        render: (d, t) => t === 'sort' ? d : '₱' + Number(d).toLocaleString(undefined, { minimumFractionDigits: 2 })
+                    },
+                    {
+                        data: 'total',
+                        render: (d, t) => t === 'sort' ? d : '₱' + Number(d).toLocaleString(undefined, { minimumFractionDigits: 2 })
+                    },
+                    { data: 'payment_thru' },
+                    {
+                        data: null,
+                        orderable: false,
+                        searchable: false,
+                        render: row => `
+                <button class="btn btn-sm btn-outline-primary view-btn" data-id="${row.id}">
+                    <i class="bi bi-eye"></i> View
+                </button>
+                <button class="btn btn-sm btn-outline-danger delete-btn" data-id="${row.id}">
+                    <i class="bi bi-trash"></i>
+                </button>
+            `
+                    }
+                ]
+            });
+
+
+            //  View Transaction
+            $('#transactionsTable').on('click', '.view-btn', function () {
+                const rowData = table.row($(this).parents('tr')).data();
+
+                $('#viewDate').text(rowData.created_at);
+                $('#viewRef').text(rowData.reference_no);
+                $('#viewEwallet').text(rowData.wallet_name);
+                $('#viewType').text(rowData.type);
+                $('#viewAmount').text(parseFloat(rowData.amount).toFixed(2));
+                $('#viewCharge').text(parseFloat(rowData.charge).toFixed(2));
+                $('#c_change').text(parseFloat(rowData.change_amount).toFixed(2));
+                $('#viewPaymentMode').text(rowData.payment_thru);
+
+                $('#viewTransactionModal').modal('show');
+            });
+
+        });
+
+
+
 
     </script>
 
