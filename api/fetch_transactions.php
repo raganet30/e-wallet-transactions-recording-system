@@ -35,7 +35,7 @@ if ($role === "super_admin" && $selected === "all") {
             t.created_at,
             w.account_name AS wallet_name
         FROM transactions t
-        LEFT JOIN wallet_account w ON w.id = t.wallet_id
+        LEFT JOIN wallet_accounts w ON w.id = t.wallet_id
         WHERE t.is_deleted = 0
         ORDER BY t.created_at DESC
     ";

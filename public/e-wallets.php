@@ -91,6 +91,7 @@ require '../config/session_checker.php';
                                 <option value="">Select wallet type</option>
                                 <option value="GCash">GCash</option>
                                 <option value="Maya">Maya</option>
+                                <option value="Others">Others</option>
                             </select>
                         </div>
 
@@ -156,6 +157,7 @@ require '../config/session_checker.php';
                                 <option value="">Select wallet type</option>
                                 <option value="GCash">GCash</option>
                                 <option value="Maya">Maya</option>
+                                <option value="Others">Others</option>
                             </select>
                         </div>
 

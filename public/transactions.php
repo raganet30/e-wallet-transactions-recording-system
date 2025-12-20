@@ -19,11 +19,14 @@ require '../config/session_checker.php';
 
             <div class="container-fluid">
                 <!-- Page Header with Add Button -->
+
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <h1 class="mb-0">Transactions</h1>
-                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addTransactionModal">
-                        <i class="bi bi-plus-circle me-2"></i>Add New Transaction
-                    </button>
+                    <?php if (currentRole() !== 'super_admin'): ?>
+                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addTransactionModal">
+                            <i class="bi bi-plus-circle me-2"></i>Add New Transaction
+                        </button>
+                    <?php endif; ?>
                 </div>
 
                 <!-- Filter Section -->
@@ -72,26 +75,7 @@ require '../config/session_checker.php';
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <!-- Sample data - replace with PHP/DB data -->
-                                    <!-- <tr>
-                                        <td>1</td>
-                                        <td>2023-12-01 14:30</td>
-                                        <td>0123456</td>
-                                        <td><span class="badge badge-gcash">GCash</span></td>
-                                        <td>Cash-in</td>
-                                        <td data-order="1500.00">₱1,500.00</td>
-                                        <td data-order="15.00">₱15.00</td>
-                                        <td data-order="1515.00">₱1,515.00</td>
-                                        <td>Cash</td>
-                                        <td>
-                                            <button class="btn btn-sm btn-outline-primary view-btn" data-id="0123456">
-                                                <i class="bi bi-eye"></i> View
-                                            </button>
-                                            <button class="btn btn-sm btn-outline-danger delete-btn" data-id="0123456">
-                                                <i class="bi bi-trash"></i>
-                                            </button>
-                                        </td>
-                                    </tr> -->
+                                    <!-- Data populated by AJAX -->
                                 </tbody>
                                 <tfoot>
                                     <!-- <tr>
@@ -151,18 +135,43 @@ require '../config/session_checker.php';
 
                                     <!-- Transaction Type -->
                                     <div class="col-md-6">
-                                        <label class="form-label d-block">Transaction Type</label>
-                                        <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="radio" name="transaction_type"
-                                                id="cash-in" value="Cash-in" required>
-                                            <label class="form-check-label" for="cash-in">Cash In</label>
-                                        </div>
-                                        <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="radio" name="transaction_type"
-                                                id="cash-out" value="Cash-out" required>
-                                            <label class="form-check-label" for="cash-out">Cash Out</label>
+                                        <label class="form-label d-block mb-2">Transaction Type</label>
+
+                                        <div class="row g-2">
+
+                                            <!-- CASH IN -->
+                                            <div class="col-6">
+                                                <input type="radio" class="btn-check" name="transaction_type"
+                                                    id="cash-in" value="Cash-in" required>
+                                                <label class="card text-center cursor-pointer transaction-card h-100"
+                                                    for="cash-in">
+                                                    <div
+                                                        class="card-body d-flex flex-column justify-content-center align-items-center">
+                                                        <div class="fw-bold fs-5 text-success">
+                                                            <i class="bi bi-arrow-down-circle"></i> Cash-in
+                                                        </div>
+                                                        <!-- <div class="mt-1">Cash In</div> -->
+                                                    </div>
+                                                </label>
+
+                                            </div>
+
+                                            <!-- CASH OUT -->
+                                            <div class="col-6">
+                                                <input type="radio" class="btn-check" name="transaction_type"
+                                                    id="cash-out" value="Cash-out" required>
+                                                <label class="card text-center p-3 cursor-pointer transaction-card"
+                                                    for="cash-out">
+                                                    <div class="fw-bold fs-5 text-danger">
+                                                        <i class="bi bi-arrow-up-circle"></i> Cash Out
+                                                    </div>
+                                                    <!-- <div class="mt-1">Cash Out</div> -->
+                                                </label>
+                                            </div>
+
                                         </div>
                                     </div>
+
 
                                     <!-- Amount -->
                                     <div class="col-md-6">
@@ -222,42 +231,77 @@ require '../config/session_checker.php';
 
             <!-- Add Transaction Confirmation Modal -->
             <div class="modal fade" id="confirmAddModal" tabindex="-1">
-                <div class="modal-dialog">
+                <div class="modal-dialog modal-dialog-scrollable modal-lg modal-dialog-centered">
                     <div class="modal-content">
+
                         <div class="modal-header">
                             <h5 class="modal-title">Confirm Transaction Details</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                         </div>
 
                         <div class="modal-body">
-                            <ul class="list-group">
-                                <li class="list-group-item"><strong>E-wallet Type:</strong> <span id="c_eWallet"></span>
-                                </li>
-                                <li class="list-group-item"><strong>Reference No:</strong> <span
-                                        id="c_reference"></span></li>
-                                <li class="list-group-item"><strong>Amount:</strong> ₱<span id="c_amount"></span></li>
-                                <li class="list-group-item"><strong>Transaction Fee:</strong> ₱<span
-                                        id="c_charge"></span></li>
-                                <!-- total -->
-                                <li class="list-group-item"><strong>Total:</strong> ₱<span id="c_total"></span></li>
-                                <li class="list-group-item"><strong>Tendered Amount:</strong> ₱<span
-                                        id="c_tendered"></span></li>
-                                <li class="list-group-item"><strong>Change:</strong> ₱<span id="c_change"></span></li>
+                            <div class="row g-2">
 
-                                <li class="list-group-item"><strong>Transaction Fee thru:</strong> <span
-                                        id="c_feeThru"></span></li>
-                                <li class="list-group-item"><strong>Transaction Type:</strong> <span
-                                        id="c_transType"></span></li>
-                            </ul>
+                                <!-- LEFT COLUMN -->
+                                <div class="col-md-6">
+                                    <ul class="list-group">
+                                        <li class="list-group-item">
+                                            <strong>E-wallet Type:</strong>
+                                            <span class="float-end" id="c_eWallet"></span>
+                                        </li>
+                                        <li class="list-group-item">
+                                            <strong>Reference No:</strong>
+                                            <span class="float-end" id="c_reference"></span>
+                                        </li>
+                                        <li class="list-group-item">
+                                            <strong>Transaction Type:</strong>
+                                            <span class="float-end" id="c_transType"></span>
+                                        </li>
+                                        <li class="list-group-item">
+                                            <strong>Transaction Fee thru:</strong>
+                                            <span class="float-end" id="c_feeThru"></span>
+                                        </li>
+                                    </ul>
+                                </div>
+
+                                <!-- RIGHT COLUMN -->
+                                <div class="col-md-6">
+                                    <ul class="list-group">
+                                        <li class="list-group-item">
+                                            <strong>Amount:</strong>
+                                            <span class="float-end">₱<span id="c_amount"></span></span>
+                                        </li>
+                                        <li class="list-group-item">
+                                            <strong>Transaction Fee:</strong>
+                                            <span class="float-end">₱<span id="c_charge"></span></span>
+                                        </li>
+                                        <li class="list-group-item">
+                                            <strong>Total:</strong>
+                                            <span class="float-end fw-bold">₱<span id="c_total"></span></span>
+                                        </li>
+                                        <li class="list-group-item">
+                                            <strong>Tendered Amount:</strong>
+                                            <span class="float-end">₱<span id="c_tendered"></span></span>
+                                        </li>
+                                        <li class="list-group-item">
+                                            <strong>Change:</strong>
+                                            <span class="float-end">₱<span id="c_change"></span></span>
+                                        </li>
+                                    </ul>
+                                </div>
+
+                            </div>
                         </div>
 
                         <div class="modal-footer">
                             <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                             <button class="btn btn-primary" id="confirmAddBtn">Save</button>
                         </div>
+
                     </div>
                 </div>
             </div>
+
 
 
 
@@ -280,9 +324,11 @@ require '../config/session_checker.php';
                                 </li>
                                 <li class="list-group-item"><strong>Type:</strong> <span id="viewType"></span></li>
                                 <li class="list-group-item"><strong>Amount:</strong> ₱<span id="viewAmount"></span></li>
-                                <li class="list-group-item"><strong>Charge:</strong> ₱<span id="viewCharge"></span></li>
-                                <li class="list-group-item"><strong>Change:</strong> ₱<span id="c_change"></span></li>
-                                <li class="list-group-item"><strong>Payment Thru:</strong> <span
+                                <li class="list-group-item"><strong>Transaction Fee:</strong> ₱<span id="viewCharge"></span></li>
+                                <li class="list-group-item"><strong>Total:</strong> ₱<span id="viewTotal"></span></li>
+                                <li class="list-group-item"><strong>Tendered:</strong> ₱<span id="viewTendered"></span></li>                            
+                                <li class="list-group-item"><strong>Change:</strong> ₱<span id="viewChange"></span></li>
+                                <li class="list-group-item"><strong>Transaction Fee Thru:</strong> <span
                                         id="viewPaymentMode"></span></li>
                             </ul>
 
@@ -326,7 +372,7 @@ require '../config/session_checker.php';
             // Fetch e-wallet accounts for this branch and populate selector
             function loadEwalletAccounts() {
                 $.ajax({
-                    url: "../api/fetch_e-wallets.php",
+                    url: "../api/fetch_active_e-wallet.php",
                     dataType: "json",
                     success: function (response) {
                         const $selector = $('select[name="e_wallet_account"]');
@@ -354,12 +400,18 @@ require '../config/session_checker.php';
                 if (!walletName) return;
 
                 if (walletName.toLowerCase() === 'gcash') {
+                    $feeThru.append('<option value="Cash">Cash</option>');
                     $feeThru.append('<option value="GCash">GCash</option>');
-                    $feeThru.append('<option value="Cash">Cash</option>');
+
                 } else if (walletName.toLowerCase() === 'maya') {
-                    $feeThru.append('<option value="Maya">Maya</option>');
                     $feeThru.append('<option value="Cash">Cash</option>');
-                } else {
+                    $feeThru.append('<option value="Maya">Maya</option>');
+
+                } else if (walletName.toLowerCase() === 'others') {
+                    $feeThru.append('<option value="Cash">Cash</option>');
+                    $feeThru.append('<option value="Others">Others</option>');
+                } 
+                else {
                     $feeThru.append('<option value="Cash">Cash</option>');
                 }
 
@@ -374,7 +426,7 @@ require '../config/session_checker.php';
                 const $tendered = $('input[name="tendered_amount"]');
 
                 if (
-                    (transType === 'Cash-in' || transType === 'Cash-out') &&
+                    (transType === 'Cash-out') &&
                     feeThru &&
                     feeThru !== 'Cash'
                 ) {
@@ -392,6 +444,7 @@ require '../config/session_checker.php';
                 const charge = parseFloat($('input[name="transaction_charge"]').val()) || 0;
                 const tendered = parseFloat($('input[name="tendered_amount"]').val()) || 0;
                 const transType = $('input[name="transaction_type"]:checked').val();
+                const transFeeThru = $('select[name="transaction_fee_thru"]').val();
 
                 let change = 0;
 
@@ -399,9 +452,22 @@ require '../config/session_checker.php';
                     // Cash-in: total = amount + transaction fee
                     const total = amount + charge;
                     change = tendered - total;
+
+                    if (transFeeThru && transFeeThru !== 'Cash') {
+                        // If fee is thru e-wallet, tendered must cover only amount
+                        change = tendered - amount;
+
+                    }
+
                 } else if (transType === "Cash-out") {
                     // Cash-out: customer only pays transaction fee
                     change = tendered - charge;
+
+                    if (transFeeThru && transFeeThru !== 'Cash') {
+                        // If fee is thru e-wallet, tendered must cover only amount
+                        change = tendered - amount;
+
+                    }
                 }
 
                 $('input[name="change_amount"]').val(change >= 0 ? change.toFixed(2) : '0.00');
@@ -418,6 +484,7 @@ require '../config/session_checker.php';
             $('#addTransactionForm').on('submit', function (e) {
                 e.preventDefault();
 
+
                 // Get form values
                 const walletName = $('select[name="e_wallet_account"] option:selected').data('name') || '';
                 const referenceNo = $('input[name="reference_no"]').val();
@@ -428,6 +495,44 @@ require '../config/session_checker.php';
                 const total = (parseFloat(amount) + parseFloat(charge)).toFixed(2);
                 const feeThru = $('select[name="transaction_fee_thru"]').val();
                 const transType = $('input[name="transaction_type"]:checked').val();
+
+
+
+                // add validation before showing confirmation modal
+                // if feThru is e-wallet and tendered is less than amount for cash-in
+                if (
+                    (transType === 'Cash-in') &&
+                    (feeThru && feeThru !== 'Cash') &&
+                    (parseFloat(tendered) < parseFloat(amount))
+                ) {
+                    let alertHtml = `
+                                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                        ${"Insufficient tendered amount."}
+                                    </div>
+                                `;
+
+                    $("#addTransactionModal .modal-body").prepend(alertHtml);
+                    setTimeout(() => $(".alert").alert('close'), 3000);
+                    return;
+                }
+
+                if (
+                    (transType === 'Cash-in') &&
+                    (feeThru && feeThru === 'Cash') &&
+                    (parseFloat(tendered) < parseFloat(total))
+                ) {
+                    let alertHtml = `
+                                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                        ${"Insufficient tendered amount."}
+                                    </div>
+                                `;
+
+                    $("#addTransactionModal .modal-body").prepend(alertHtml);
+                    setTimeout(() => $(".alert").alert('close'), 3000);
+                    return;
+                }
+
+
 
                 // Populate confirmation modal
                 $('#c_eWallet').text(walletName);
@@ -476,34 +581,39 @@ require '../config/session_checker.php';
                             $('#addTransactionForm')[0].reset();
                             $('#addTransactionModal').modal('hide');
 
-
+                            // reload datatable
+                            $('#transactionsTable').DataTable().ajax.reload();
                         } else {
                             // alert(response.message || "Failed to save transaction.");
-                            let alertHtml = `
-                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                    ${response.message || "Failed to add transaction."}
-                                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                                </div>
-                            `;
+                            //show the add transaction modal again with error
+                            // the div alert must show inside add modal
 
-                            $("#globalAlertArea").html(alertHtml);
+                            let alertHtml = `
+                                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                        ${response.message || "Failed to add transaction."}
+                                    </div>
+                                `;
+
+                            $("#addTransactionModal .modal-body").prepend(alertHtml);
                             setTimeout(() => $(".alert").alert('close'), 3000);
                             $('#confirmAddModal').modal('hide');
+                            $('#addTransactionModal').modal('show');
 
                         }
                     },
                     error: function () {
                         // alert("An error occurred while saving transaction.");
                         let alertHtml = `
-                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                An error occurred while adding transaction.
-                                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                            </div>
-                        `;
+                                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                        ${response.message || "An error occurred while saving transaction"}
+                                    </div>
+                                `;
 
-                        $("#globalAlertArea").html(alertHtml);
+                        $("#addTransactionModal .modal-body").prepend(alertHtml);
                         setTimeout(() => $(".alert").alert('close'), 3000);
                         $('#confirmAddModal').modal('hide');
+                        $('#addTransactionModal').modal('show');
+
                     }
                 });
             });
@@ -533,12 +643,19 @@ require '../config/session_checker.php';
                         data: 'wallet_name',
                         render: d => {
                             if (!d) return '';
-                            const badgeClass = d.toLowerCase() === 'gcash' ? 'bg-info' : d.toLowerCase() === 'maya' ? 'bg-success' : 'bg-secondary';
+                            const badgeClass = d.toLowerCase() === 'gcash' ? 'bg-info' : d.toLowerCase() === 'maya' ? 'bg-success' : 'bg-warning';
                             return `<span class="badge ${badgeClass}">${d}</span>`;
                         }
 
                     },
-                    { data: 'type' },
+                    {
+                        data: 'type',
+                        render: d => {
+                            if (!d) return '';
+                            const badgeClass = d === 'Cash-in' ? 'bg-secondary' : d === 'Cash-out' ? 'bg-danger' : 'bg-secondary';
+                            return `<span class="badge ${badgeClass}">${d}</span>`;
+                        }
+                    },
                     {
                         data: 'amount',
                         render: (d, t) => t === 'sort' ? d : '₱' + Number(d).toLocaleString(undefined, { minimumFractionDigits: 2 })
@@ -558,7 +675,7 @@ require '../config/session_checker.php';
                         searchable: false,
                         render: row => `
                 <button class="btn btn-sm btn-outline-primary view-btn" data-id="${row.id}">
-                    <i class="bi bi-eye"></i> View
+                    <i class="bi bi-eye"></i>
                 </button>
                 <button class="btn btn-sm btn-outline-danger delete-btn" data-id="${row.id}">
                     <i class="bi bi-trash"></i>
@@ -577,9 +694,11 @@ require '../config/session_checker.php';
                 $('#viewRef').text(rowData.reference_no);
                 $('#viewEwallet').text(rowData.wallet_name);
                 $('#viewType').text(rowData.type);
-                $('#viewAmount').text(parseFloat(rowData.amount).toFixed(2));
-                $('#viewCharge').text(parseFloat(rowData.charge).toFixed(2));
-                $('#c_change').text(parseFloat(rowData.change_amount).toFixed(2));
+                $('#viewAmount').text(Number(rowData.amount).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
+                $('#viewCharge').text(Number(rowData.charge).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
+                $('#viewTotal').text(Number(rowData.total).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
+                $('#viewTendered').text(Number(rowData.tendered_amount).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
+                $('#viewChange').text(Number(rowData.change_amount).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
                 $('#viewPaymentMode').text(rowData.payment_thru);
 
                 $('#viewTransactionModal').modal('show');

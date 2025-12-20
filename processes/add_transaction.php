@@ -78,7 +78,9 @@ if ($type === 'Cash-in') {
 } else { // Cash-out
     $total  = $amount + $charge;
     $change = $tendered - $charge;
-
+     if ($change < 0) {
+        $change = 0;
+    }
     if (in_array($payment_thru, ['GCash', 'Maya'])) {
         // For e-wallet payments, tendered amount can be 0
         if ($tendered < 0) {

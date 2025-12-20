@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 12, 2025 at 09:22 AM
+-- Generation Time: Dec 20, 2025 at 06:17 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -60,8 +60,8 @@ CREATE TABLE `branches` (
 --
 
 INSERT INTO `branches` (`id`, `branch_name`, `address`, `current_coh`, `status`, `created_at`, `updated_at`) VALUES
-(1, 'MAIN BRANCH', 'CALBAYOG', 15000.00, 1, '2025-12-09 03:33:49', '2025-12-12 14:57:16'),
-(4, 'TEST', 'TEST ADDRESS', 10000.00, 1, '2025-12-12 11:14:53', '2025-12-12 14:34:24'),
+(1, 'MAIN BRANCH', 'CALBAYOG', 1000.00, 1, '2025-12-09 03:33:49', '2025-12-20 13:16:48'),
+(4, 'TEST', 'TEST ADDRESS', 2500.00, 1, '2025-12-12 11:14:53', '2025-12-12 22:31:48'),
 (7, 'CATBALOGAN BRANCH', 'CATBALOGAN', 20000.00, 1, '2025-12-12 13:05:27', '2025-12-12 13:05:27');
 
 -- --------------------------------------------------------
@@ -93,7 +93,31 @@ INSERT INTO `coh_logs` (`id`, `branch_id`, `user_id`, `transaction_id`, `type`, 
 (47, 1, 1, NULL, 'daily_adjustment', 5000.00, 2000.00, 5000.00, 'test', '2025-12-12 14:55:44'),
 (48, 1, 1, NULL, 'daily_adjustment', 50000.00, 5000.00, 50000.00, 'test teststt', '2025-12-12 14:56:20'),
 (49, 1, 1, NULL, 'cash_deposit', 100000.00, 50000.00, 100000.00, '', '2025-12-12 14:56:37'),
-(50, 1, 1, NULL, 'daily_adjustment', 15000.00, 100000.00, 15000.00, '', '2025-12-12 14:57:16');
+(50, 1, 1, NULL, 'daily_adjustment', 15000.00, 100000.00, 15000.00, '', '2025-12-12 14:57:16'),
+(51, 4, 34, NULL, 'daily_adjustment', 5000.00, 10000.00, 5000.00, 'test adjustment', '2025-12-12 22:30:15'),
+(52, 4, 32, NULL, 'replenishment', 2500.00, 5000.00, 2500.00, 'test', '2025-12-12 22:31:48'),
+(53, 1, 1, NULL, 'daily_adjustment', 1000.00, 15000.00, 1000.00, '', '2025-12-16 22:37:17'),
+(54, 1, 1, NULL, 'daily_adjustment', 1000.00, 1110.00, 1000.00, '', '2025-12-16 22:50:23'),
+(55, 1, 1, NULL, 'daily_adjustment', 1000.00, 1100.00, 1000.00, '', '2025-12-16 22:55:32'),
+(56, 1, 1, NULL, 'daily_adjustment', 1000.00, 910.00, 1000.00, '', '2025-12-16 22:58:05'),
+(57, 1, 1, NULL, 'daily_adjustment', 1000.00, 900.00, 1000.00, '', '2025-12-16 23:01:20'),
+(58, 1, 1, NULL, 'daily_adjustment', 1000.00, 1110.00, 1000.00, '', '2025-12-16 23:03:41'),
+(59, 1, 1, NULL, 'daily_adjustment', 1000.00, 1100.00, 1000.00, '', '2025-12-16 23:05:05'),
+(60, 1, 1, NULL, 'daily_adjustment', 1000.00, 900.00, 1000.00, '', '2025-12-16 23:06:51'),
+(61, 1, 1, NULL, 'daily_adjustment', 1000.00, 10.00, 1000.00, '', '2025-12-16 23:08:13'),
+(62, 1, 1, NULL, 'daily_adjustment', 1000.00, 910.00, 1000.00, '', '2025-12-16 23:09:29'),
+(63, 1, 1, NULL, 'daily_adjustment', 1000.00, 900.00, 1000.00, '', '2025-12-16 23:16:28'),
+(64, 1, 1, NULL, 'daily_adjustment', 1000.00, 1100.00, 1000.00, '', '2025-12-16 23:18:10'),
+(65, 1, 1, NULL, 'daily_adjustment', 1000.00, 1100.00, 1000.00, '', '2025-12-16 23:20:43'),
+(66, 1, 1, NULL, 'daily_adjustment', 1000.00, 1100.00, 1000.00, '', '2025-12-16 23:31:43'),
+(67, 1, 1, NULL, 'daily_adjustment', 1000.00, 900.00, 1000.00, '', '2025-12-16 23:46:31'),
+(68, 1, 1, NULL, 'daily_adjustment', 1000.00, 1210.00, 1000.00, '', '2025-12-17 00:00:02'),
+(69, 1, 1, NULL, 'daily_adjustment', 1000.00, 910.00, 1000.00, '', '2025-12-17 00:08:44'),
+(70, 1, 1, NULL, 'daily_adjustment', 1000.00, 5270.00, 1000.00, '', '2025-12-17 22:27:17'),
+(71, 1, 1, NULL, 'daily_adjustment', 1000.00, 2050.00, 1000.00, '', '2025-12-18 00:57:36'),
+(72, 1, 1, NULL, 'daily_adjustment', 1000.00, 4012.00, 1000.00, '', '2025-12-18 15:14:01'),
+(73, 1, 1, NULL, 'daily_adjustment', 1000.00, 930.00, 1000.00, '', '2025-12-20 11:07:22'),
+(74, 1, 1, NULL, 'daily_adjustment', 1000.00, 2050.00, 1000.00, '', '2025-12-20 13:16:48');
 
 -- --------------------------------------------------------
 
@@ -185,7 +209,68 @@ INSERT INTO `login_logs` (`id`, `user_id`, `ip_address`, `login_type`, `created_
 (50, 2, '::1', 'logout', '2025-12-12 15:00:38'),
 (51, 2, '::1', 'login', '2025-12-12 15:00:40'),
 (52, 2, '::1', 'logout', '2025-12-12 15:00:44'),
-(53, 1, '::1', 'login', '2025-12-12 15:00:50');
+(53, 1, '::1', 'login', '2025-12-12 15:00:50'),
+(54, 2, '::1', 'login', '2025-12-12 21:37:49'),
+(55, 2, '::1', 'logout', '2025-12-12 21:38:13'),
+(56, 1, '::1', 'login', '2025-12-12 21:38:16'),
+(57, 1, '::1', 'logout', '2025-12-12 21:41:56'),
+(58, 2, '::1', 'login', '2025-12-12 21:41:58'),
+(59, 2, '::1', 'logout', '2025-12-12 21:58:18'),
+(60, 1, '::1', 'login', '2025-12-12 21:58:21'),
+(61, 1, '::1', 'logout', '2025-12-12 21:58:24'),
+(62, 2, '::1', 'login', '2025-12-12 21:58:27'),
+(63, 2, '::1', 'logout', '2025-12-12 22:03:59'),
+(64, 1, '::1', 'login', '2025-12-12 22:04:01'),
+(65, 1, '::1', 'logout', '2025-12-12 22:04:05'),
+(66, 1, '::1', 'login', '2025-12-12 22:04:10'),
+(67, 1, '::1', 'logout', '2025-12-12 22:04:22'),
+(68, 1, '::1', 'login', '2025-12-12 22:04:27'),
+(69, 1, '::1', 'logout', '2025-12-12 22:04:52'),
+(70, 2, '::1', 'login', '2025-12-12 22:04:54'),
+(71, 2, '::1', 'logout', '2025-12-12 22:09:44'),
+(72, 34, '::1', 'login', '2025-12-12 22:09:48'),
+(73, 34, '::1', 'logout', '2025-12-12 22:10:08'),
+(74, 2, '::1', 'login', '2025-12-12 22:10:10'),
+(75, 2, '::1', 'logout', '2025-12-12 22:15:35'),
+(76, 1, '::1', 'login', '2025-12-12 22:15:37'),
+(77, 1, '::1', 'logout', '2025-12-12 22:15:41'),
+(78, 2, '::1', 'login', '2025-12-12 22:15:45'),
+(79, 2, '::1', 'logout', '2025-12-12 22:16:19'),
+(80, 34, '::1', 'login', '2025-12-12 22:16:22'),
+(81, 34, '::1', 'logout', '2025-12-12 22:16:37'),
+(82, 2, '::1', 'login', '2025-12-12 22:16:39'),
+(83, 2, '::1', 'logout', '2025-12-12 22:25:27'),
+(84, 34, '::1', 'login', '2025-12-12 22:25:30'),
+(85, 34, '::1', 'logout', '2025-12-12 22:25:52'),
+(86, 2, '::1', 'login', '2025-12-12 22:25:55'),
+(87, 2, '::1', 'logout', '2025-12-12 22:29:36'),
+(88, 1, '::1', 'login', '2025-12-12 22:29:39'),
+(89, 1, '::1', 'logout', '2025-12-12 22:29:55'),
+(90, 34, '::1', 'login', '2025-12-12 22:29:58'),
+(91, 34, '::1', 'logout', '2025-12-12 22:30:40'),
+(92, 2, '::1', 'login', '2025-12-12 22:30:43'),
+(93, 2, '::1', 'logout', '2025-12-12 22:31:30'),
+(94, 32, '::1', 'login', '2025-12-12 22:31:33'),
+(95, 32, '::1', 'logout', '2025-12-12 22:43:22'),
+(96, 1, '::1', 'login', '2025-12-12 22:43:30'),
+(97, 1, '::1', 'logout', '2025-12-12 22:43:39'),
+(98, 1, '::1', 'login', '2025-12-12 22:43:44'),
+(99, 1, '::1', 'logout', '2025-12-13 00:14:45'),
+(100, 1, '::1', 'login', '2025-12-16 22:23:21'),
+(101, 1, '::1', 'logout', '2025-12-17 00:22:49'),
+(102, 1, '::1', 'login', '2025-12-17 22:27:04'),
+(103, 1, '::1', 'logout', '2025-12-18 01:35:37'),
+(104, 32, '::1', 'login', '2025-12-18 01:35:39'),
+(105, 32, '::1', 'logout', '2025-12-18 01:35:45'),
+(106, 2, '::1', 'login', '2025-12-18 01:35:47'),
+(107, 2, '::1', 'logout', '2025-12-18 01:37:22'),
+(108, 2, '::1', 'login', '2025-12-18 14:21:52'),
+(109, 2, '::1', 'logout', '2025-12-18 14:38:02'),
+(110, 1, '::1', 'login', '2025-12-18 14:38:05'),
+(111, 1, '::1', 'logout', '2025-12-18 16:41:20'),
+(112, 1, '::1', 'login', '2025-12-19 22:30:28'),
+(113, 1, '::1', 'logout', '2025-12-19 22:30:38'),
+(114, 1, '::1', 'login', '2025-12-20 10:43:49');
 
 -- --------------------------------------------------------
 
@@ -198,11 +283,13 @@ CREATE TABLE `transactions` (
   `branch_id` int(10) UNSIGNED NOT NULL,
   `user_id` int(10) UNSIGNED NOT NULL,
   `wallet_id` int(10) UNSIGNED NOT NULL,
-  `type` enum('cashin','cashout') NOT NULL,
+  `type` char(55) NOT NULL,
   `amount` decimal(15,2) NOT NULL,
   `charge` decimal(15,2) NOT NULL DEFAULT 0.00,
   `total` decimal(15,2) NOT NULL,
-  `payment_mode` enum('cash','wallet','bank_transfer','other') NOT NULL DEFAULT 'wallet',
+  `tendered_amount` decimal(15,2) DEFAULT NULL,
+  `change_amount` decimal(15,2) DEFAULT NULL,
+  `payment_thru` char(55) NOT NULL,
   `reference_no` varchar(200) DEFAULT NULL,
   `notes` text DEFAULT NULL,
   `is_deleted` tinyint(1) NOT NULL DEFAULT 0,
@@ -236,9 +323,9 @@ INSERT INTO `users` (`id`, `branch_id`, `name`, `username`, `password`, `role`, 
 (1, 1, 'kenneth.admin', 'admin', '$2y$10$zv5Z8i1r1IF.4/D7RrVC4uBnBXnbTx3yFihjAxPtHa07CHbXboJiW', 'admin', 1, '2025-12-09 03:35:57', '2025-12-12 14:38:09'),
 (2, 0, 'super admin', 'super_admin', '$2y$10$B8DHSKdCEG0kDzSGwNz.Re8vUWGOhLg5jwHGnYK5QcBBx/sqgnHIS', 'super_admin', 1, '2025-12-09 04:47:16', '2025-12-10 21:12:07'),
 (31, 1, 'cashier', 'cashier', '$2y$10$AaOj4VTtJ9Cafen/RkOpP.mXo2jk7MRQ8QU6awi09dGf9WTDKgiUW', 'cashier', 1, '2025-12-11 22:02:39', '2025-12-11 23:21:03'),
-(32, 4, 'kenken', 'kenken123', '$2y$10$JJErU0xbSPsrney666DZ2eFT5CEdRE187yaoCHKC46ZKpBaDQz2/i', 'admin', 1, '2025-12-11 23:22:05', '2025-12-12 11:34:17'),
+(32, 4, 'test.cashier', 'test_cashier', '$2y$10$JTE0.I9/e96hU72/WhZFFOxqgreGDBuocGDXWhfjgP2PW1a8ZJS/u', 'cashier', 1, '2025-12-11 23:22:05', '2025-12-12 22:31:20'),
 (33, 1, 'ashnuahsud', 'xxx', '$2y$10$OPs.ac2lMtbxpt8kXgUO3uUUaLZRmf6BkW0FlQaSjfDFP0tWMlb9u', 'admin', 0, '2025-12-12 11:01:52', '2025-12-12 11:27:47'),
-(34, 4, 'NEW', 'new', '$2y$10$fn.hskT1qNNnjNPpFSY9jOtDIq64mbkRGASX4N.85weZE0zosIjpG', 'admin', 1, '2025-12-12 11:35:59', '2025-12-12 11:35:59');
+(34, 4, 'test.user', 'test_user', '$2y$10$szIUpDEZAxjfELqN4aNPHO2T6WgasWelLvQIyC6AVWP8F4eoku9Cy', 'admin', 1, '2025-12-12 11:35:59', '2025-12-12 22:16:12');
 
 -- --------------------------------------------------------
 
@@ -263,8 +350,10 @@ CREATE TABLE `wallet_accounts` (
 --
 
 INSERT INTO `wallet_accounts` (`id`, `branch_id`, `account_name`, `account_number`, `label`, `current_balance`, `status`, `created_at`, `updated_at`) VALUES
-(1, 1, 'GCash', '09123456789', 'Primary Account', 500.00, 1, '2025-12-12 15:18:32', '2025-12-12 16:19:49'),
-(2, 1, 'Maya', '09123456789', 'Second Account', 5000.00, 1, '2025-12-12 15:18:32', '2025-12-12 16:19:35');
+(1, 1, 'GCash', '-', 'Main Account', 1000.00, 1, '2025-12-12 15:18:32', '2025-12-20 13:16:34'),
+(2, 1, 'Maya', '-', 'Main Account', 1000.00, 1, '2025-12-12 15:18:32', '2025-12-20 13:16:39'),
+(8, 4, 'GCash', 'test', 'test', 5000.00, 1, '2025-12-12 22:10:05', '2025-12-12 22:25:00'),
+(9, 4, 'Maya', 'test', 'test', 2000.00, 1, '2025-12-12 22:16:32', '2025-12-12 22:24:52');
 
 --
 -- Indexes for dumped tables
@@ -350,7 +439,7 @@ ALTER TABLE `branches`
 -- AUTO_INCREMENT for table `coh_logs`
 --
 ALTER TABLE `coh_logs`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=51;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=75;
 
 --
 -- AUTO_INCREMENT for table `daily_coh`
@@ -362,13 +451,13 @@ ALTER TABLE `daily_coh`
 -- AUTO_INCREMENT for table `login_logs`
 --
 ALTER TABLE `login_logs`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=54;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=115;
 
 --
 -- AUTO_INCREMENT for table `transactions`
 --
 ALTER TABLE `transactions`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=63;
 
 --
 -- AUTO_INCREMENT for table `users`
@@ -380,7 +469,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `wallet_accounts`
 --
 ALTER TABLE `wallet_accounts`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- Constraints for dumped tables
