@@ -13,7 +13,7 @@
 
     <div class="content" id="mainContent">
         <div class="container-fluid">
-            <h1 class="mb-4">Transaction Reports</h1>
+            <h1 class="mb-4">Transaction Reports <span class="badge bg-warning me-2">SAMPLE ONLY</span></h1>
 
 
             <!-- Filters Section -->

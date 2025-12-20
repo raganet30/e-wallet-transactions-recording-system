@@ -14,7 +14,7 @@ require '../config/session_checker.php';
     <div class="content" id="mainContent">
         <div id="globalAlertArea"></div>
         <div class="container-fluid">
-            <h1 class="mb-4">Wallet Accounts</h1>
+            <h1 class="mb-4">Wallet Accounts <span class="badge bg-info me-2">data from database</span></h1>
 
             <!-- Add Wallet Button -->
             <div class="row mb-4">

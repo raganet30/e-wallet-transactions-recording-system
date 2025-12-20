@@ -21,7 +21,7 @@ require '../config/session_checker.php';
                 <!-- Page Header with Add Button -->
 
                 <div class="d-flex justify-content-between align-items-center mb-4">
-                    <h1 class="mb-0">Transactions</h1>
+                    <h1 class="mb-0">Transactions <span class="badge bg-info me-2">data from database</span></h1>
                     <?php if (currentRole() !== 'super_admin'): ?>
                         <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addTransactionModal">
                             <i class="bi bi-plus-circle me-2"></i>Add New Transaction

@@ -14,7 +14,7 @@ require '../config/session_checker.php';
     <div class="content" id="mainContent">
         <div id="globalAlertArea"></div>
         <div class="container-fluid">
-            <h1 class="mb-4">Cash On Hand</h1>
+            <h1 class="mb-4">Cash On Hand <span class="badge bg-info me-2">data from database</span></h1>
 
             <!-- Cash On Hand Display -->
             <div class="row">
