@@ -6,7 +6,6 @@ header('Content-Type: application/json');
 $role = $_SESSION['role'] ?? null;
 $session_branch = $_SESSION['branch_id'] ?? null;
 
-$selected = $_GET['branch_id'] ?? ""; // always defined
 
 
 // select e-wallet account based on branch
