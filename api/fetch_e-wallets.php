@@ -8,7 +8,7 @@ $session_branch = $_SESSION['branch_id'] ?? null;
 
 $selected = $_GET['branch_id'] ?? ""; // always defined
 
-// ⭐ FORCE DEFAULT = ALL for super_admin
+//  FORCE DEFAULT = ALL for super_admin
 if ($role === "super_admin" && ($selected === "" || $selected === null)) {
     $selected = "all";
 }

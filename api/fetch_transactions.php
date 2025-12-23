@@ -5,133 +5,99 @@ header('Content-Type: application/json');
 
 $role           = $_SESSION['role'] ?? null;
 $session_branch = $_SESSION['branch_id'] ?? null;
-$selected       = $_GET['branch_id'] ?? ""; // always defined
 
-// FORCE DEFAULT = ALL for super_admin
-if ($role === "super_admin" && ($selected === "" || $selected === null)) {
-    $selected = "all";
+$branch_id   = $_GET['branch_id'] ?? '';
+$date_from   = $_GET['date_from'] ?? '';
+$date_to     = $_GET['date_to'] ?? '';
+$wallet_id   = $_GET['wallet_id'] ?? '';
+$type        = $_GET['transaction_type'] ?? '';
+
+$params = [];
+$types  = "";
+$where  = "WHERE t.is_deleted = 0";
+
+/* =========================
+   BRANCH CONTROL
+========================= */
+if ($role === "super_admin") {
+    if ($branch_id !== "" && $branch_id !== "all") {
+        $where .= " AND t.branch_id = ?";
+        $params[] = $branch_id;
+        $types .= "i";
+    }
+} elseif (!empty($session_branch)) {
+    $where .= " AND t.branch_id = ?";
+    $params[] = $session_branch;
+    $types .= "i";
 }
 
-/*
-|--------------------------------------------------------------------------
-| BUILD QUERY BASED ON ROLE & BRANCH
-|--------------------------------------------------------------------------
-*/
+/* =========================
+   DATE FILTER
+========================= */
+if (!empty($date_from)) {
+    $where .= " AND DATE(t.created_at) >= ?";
+    $params[] = $date_from;
+    $types .= "s";
+}
 
-// CASE 1: super_admin → ALL branches
-if ($role === "super_admin" && $selected === "all") {
+if (!empty($date_to)) {
+    $where .= " AND DATE(t.created_at) <= ?";
+    $params[] = $date_to;
+    $types .= "s";
+}
 
-    $query = "
-        SELECT 
-            t.id,
-            t.reference_no,
-            t.type,
-            t.amount,
-            t.charge,
-            t.total,
-            t.tendered_amount,
-            t.change_amount,
-            t.payment_thru,
-            t.created_at,
-            w.account_name AS wallet_name
-        FROM transactions t
-        LEFT JOIN wallet_accounts w ON w.id = t.wallet_id
-        WHERE t.is_deleted = 0
-        ORDER BY t.created_at DESC
-    ";
+/* =========================
+   E-WALLET FILTER
+========================= */
+if (!empty($wallet_id)) {
+    $where .= " AND t.wallet_id = ?";
+    $params[] = $wallet_id;
+    $types .= "i";
+}
 
-    $stmt = $con->prepare($query);
+/* =========================
+   TRANSACTION TYPE
+========================= */
+if (!empty($type)) {
+    $where .= " AND t.type = ?";
+    $params[] = $type;
+    $types .= "s";
+}
 
-// CASE 2: super_admin → specific branch
-} elseif ($role === "super_admin" && is_numeric($selected)) {
+/* =========================
+   FINAL QUERY
+========================= */
+$query = "
+    SELECT 
+        t.id,
+        t.reference_no,
+        t.type,
+        t.amount,
+        t.charge,
+        t.total,
+        t.tendered_amount,
+        t.change_amount,
+        t.payment_thru,
+        t.created_at,
+        w.account_name AS wallet_name
+    FROM transactions t
+    LEFT JOIN wallet_accounts w ON w.id = t.wallet_id
+    $where
+    ORDER BY t.created_at DESC
+";
 
-    $query = "
-        SELECT 
-            t.id,
-            t.reference_no,
-            t.type,
-            t.amount,
-            t.charge,
-            t.total,
-            t.tendered_amount,
-            t.change_amount,
-            t.payment_thru,
-            t.created_at,
-            w.account_name AS wallet_name
-        FROM transactions t
-        LEFT JOIN wallet_accounts w ON w.id = t.wallet_id
-        WHERE 
-            t.is_deleted = 0
-            AND t.branch_id = ?
-        ORDER BY t.created_at DESC
-    ";
+$stmt = $con->prepare($query);
 
-    $stmt = $con->prepare($query);
-    $stmt->bind_param("i", $selected);
-
-// CASE 3: normal user → own branch only
-} elseif (!empty($session_branch)) {
-
-    $query = "
-        SELECT 
-            t.id,
-            t.reference_no,
-            t.type,
-            t.amount,
-            t.charge,
-            t.total,
-            t.tendered_amount,
-            t.change_amount,
-            t.payment_thru,
-            t.created_at,
-            w.account_name AS wallet_name
-        FROM transactions t
-        LEFT JOIN wallet_accounts w ON w.id = t.wallet_id
-        WHERE 
-            t.is_deleted = 0
-            AND t.branch_id = ?
-        ORDER BY t.created_at DESC
-    ";
-
-    $stmt = $con->prepare($query);
-    $stmt->bind_param("i", $session_branch);
-
-// CASE 4: no branch context
-} else {
-    echo json_encode(["data" => []]);
-    exit;
+if (!empty($params)) {
+    $stmt->bind_param($types, ...$params);
 }
 
 $stmt->execute();
 $result = $stmt->get_result();
 
-/*
-|--------------------------------------------------------------------------
-| FORMAT RESPONSE FOR DATATABLE
-|--------------------------------------------------------------------------
-*/
-
-$transactions = [];
-$no = 1;
-
+$data = [];
 while ($row = $result->fetch_assoc()) {
-
-    $transactions[] = [
-        "no"              => $no++,
-        "id"              => $row['id'],
-        "reference_no"    => $row['reference_no'],
-        "wallet_name"     => $row['wallet_name'],
-        "type"            => $row['type'],
-        "amount"          => $row['amount'],
-        "charge"          => $row['charge'],
-        "total"           => $row['total'],
-        "payment_thru"    => $row['payment_thru'],
-        "tendered_amount" => $row['tendered_amount'],
-        "change_amount"   => $row['change_amount'],
-        "created_at"      => $row['created_at']
-    ];
+    $data[] = $row;
 }
 
-echo json_encode([
-    "data" => $transactions
-]);
+echo json_encode(["data" => $data]);

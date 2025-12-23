@@ -23,7 +23,7 @@ require '../config/session_checker.php';
                 <!-- E-wallet balance (Dynamic) -->
                 <div class="col-md-4 mb-3">
                     <div class="demo-content">
-                        <h5><i class="bi bi-phone me-2"></i>E-wallet Balance <span class="badge bg-info me-2">data from database</span></h5>
+                        <h5><i class="bi bi-phone me-2"></i>E-wallet Balance </h5>
                         <div class="mt-3" id="ewalletBalances">
                             <!-- Wallet balances will be dynamically injected here -->
                         </div>
@@ -33,7 +33,7 @@ require '../config/session_checker.php';
                 <!-- CASH ON HAND (remains static structure) -->
                 <div class="col-md-4 mb-3">
                     <div class="demo-content">
-                        <h5><i class="bi-cash-coin me-2"></i>Cash on Hand <span class="badge bg-info me-2">data from database</span></h5>
+                        <h5><i class="bi-cash-coin me-2"></i>Cash on Hand </h5>
                         <div class="mt-3 text-center">
                             <div class="h3 fw-bold text-primary" id="cohAmount">₱0.00</div>
                             <small class="text-muted" id="cohLastCount">Last count: Today</small>
@@ -46,7 +46,7 @@ require '../config/session_checker.php';
                 <!-- DAILY INCOME IN E-WALLETS (GCash, Maya) -->
                 <div class="col-md-4 mb-3">
                     <div class="demo-content">
-                        <h5><i class="bi bi-graph-up me-2"></i>Daily E-wallet Income  <span class="badge bg-warning me-2">SAMPLE ONLY</span> </h5>
+                        <h5><i class="bi bi-graph-up me-2"></i>Daily E-wallet Income   </h5>
                         <div class="mt-3">
                             <div class="d-flex justify-content-between mb-2">
                                 <span>GCash Income</span>
@@ -65,7 +65,7 @@ require '../config/session_checker.php';
                 <!-- DAILY INCOME IN CASH -->
                 <div class="col-md-4 mb-3">
                     <div class="demo-content">
-                        <h5><i class="bi bi-cash-stack me-2"></i>Daily Cash Income <span class="badge bg-warning me-2">SAMPLE ONLY</span></h5>
+                        <h5><i class="bi bi-cash-stack me-2"></i>Daily Cash Income </h5>
                         <div class="mt-3 text-center">
                             <div class="h3 fw-bold text-success">₱18,450.00</div>
                             <small class="text-muted">Cash transactions today</small>
@@ -76,7 +76,7 @@ require '../config/session_checker.php';
                 <!-- TOTAL DAILY INCOME (Cash + E-wallets income) -->
                 <div class="col-md-4 mb-3">
                     <div class="demo-content">
-                        <h5><i class="bi bi-bar-chart me-2"></i>Total Daily Income <span class="badge bg-warning me-2">SAMPLE ONLY</span></h5>
+                        <h5><i class="bi bi-bar-chart me-2"></i>Total Daily Income </h5>
                         <div class="mt-3 text-center">
                             <div class="h2 fw-bold" style="color: #3f8cff;">₱31,431.25</div>
                             <div class="mt-2">

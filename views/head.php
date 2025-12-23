@@ -14,4 +14,7 @@
 
     <!-- favicon -->
     <link rel="icon" type="image/png" href="../assets/images/e-wallet.png">
+
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.bootstrap5.min.css">
+
 </head>

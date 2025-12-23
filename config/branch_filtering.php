@@ -8,9 +8,9 @@ require_once  'helpers.php';
 // Only display dropdown if user is super_admin
 if (currentRole() === 'super_admin'):
 ?>
-    <div>
+     <div class="col-md-2">
         <label for="branchFilter" class="form-label me-2">Filter by Branch:</label>
-        <select id="branchFilter" class="form-select d-inline-block w-auto">
+        <select id="branchFilter" class="form-select">
             <option value="all">All Branches</option>
             <?php
             $query = "SELECT id, branch_name FROM branches ORDER BY branch_name ASC";

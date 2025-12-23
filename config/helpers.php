@@ -120,4 +120,24 @@ function fetchCurrentBranchCoh($branchId) {
     return 0; // fallback
 }
 
-// get all branches
+// function to save audit logs
+function saveAuditLog($userId, $branchId, $transactionId, $description, $actionType) {
+    global $con;
+
+    $stmt = $con->prepare("
+        INSERT INTO audit_logs (user_id, branch_id, transaction_id, description, action_type, created_at)
+        VALUES (?, ?, ?, ?, ?, NOW())
+    ");
+
+    $stmt->bind_param("iiiss",
+        $userId,
+        $branchId,
+        $transactionId,
+        $description,
+        $actionType
+    );
+
+    return $stmt->execute();
+}
+
+

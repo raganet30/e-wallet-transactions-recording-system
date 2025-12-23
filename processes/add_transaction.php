@@ -1,6 +1,7 @@
 <?php
 session_start();
 require '../config/db.php';
+require '../config/helpers.php';
 header('Content-Type: application/json');
 
 /**
@@ -250,6 +251,20 @@ try {
     /**
      * COMMIT EVERYTHING
      */
+
+
+    // addd audit log
+    saveAuditLog(
+        $user_id,
+        $branch_id,
+        $con->insert_id,
+        "Added $type transaction of " . number_format($amount, 2) .
+        " with transaction fee: " . number_format($charge, 2) . " via $payment_thru on e-wallet account '$wallet_name'. Reference no.: $reference_no. | Tendered amount: " . number_format($tendered, 2) .
+        "| Change: " . number_format($change, 2),
+        'add_transaction'
+    );
+
+
     $con->commit();
 
     echo json_encode([
