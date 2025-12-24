@@ -378,7 +378,11 @@ require '../config/session_checker.php';
                         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                     </div>
                     <div class="modal-body">
-                        <p>Are you sure you want to delete this transaction? This action cannot be undone.</p>
+                        <p>Are you sure you want to delete this transaction?
+                        <br>
+                        This process will reverse all affected balances.
+                        <br>
+                        This action cannot be undone.</p>
                         <input type="hidden" id="deleteTransactionId">
                     </div>
                     <div class="modal-footer">

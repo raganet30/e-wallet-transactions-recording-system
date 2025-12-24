@@ -23,26 +23,47 @@ require '../config/helpers.php';
         </span>
     </h5>
 
-    <a href="dashboard" class="menu-item active">
-        <i class="bi bi-speedometer2"></i> <span class="menu-text">Dashboard</span>
+    <!-- Dashboard -->
+    <a href="<?= (currentRole() === 'super_admin') ? 'super_admin_dashboard' : 'dashboard'; ?>" class="menu-item">
+        <i class="bi bi-speedometer2"></i>
+        <span class="menu-text">Dashboard</span>
     </a>
 
     <a href="transactions" class="menu-item">
-        <i class="bi bi-cash-stack"></i> <span class="menu-text">Transactions</span>
+        <i class="bi bi-card-checklist"></i> <span class="menu-text">Transactions</span>
     </a>
 
     <a href="e-wallets" class="menu-item">
-        <i class="bi bi-wallet2"></i> <span class="menu-text">E-Wallet Accounts</span>
+        <i class="bi bi-wallet-fill"></i> <span class="menu-text">E-Wallet Accounts</span>
     </a>
     <?php if (currentRole() !== 'super_admin'): ?>
         <a href="cash_on_hand" class="menu-item">
-            <i class="bi bi-currency-dollar"></i> <span class="menu-text">Cash on Hand</span>
+            <i class="bi bi-cash-stack"></i> <span class="menu-text">Cash on Hand</span>
         </a>
     <?php endif; ?>
-    <!-- Audit Log -->
-    <a href="audit_logs" class="menu-item">
-        <i class="bi bi-clock-history"></i> <span class="menu-text">Audit Logs</span>
-    </a>
+    <!-- Logs with Submenu -->
+    <div class="menu-item has-submenu">
+        <a href="javascript:void(0)" class="menu-link" onclick="toggleSubmenu(this)">
+            <i class="bi bi-clock-history"></i>
+            <span class="menu-text">Logs</span>
+            <i class="bi bi-chevron-down ms-auto submenu-icon"></i>
+        </a>
+
+        <div class="submenu">
+            <?php if (currentRole() === 'super_admin' || currentRole() === 'admin'): ?>
+                <a href="audit_logs" class="submenu-item">
+                    <i class="bi bi-journal-text"></i>
+                    <span>Audit Logs</span>
+                </a>
+            <?php endif; ?>
+
+            <a href="login_logs" class="submenu-item">
+                <i class="bi bi-box-arrow-in-right"></i>
+                <span>Login Logs</span>
+            </a>
+        </div>
+    </div>
+
 
     <a href="reports" class="menu-item">
         <i class="bi bi-journal-text"></i> <span class="menu-text">Reports</span>
@@ -106,5 +127,32 @@ require '../config/helpers.php';
     }
 
     // Run when page loads
+    document.addEventListener('DOMContentLoaded', setActiveMenuItem);
+
+
+    // submenu toggle
+    function toggleSubmenu(el) {
+        const parent = el.closest('.has-submenu');
+        parent.classList.toggle('open');
+    }
+
+    // Extend active menu detection for submenu items
+    function setActiveMenuItem() {
+        const currentPage = window.location.pathname.split("/").pop();
+
+        document.querySelectorAll('.menu-item, .submenu-item').forEach(item => {
+            item.classList.remove('active');
+
+            const href = item.getAttribute('href');
+            if (href === currentPage) {
+                item.classList.add('active');
+
+                // Auto-open submenu if child is active
+                const submenu = item.closest('.has-submenu');
+                if (submenu) submenu.classList.add('open');
+            }
+        });
+    }
+
     document.addEventListener('DOMContentLoaded', setActiveMenuItem);
 </script>

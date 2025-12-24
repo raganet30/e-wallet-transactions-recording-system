@@ -164,8 +164,8 @@
 
  /* FOOTER */
  .footer {
-     background: #3f8cff;
-     color: white;
+     background: #f7f7f7;
+     color: rgb(0, 0, 0);
      padding: 15px 0;
      text-align: center;
      position: fixed;
@@ -184,6 +184,7 @@
      width: calc(100% - 70px);
  }
 
+ 
  /* FOOTER CONTENT */
  .footer-content {
      display: flex;
@@ -291,6 +292,10 @@
 
  .badge-login {
      background-color: #007bff;
+     color: white;
+ }
+ .badge-logout {
+     background-color: #fe1e00;
      color: white;
  }
 
@@ -412,4 +417,41 @@
 
 .transaction-card:hover {
     border-color: #0d6efd;
+}
+
+
+/* Logs sub menu  */
+/* Make submenu stack vertically */
+.has-submenu {
+    display: flex;
+    flex-direction: column; /* IMPORTANT */
+}
+
+/* Main Logs button */
+.has-submenu > .menu-link {
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+/* Submenu container */
+.submenu {
+    display: none;
+    flex-direction: column; /* IMPORTANT */
+    width: 100%;
+    padding-left: 2.5rem;
+    margin-top: 6px;
+}
+
+/* Show submenu downward */
+.has-submenu.open .submenu {
+    display: flex;
+}
+
+/* Submenu items */
+.submenu-item {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding: 6px 0;
 }

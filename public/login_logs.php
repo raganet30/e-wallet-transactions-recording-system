@@ -13,7 +13,7 @@
 
    <div class="content" id="mainContent">
         <div class="container-fluid">
-            <h1 class="mb-4">Audit Logs </h1>
+            <h1 class="mb-4">Login Logs </h1>
 
             <!-- Filters Section -->
             <div class="row mb-4">
@@ -35,9 +35,8 @@
                                     <label for="actionType" class="form-label">Action Type</label>
                                     <select class="form-select" id="actionType">
                                         <option value="">All Types</option>
-                                        <option value="add_transaction">Add Transaction</option>
-                                        <option value="delete_transaction">Delete Transaction</option>
-                                        <!-- other action types -->
+                                        <option value="login">Login</option>
+                                        <option value="logout">Logout</option>
                                     </select>
                                 </div>
                                 <div class="col-md-2 d-flex align-items-end">
@@ -63,107 +62,88 @@
                     <div class="card">
                         <div class="card-header bg-white d-flex justify-content-between align-items-center">
                             <h5 class="card-title mb-0">
-                                <i class="bi bi-list-check me-2"></i>Audit Logs
+                                <i class="bi bi-list-check me-2"></i>Login Logs
                             </h5>
-                            <div class="btn-group">
-                                <button class="btn btn-sm btn-outline-secondary" id="refreshLogs">
-                                    <i class="bi bi-arrow-clockwise me-1"></i> Refresh
-                                </button>
-                                <button class="btn btn-sm btn-outline-secondary" id="exportLogs">
-                                    <i class="bi bi-download me-1"></i> Export
-                                </button>
-                            </div>
+                           
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
                                 <table id="auditLogsTable" class="table table-hover" style="width:100%">
                                     <thead>
                                         <tr>
-                                            <th>No.</th>
+                                            <th>No.</th> 
+                                            <th>Date & Time</th>
                                             <th>Action Type</th>
                                             <th>Description</th>
-                                            <th>Date & Time</th>
                                             <th>User</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                    
-                                        <!-- Sample Audit Log 3: Transaction -->
+                                        <!-- Sample Audit Log 1: Login -->
                                         <tr>
-                                            <td>3</td>
+                                            <td>1</td>
+                                             <td data-order="2023-12-05 14:30:00">
+                                                <div class="fw-medium">12-24-2025 08:00</div>
+                                            </td>
                                             <td>
-                                                <span class="badge badge-transaction">Transaction</span>
+                                                <span class="badge badge-login">Login</span>
                                             </td>
                                             <td class="action-cell">
                                                 <div class="d-flex align-items-center">
-                                                    <div class="log-icon bg-info bg-opacity-10">
-                                                        <i class="bi bi-arrow-left-right text-info"></i>
+                                                    <div class="log-icon bg-primary bg-opacity-10">
+                                                        <i class="bi bi-box-arrow-in-right text-primary"></i>
                                                     </div>
                                                     <div>
-                                                        <div class="fw-medium">New transaction created</div>
-                                                        <small class="text-muted">GCash • ₱1,500.00 • Ref: 0123456</small>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td data-order="2023-12-05 15:00:00">
-                                                <div class="fw-medium">Dec 5, 2023</div>
-                                                <small class="text-muted">3:00 PM</small>
-                                            </td>
-                                            <td>
-                                                <div class="d-flex align-items-center">
-                                                    <div class="avatar-sm me-2">
-                                                        <span class="avatar-title rounded-circle bg-info bg-opacity-10 text-info">
-                                                            CU
-                                                        </span>
-                                                    </div>
-                                                    <div>
-                                                        <div class="fw-medium">Cashier User</div>
-                                                        <small class="text-muted">Cashier</small>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                        
-                                        </tr>
-
-                                        <!-- Sample Audit Log 4: Wallet -->
-                                        <tr>
-                                            <td>4</td>
-                                            <td>
-                                                <span class="badge badge-wallet">Wallet</span>
-                                            </td>
-                                            <td class="action-cell">
-                                                <div class="d-flex align-items-center">
-                                                    <div class="log-icon bg-purple bg-opacity-10" style="background-color: rgba(111, 66, 193, 0.1);">
-                                                        <i class="bi bi-wallet2" style="color: #6f42c1;"></i>
-                                                    </div>
-                                                    <div>
-                                                        <div class="fw-medium">New wallet account added</div>
-                                                        <small class="text-muted">Maya • 0985-987-6543 • Secondary Account</small>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td data-order="2023-12-04 11:20:00">
-                                                <div class="fw-medium">Dec 4, 2023</div>
-                                                <small class="text-muted">11:20 AM</small>
-                                            </td>
-                                            <td>
-                                                <div class="d-flex align-items-center">
-                                                    <div class="avatar-sm me-2">
-                                                        <span class="avatar-title rounded-circle" style="background-color: rgba(111, 66, 193, 0.1); color: #6f42c1;">
-                                                            AU
-                                                        </span>
-                                                    </div>
-                                                    <div>
-                                                        <div class="fw-medium">Admin User</div>
-                                                        <small class="text-muted">Administrator</small>
+                                                        <div class="fw-medium">User login | IP: </div>
+                                                       
                                                     </div>
                                                 </div>
                                             </td>
                                            
+                                            <td>
+                                                <div class="d-flex align-items-center">
+                                                    <div class="avatar-sm me-2">
+                                                    </div>
+                                                    <div>
+                                                        <div class="fw-medium">Admin User</div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                          
                                         </tr>
 
-                                  
-                                      
+                                        <!-- Sample Audit Log 2: Logout -->
+                                        <tr>
+                                            <td>2</td> 
+                                            <td data-order="2023-12-05 15:45:00">
+                                                <div class="fw-medium">12-24-2025 09:00</div>
+                                            </td>
+                                            <td>
+                                                <span class="badge badge-logout">Logout</span>
+                                            </td>
+                                            <td class="action-cell">
+                                                <div class="d-flex align-items-center">
+                                                    <div class="log-icon bg-secondary bg-opacity-10">
+                                                        <i class="bi bi-box-arrow-right text-secondary"></i>
+                                                    </div>
+                                                    <div>
+                                                        <div class="fw-medium">User logged out | IP: </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                           
+                                            <td>
+                                                <div class="d-flex align-items-center">
+                                                    <div class="avatar-sm me-2">
+                                                        
+                                                    </div>
+                                                    <div>
+                                                        <div class="fw-medium">Admin User</div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+
                                     </tbody>
                                 </table>
                             </div>

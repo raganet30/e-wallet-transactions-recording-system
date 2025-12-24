@@ -35,7 +35,7 @@ $tendered       = (float) ($_POST['tendered_amount'] ?? 0);
 if (
     !$wallet_id ||
     !in_array($type, ['Cash-in', 'Cash-out']) ||
-    !in_array($payment_thru, ['GCash', 'Maya', 'Cash']) ||
+    !in_array($payment_thru, ['GCash', 'Maya', 'Others', 'Cash']) ||
     $amount <= 0 ||
     $charge < 0
 ) {
@@ -225,6 +225,7 @@ try {
         $reference_no
     );
     $stmt->execute();
+    $transaction_id = $con->insert_id;
 
     /**
      * UPDATE WALLET BALANCE
@@ -253,11 +254,12 @@ try {
      */
 
 
+    
     // addd audit log
     saveAuditLog(
         $user_id,
         $branch_id,
-        $con->insert_id,
+        $transaction_id,
         "Added $type transaction of " . number_format($amount, 2) .
         " with transaction fee: " . number_format($charge, 2) . " via $payment_thru on e-wallet account '$wallet_name'. Reference no.: $reference_no. | Tendered amount: " . number_format($tendered, 2) .
         "| Change: " . number_format($change, 2),

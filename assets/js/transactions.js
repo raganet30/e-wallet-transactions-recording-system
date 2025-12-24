@@ -329,9 +329,9 @@ $(document).ready(function () {
                     sheet.childNodes[0].childNodes[1].innerHTML += `
             <row r="${lastRow}">
                 <c r="A${lastRow}" t="inlineStr"><is><t>TOTAL</t></is></c>
-                <c r="F${lastRow}" t="inlineStr"><is><t>${footerTotals.amount.toFixed(2)}</t></is></c>
-                <c r="G${lastRow}" t="inlineStr"><is><t>${footerTotals.charge.toFixed(2)}</t></is></c>
-                <c r="H${lastRow}" t="inlineStr"><is><t>${footerTotals.total.toFixed(2)}</t></is></c>
+                <c r="F${lastRow}" t="inlineStr"><is><t>₱${footerTotals.amount.toFixed(2)}</t></is></c>
+                <c r="G${lastRow}" t="inlineStr"><is><t>₱${footerTotals.charge.toFixed(2)}</t></is></c>
+                <c r="H${lastRow}" t="inlineStr"><is><t>₱${footerTotals.total.toFixed(2)}</t></is></c>
             </row>
         `;
                 }
@@ -352,25 +352,79 @@ $(document).ready(function () {
 
                     const meta = buildReportMeta();
 
-                    // Remove default title
+                    /* =========================
+                       PAGE SETUP
+                    ========================== */
+                    doc.pageMargins = [40, 60, 40, 40]; // left, top, right, bottom
+
+                    /* =========================
+                       REMOVE DEFAULT TITLE
+                    ========================== */
                     doc.content.splice(0, 1);
 
-                    // Insert dynamic title
+                    /* =========================
+                       HEADER TITLE
+                    ========================== */
                     doc.content.unshift({
                         text: meta.title,
                         style: 'header',
                         alignment: 'center',
-                        margin: [0, 0, 0, 12]
+                        margin: [0, 0, 0, 15]
                     });
 
-                    let body = doc.content[1].table.body;
+                    /* =========================
+                       TABLE LAYOUT CONTROL
+                    ========================== */
+                    const table = doc.content.find(c => c.table);
+                    table.alignment = 'center';
 
-                    body.push([
+                    table.layout = {
+                        hLineWidth: () => 0.8,
+                        vLineWidth: () => 0.8,
+                        hLineColor: () => '#ccc',
+                        vLineColor: () => '#ccc',
+                        paddingLeft: () => 6,
+                        paddingRight: () => 6,
+                        paddingTop: () => 4,
+                        paddingBottom: () => 4
+                    };
+
+                    /* =========================
+                       COLUMN WIDTHS (FIT A4)
+                       TOTAL = 100%
+                    ========================== */
+                    table.table.widths = [
+                        '5%',   // No
+                        '12%',  // Date
+                        '15%',  // Reference
+                        '12%',  // E-wallet
+                        '10%',  // Type
+                        '10%',  // Amount
+                        '10%',  // Fee
+                        '10%',  // Total
+                        '11%'   // Fee Thru
+                    ];
+
+                    /* =========================
+                       FONT & HEADER STYLE
+                    ========================== */
+                    doc.styles.tableHeader = {
+                        fontSize: 9,
+                        bold: true,
+                        alignment: 'center'
+                    };
+
+                    doc.defaultStyle.fontSize = 8;
+
+                    /* =========================
+                       ADD FOOTER TOTAL
+                    ========================== */
+                    table.table.body.push([
                         { text: 'TOTAL', colSpan: 5, alignment: 'right', bold: true }, {}, {}, {}, {},
-                        footerTotals.amount.toFixed(2),
-                        footerTotals.charge.toFixed(2),
-                        footerTotals.total.toFixed(2),
-                        ''
+                        { text: '₱' + footerTotals.amount.toFixed(2), alignment: 'right', bold: true },
+                        { text: '₱' + footerTotals.charge.toFixed(2), alignment: 'right', bold: true },
+                        { text: '₱' + footerTotals.total.toFixed(2), alignment: 'right', bold: true },
+                        { text: '', alignment: 'center' }
                     ]);
                 }
             },
@@ -486,15 +540,23 @@ $(document).ready(function () {
                 data: null,
                 orderable: false,
                 searchable: false,
-                render: row => `
-                <button class="btn btn-sm btn-outline-primary view-btn" data-id="${row.id}">
-                    <i class="bi bi-eye"></i>
-                </button>
-                <button class="btn btn-sm btn-outline-danger delete-btn" data-id="${row.id}">
-                    <i class="bi bi-trash"></i>
-                </button>
-            `
+                render: row => {
+
+                    const canDelete = window.CURRENT_ROLE === 'admin';
+
+                    return `
+                    <button class="btn btn-sm btn-outline-primary view-btn" data-id="${row.id}">
+                        <i class="bi bi-eye"></i>
+                    </button>
+                    ${canDelete ? `
+                        <button class="btn btn-sm btn-outline-danger delete-btn" data-id="${row.id}">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                        ` : ''}
+                    `;
+                }
             }
+
         ]
     });
 
@@ -565,6 +627,51 @@ $(document).ready(function () {
         loadEwallets($(this).val());
         table.ajax.reload();
     });
+
+
+    // delete transaction function
+    let deleteId = null;
+
+    $('#transactionsTable').on('click', '.delete-btn', function () {
+        deleteId = $(this).data('id');
+        $('#deleteTransactionId').val(deleteId);
+        $('#deleteModal').modal('show');
+    });
+
+    $('#confirmDelete').on('click', function () {
+
+        const id = $('#deleteTransactionId').val();
+
+        $.post('../processes/delete_transaction.php', { id }, function (res) {
+
+            if (res.success) {
+                $('#deleteModal').modal('hide');
+                // show global alert
+                let alertHtml = `
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    ${res.message || 'Transaction deleted successfully.'}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            `;
+                $('#transactionsTable').DataTable().ajax.reload(null, false);
+                $("#globalAlertArea").html(alertHtml);
+                 setTimeout(() => $(".alert").alert('close'), 3000);
+
+
+            } else {
+                let alertHtml = `
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    ${res.message || 'Failed to delete transaction.'}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            `;
+                $("#deleteModal .modal-body").prepend(alertHtml);
+                setTimeout(() => $(".alert").alert('close'), 3000);
+            }
+
+        }, 'json');
+    });
+
 
 
 });
