@@ -141,3 +141,16 @@ function saveAuditLog($userId, $branchId, $transactionId, $description, $actionT
 }
 
 
+function saveProfileAuditLog($userId, $branchId, $description) {
+    global $con;
+
+    $stmt = $con->prepare("
+        INSERT INTO audit_logs
+        (user_id, branch_id, description, action_type, created_at)
+        VALUES (?, ?, ?, 'update_profile', NOW())
+    ");
+
+    $stmt->bind_param("iis", $userId, $branchId, $description);
+    return $stmt->execute();
+}
+

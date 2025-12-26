@@ -91,6 +91,18 @@ require '../config/session_checker.php';
                             </div>
                         </div>
                     </div>
+
+                    <!-- grand total income (e-wallet income + cash income) -->
+                    <div class="col-md-4 mb-3">
+                        <div class="demo-content">
+                            <h5><i class="bi bi-calculator me-2"></i>Grand Total Income </h5>
+                            <div class="mt-3 text-center">
+                                <div class="h3 fw-bold text-secondary" id="grandTotalIncome">₱0.00</div>
+                                <small class="text-muted">Total income from all sources</small>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
                 <hr>
                 <!-- add trendS chart for monthy income -->
@@ -111,36 +123,37 @@ require '../config/session_checker.php';
                             <canvas id="monthlyIncomeChart" height="120"></canvas>
                         </div>
                     </div>
-    
+
                 </div>
-     
+
 
 
             </div>
         </div>
-        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-        <?php include '../views/scripts.php'; ?>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <?php include '../views/scripts.php'; ?>
 
-        <script>
-            $(document).ready(function () {
+    <script>
+        $(document).ready(function () {
 
-                function loadEwalletBalances() {
-                    $.ajax({
-                        url: "../api/fetch_e-wallets.php",
-                        type: "GET",
-                        dataType: "json",
-                        success: function (response) {
-                            const container = $("#ewalletBalances");
-                            container.empty();
+            function loadEwalletBalances() {
+                $.ajax({
+                    url: "../api/fetch_e-wallets.php",
+                    type: "GET",
+                    dataType: "json",
+                    success: function (response) {
+                        const container = $("#ewalletBalances");
+                        container.empty();
 
-                            let totalBalance = 0;
+                        let totalBalance = 0;
 
-                            if (response.data && response.data.length > 0) {
-                                response.data.forEach(wallet => {
-                                    const balance = parseFloat(wallet.current_balance.replace(/,/g, '')) || 0;
-                                    totalBalance += balance;
+                        if (response.data && response.data.length > 0) {
+                            response.data.forEach(wallet => {
+                                const balance = parseFloat(wallet.current_balance.replace(/,/g, '')) || 0;
+                                totalBalance += balance;
 
-                                    const row = `
+                                const row = `
                                   <div class="d-flex justify-content-between align-items-center mb-2 p-2 rounded bg-light shadow-sm wallet-row">
                                     <div>
                                         <span class="fw-semibold">${wallet.account_name}</span>
@@ -152,208 +165,219 @@ require '../config/session_checker.php';
                                 </div>
 
                                 `;
-                                    container.append(row);
-                                });
+                                container.append(row);
+                            });
 
-                                // Add total row at the bottom
-                                const totalRow = `
+                            // Add total row at the bottom
+                            const totalRow = `
                                 <hr>
                                 <div class="d-flex justify-content-between fw-bold">
                                     <span>Total E-wallet balance</span>
                                     <span>₱${totalBalance.toLocaleString("en-PH", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                                 </div>
                             `;
-                                container.append(totalRow);
+                            container.append(totalRow);
 
-                            } else {
-                                container.append(`<div class="text-muted">No e-wallet accounts available.</div>`);
-                            }
-                        },
-                        error: function () {
-                            $("#ewalletBalances").html(`<div class="text-danger">Failed to load e-wallet balances.</div>`);
+                        } else {
+                            container.append(`<div class="text-muted">No e-wallet accounts available.</div>`);
                         }
-                    });
-                }
+                    },
+                    error: function () {
+                        $("#ewalletBalances").html(`<div class="text-danger">Failed to load e-wallet balances.</div>`);
+                    }
+                });
+            }
 
-                function loadCoh() {
-                    $.ajax({
-                        url: "../api/fetch_current_coh.php",
-                        type: "GET",
-                        dataType: "json",
-                        success: function (response) {
-                            let coh = parseFloat(response.current_coh) || 0;
-                            $("#cohAmount").text("₱" + coh.toLocaleString("en-PH", { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
-                            $("#cohLastCount").text(response.last_count || "Today");
+            function loadCoh() {
+                $.ajax({
+                    url: "../api/fetch_current_coh.php",
+                    type: "GET",
+                    dataType: "json",
+                    success: function (response) {
+                        let coh = parseFloat(response.current_coh) || 0;
+                        $("#cohAmount").text("₱" + coh.toLocaleString("en-PH", { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
+                        $("#cohLastCount").text(response.last_count || "Today");
+                    },
+                    error: function () {
+                        $("#cohAmount").text("₱0.00");
+                        $("#cohLastCount").text("-");
+                    }
+                });
+            }
+
+            // Load data on page ready
+            loadEwalletBalances();
+            loadCoh();
+
+        });
+
+
+
+        // load daily income
+        function formatPeso(value) {
+            return '₱' + Number(value).toLocaleString(undefined, {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            });
+        }
+
+        function loadDailyIncome() {
+
+            $.getJSON('../api/fetch_daily_income.php', function (res) {
+
+                if (!res.success) return;
+
+                const d = res.data;
+
+                $('#gcashIncome').text(formatPeso(d.gcash));
+                $('#mayaIncome').text(formatPeso(d.maya));
+                $('#otherEwalletIncome').text(formatPeso(d.others));
+                $('#cashIncome').text(formatPeso(d.cash));
+
+                $('#totalIncome').text(formatPeso(d.grand_total));
+                $('#cashBadge').text('Cash: ' + formatPeso(d.cash));
+                $('#ewalletBadge').text('E-wallets: ' + formatPeso(d.ewallet_total));
+            });
+        }
+
+        // Load on page ready
+        $(document).ready(function () {
+            loadDailyIncome();
+        });
+
+        function loadGrandTotalIncome() {
+            $.getJSON('../api/fetch_grand_total_income.php', function (res) {
+                if (!res.success) return;
+                $('#grandTotalIncome').text(formatPeso(res.grand_total_income));
+            });
+        }
+
+        $(document).ready(function () {
+            loadGrandTotalIncome();
+        });
+
+
+
+        // load income trends charts
+        function peso(n) {
+            return '₱' + Number(n).toLocaleString(undefined, {
+                minimumFractionDigits: 2
+            });
+        }
+
+
+        let dailyChart, monthlyChart;
+
+        function loadIncomeTrends() {
+
+            $.getJSON('../api/fetch_income_trends.php', function (res) {
+
+                if (!res.success) return;
+
+                /* =========================
+                   DAILY CHART
+                ========================== */
+                const dailyLabels = Object.keys(res.daily);
+                const dailyData = Object.values(res.daily);
+
+                if (dailyChart) dailyChart.destroy();
+
+                dailyChart = new Chart(
+                    document.getElementById('dailyIncomeChart'),
+                    {
+                        type: 'line',
+                        data: {
+                            labels: dailyLabels,
+                            datasets: [{
+                                label: 'Daily Income',
+                                data: dailyData,
+                                tension: 0.3,
+                                fill: true
+                            }]
                         },
-                        error: function () {
-                            $("#cohAmount").text("₱0.00");
-                            $("#cohLastCount").text("-");
-                        }
-                    });
-                }
-
-                // Load data on page ready
-                loadEwalletBalances();
-                loadCoh();
-
-            });
-
-
-
-            // load daily income
-            function formatPeso(value) {
-                return '₱' + Number(value).toLocaleString(undefined, {
-                    minimumFractionDigits: 2,
-                    maximumFractionDigits: 2
-                });
-            }
-
-            function loadDailyIncome() {
-
-                $.getJSON('../api/fetch_daily_income.php', function (res) {
-
-                    if (!res.success) return;
-
-                    const d = res.data;
-
-                    $('#gcashIncome').text(formatPeso(d.gcash));
-                    $('#mayaIncome').text(formatPeso(d.maya));
-                    $('#otherEwalletIncome').text(formatPeso(d.others));
-                    $('#cashIncome').text(formatPeso(d.cash));
-
-                    $('#totalIncome').text(formatPeso(d.grand_total));
-                    $('#cashBadge').text('Cash: ' + formatPeso(d.cash));
-                    $('#ewalletBadge').text('E-wallets: ' + formatPeso(d.ewallet_total));
-                });
-            }
-
-            // Load on page ready
-            $(document).ready(function () {
-                loadDailyIncome();
-            });
-
-
-
-            // load income trends charts
-            function peso(n) {
-                return '₱' + Number(n).toLocaleString(undefined, {
-                    minimumFractionDigits: 2
-                });
-            }
-
-
-            let dailyChart, monthlyChart;
-
-            function loadIncomeTrends() {
-
-                $.getJSON('../api/fetch_income_trends.php', function (res) {
-
-                    if (!res.success) return;
-
-                    /* =========================
-                       DAILY CHART
-                    ========================== */
-                    const dailyLabels = Object.keys(res.daily);
-                    const dailyData = Object.values(res.daily);
-
-                    if (dailyChart) dailyChart.destroy();
-
-                    dailyChart = new Chart(
-                        document.getElementById('dailyIncomeChart'),
-                        {
-                            type: 'line',
-                            data: {
-                                labels: dailyLabels,
-                                datasets: [{
-                                    label: 'Daily Income',
-                                    data: dailyData,
-                                    tension: 0.3,
-                                    fill: true
-                                }]
-                            },
-                            options: {
-                                responsive: true,
-                                plugins: {
-                                    tooltip: {
-                                        callbacks: {
-                                            label: ctx => peso(ctx.raw)
-                                        }
+                        options: {
+                            responsive: true,
+                            plugins: {
+                                tooltip: {
+                                    callbacks: {
+                                        label: ctx => peso(ctx.raw)
                                     }
-                                },
-                                scales: {
-                                    y: {
-                                        ticks: {
-                                            callback: value => peso(value)
-                                        }
+                                }
+                            },
+                            scales: {
+                                y: {
+                                    ticks: {
+                                        callback: value => peso(value)
                                     }
                                 }
                             }
                         }
-                    );
+                    }
+                );
 
-                    /* =========================
-                       MONTHLY CHART
-                    ========================== */
-                    const monthNames = [
-                        'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-                        'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
-                    ];
+                /* =========================
+                   MONTHLY CHART
+                ========================== */
+                const monthNames = [
+                    'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+                    'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+                ];
 
-                    const monthlyKeys = Object.keys(res.monthly);
-                    const monthlyData = Object.values(res.monthly);
+                const monthlyKeys = Object.keys(res.monthly);
+                const monthlyData = Object.values(res.monthly);
 
-                    const monthlyLabels = monthlyKeys.map(k => {
-                        const m = parseInt(k.split('-')[1], 10);
-                        return monthNames[m - 1];
-                    });
+                const monthlyLabels = monthlyKeys.map(k => {
+                    const m = parseInt(k.split('-')[1], 10);
+                    return monthNames[m - 1];
+                });
 
 
-                    if (monthlyChart) monthlyChart.destroy();
+                if (monthlyChart) monthlyChart.destroy();
 
-                    monthlyChart = new Chart(
-                        document.getElementById('monthlyIncomeChart'),
-                        {
-                            type: 'bar',
-                            data: {
-                                labels: monthlyLabels,
-                                datasets: [{
-                                    label: 'Monthly Income',
-                                    data: monthlyData
-                                }]
-                            },
-                            options: {
-                                responsive: true,
-                                plugins: {
-                                    tooltip: {
-                                        callbacks: {
-                                            label: ctx => peso(ctx.raw)
-                                        }
+                monthlyChart = new Chart(
+                    document.getElementById('monthlyIncomeChart'),
+                    {
+                        type: 'bar',
+                        data: {
+                            labels: monthlyLabels,
+                            datasets: [{
+                                label: 'Monthly Income',
+                                data: monthlyData
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            plugins: {
+                                tooltip: {
+                                    callbacks: {
+                                        label: ctx => peso(ctx.raw)
                                     }
-                                },
-                                scales: {
-                                    y: {
-                                        ticks: {
-                                            callback: value => peso(value)
-                                        }
+                                }
+                            },
+                            scales: {
+                                y: {
+                                    ticks: {
+                                        callback: value => peso(value)
                                     }
                                 }
                             }
                         }
-                    );
+                    }
+                );
 
-                });
-            }
-
-            $(document).ready(function () {
-                loadIncomeTrends();
             });
+        }
+
+        $(document).ready(function () {
+            loadIncomeTrends();
+        });
 
 
 
-        </script>
+    </script>
 
 
-        <?php include '../views/footer.php'; ?>
+    <?php include '../views/footer.php'; ?>
 
 </body>
 

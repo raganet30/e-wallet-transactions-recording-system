@@ -187,22 +187,32 @@ $(document).ready(function () {
             },
             order: [[1, 'desc']],
             footerCallback: function (row, data) {
-                if (!footerTotals[type]) footerTotals[type] = { amount: 0, charge: 0, total: 0 };
-                footerTotals[type].amount = 0;
-                footerTotals[type].charge = 0;
-                footerTotals[type].total = 0;
+                let totalAmount = 0, totalCharge = 0, grandTotal = 0;
 
                 data.forEach(item => {
-                    footerTotals[type].amount += parseFloat(item.amount || 0);
-                    footerTotals[type].charge += parseFloat(item.charge || 0);
-                    footerTotals[type].total += parseFloat(item.total || 0);
+                    totalAmount += parseFloat(item.amount || 0);
+                    totalCharge += parseFloat(item.charge || 0);
+                    grandTotal += parseFloat(item.total || 0);
                 });
 
                 const table = $(row).closest('table');
-                table.find('#dailyTotalAmount,#monthlyTotalAmount,#customTotalAmount').text('₱' + footerTotals[type].amount.toLocaleString(undefined, { minimumFractionDigits: 2 }));
-                table.find('#dailyTotalCharge,#monthlyTotalCharge,#customTotalCharge').text('₱' + footerTotals[type].charge.toLocaleString(undefined, { minimumFractionDigits: 2 }));
-                table.find('#dailyGrandTotal,#monthlyGrandTotal,#customGrandTotal').text('₱' + footerTotals[type].total.toLocaleString(undefined, { minimumFractionDigits: 2 }));
-                
+                if (table.attr('id') === 'dailyReportTable') {
+                    $('#dailyTotalAmount').text('₱' + totalAmount.toLocaleString(undefined, { minimumFractionDigits: 2 }));
+                    $('#dailyTotalCharge').text('₱' + totalCharge.toLocaleString(undefined, { minimumFractionDigits: 2 }));
+                    $('#dailyGrandTotal').text('₱' + grandTotal.toLocaleString(undefined, { minimumFractionDigits: 2 }));
+                } else if (table.attr('id') === 'monthlyReportTable') {
+                    $('#monthlyTotalAmount').text('₱' + totalAmount.toLocaleString(undefined, { minimumFractionDigits: 2 }));
+                    $('#monthlyTotalCharge').text('₱' + totalCharge.toLocaleString(undefined, { minimumFractionDigits: 2 }));
+                    $('#monthlyGrandTotal').text('₱' + grandTotal.toLocaleString(undefined, { minimumFractionDigits: 2 }));
+                } else if (table.attr('id') === 'customReportTable') {
+                    $('#customTotalAmount').text('₱' + totalAmount.toLocaleString(undefined, { minimumFractionDigits: 2 }));
+                    $('#customTotalCharge').text('₱' + totalCharge.toLocaleString(undefined, { minimumFractionDigits: 2 }));
+                    $('#customGrandTotal').text('₱' + grandTotal.toLocaleString(undefined, { minimumFractionDigits: 2 }));
+                } else if (table.attr('id') === 'summaryReportTable') {
+                    $('#summaryTotalAmount').text('₱' + totalAmount.toLocaleString(undefined, { minimumFractionDigits: 2 }));
+                    $('#summaryTotalCharge').text('₱' + totalCharge.toLocaleString(undefined, { minimumFractionDigits: 2 }));
+                    $('#summaryGrandTotal').text('₱' + grandTotal.toLocaleString(undefined, { minimumFractionDigits: 2 }));
+                }
             },
             columns: [
                 { data: null, render: (d, t, r, m) => m.row + 1 },
@@ -247,8 +257,21 @@ $(document).ready(function () {
                 text: '<i class="bi bi-file-earmark-excel"></i> Excel',
                 className: 'btn btn-success btn-sm',
                 exportOptions: {
-                    columns: [0, 1, 2, 3, 4, 5, 6] // exclude Tendered and Change
+                    columns: [0, 1, 2, 3, 4, 5] // exclude Tendered and Change
                 },
+                customize: function (xlsx) {
+                    const sheet = xlsx.xl.worksheets['sheet1.xml'];
+                    const rowNodes = sheet.getElementsByTagName('row');
+                    const newRowIndex = parseInt(rowNodes[rowNodes.length - 1].getAttribute('r')) + 1;
+
+                    const newRow = `<row r="${newRowIndex}">
+                        <c t="inlineStr" r="D${newRowIndex}"><is><t>${$('#summaryTotalAmount').text()}</t></is></c>
+                        <c t="inlineStr" r="E${newRowIndex}"><is><t>${$('#summaryTotalCharge').text()}</t></is></c>
+                        <c t="inlineStr" r="F${newRowIndex}"><is><t>${$('#summaryGrandTotal').text()}</t></is></c>
+                    </row>`;
+                    sheet.getElementsByTagName('sheetData')[0].innerHTML += newRow;
+                },
+
                 title: 'Summary Transactions Report',
                 filename: `Summary_Report_${new Date().toISOString().slice(0, 10)}`
             },
@@ -259,7 +282,7 @@ $(document).ready(function () {
                 orientation: 'landscape',
                 pageSize: 'A4',
                 exportOptions: {
-                    columns: [0, 1, 2, 3, 4, 5, 6] // exclude Tendered and Change
+                    columns: [0, 1, 2, 3, 4, 5] // exclude Tendered and Change
                 },
                 filename: `Summary_Report_${new Date().toISOString().slice(0, 10)}`,
                 customize: function (doc) {
@@ -268,6 +291,12 @@ $(document).ready(function () {
                     doc.styles.tableHeader.fontSize = 9;
 
                     const table = doc.content.find(c => c.table);
+                    table.table.body.push([
+                        { text: 'Totals:', colSpan: 3, alignment: 'right' }, {}, {},
+                        { text: $('#summaryTotalAmount').text(), alignment: 'right' },
+                        { text: $('#summaryTotalCharge').text(), alignment: 'right' },
+                        { text: $('#summaryGrandTotal').text(), alignment: 'right' }
+                    ]);
                     table.layout = {
                         hLineWidth: () => 0.5,
                         vLineWidth: () => 0.5,
@@ -296,7 +325,7 @@ $(document).ready(function () {
                 extend: 'print',
                 text: '<i class="bi bi-printer"></i> Print',
                 className: 'btn btn-secondary btn-sm',
-                exportOptions: { columns: [0, 1, 2, 3, 4, 5, 6] }, // exclude Tendered and Change
+                exportOptions: { columns: [0, 1, 2, 3, 4, 5] }, // exclude Tendered and Change
                 customize: function (win) {
                     $(win.document.body).find('h1').remove();
                     $(win.document.body).prepend(`<h4 style="text-align:center;margin-bottom:15px">Summary Transactions Report</h4>`);
@@ -317,9 +346,19 @@ $(document).ready(function () {
             dataSrc: 'data'
         },
         order: [[1, 'asc']],
+        footerCallback: function (row, data) {
+            let totalAmount = 0, totalCharge = 0, grandTotal = 0;
+            data.forEach(item => {
+                totalAmount += parseFloat(item.amount || 0);
+                totalCharge += parseFloat(item.charge || 0);
+                grandTotal += parseFloat(item.total || 0);
+            });
+            $('#summaryTotalAmount').text('₱' + totalAmount.toLocaleString(undefined, { minimumFractionDigits: 2 }));
+            $('#summaryTotalCharge').text('₱' + totalCharge.toLocaleString(undefined, { minimumFractionDigits: 2 }));
+            $('#summaryGrandTotal').text('₱' + grandTotal.toLocaleString(undefined, { minimumFractionDigits: 2 }));
+        },
         columns: [
             { data: null, render: (d, t, r, m) => m.row + 1 },
-            { data: 'branch_name' },
             { data: 'wallet_name' },
             { data: 'type' },
             { data: 'amount', render: d => '₱' + Number(d).toLocaleString(undefined, { minimumFractionDigits: 2 }) },

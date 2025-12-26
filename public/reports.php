@@ -227,15 +227,16 @@ require '../config/session_checker.php';
                                     </thead>
                                     <tbody>
                                     </tbody>
-                                    <tfoot></tfoot>
-                                    <tr>
-                                        <th colspan="5" class="text-end">Totals:</th>
-                                        <th id="customTotalAmount">0.00</th>
-                                        <th id="customTotalCharge">0.00</th>
-                                        <th id="customGrandTotal">0.00</th>
-                                        <th colspan="2"></th>
-                                    </tr>
+                                    <tfoot>
+                                        <tr>
+                                            <th colspan="5" class="text-end">Totals:</th>
+                                            <th id="customTotalAmount">0.00</th>
+                                            <th id="customTotalCharge">0.00</th>
+                                            <th id="customGrandTotal">0.00</th>
+                                            <th colspan="2"></th>
+                                        </tr>
                                     </tfoot>
+
                             </div>
                             </table>
                         </div>
@@ -293,7 +294,6 @@ require '../config/session_checker.php';
                                 <thead>
                                     <tr>
                                         <th>No</th>
-                                        <th>Branch</th>
                                         <th>E-wallet</th>
                                         <th>Transaction Type</th>
                                         <th>Total Amount</th>
@@ -306,7 +306,7 @@ require '../config/session_checker.php';
                                 </tbody>
                                 <tfoot>
                                     <tr>
-                                        <th colspan="4" class="text-end">Totals:</th>
+                                        <th colspan="3" class="text-end">Totals:</th>
                                         <th id="summaryTotalAmount">0.00</th>
                                         <th id="summaryTotalCharge">0.00</th>
                                         <th id="summaryGrandTotal">0.00</th>
