@@ -1,5 +1,5 @@
 <?php
-    require '../config/session_checker.php';
+require '../config/session_checker.php';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -11,7 +11,7 @@
     <!-- Main Content Area -->
     <?php include '../views/header.php'; ?>
 
-   <div class="content" id="mainContent">
+    <div class="content" id="mainContent">
         <div class="container-fluid">
             <h1 class="mb-4">Audit Logs </h1>
 
@@ -20,9 +20,9 @@
                 <div class="col-12">
                     <div class="card filter-card">
                         <div class="card-body">
-                           
+
                             <div class="row g-2">
-                                 <?php include '../config/branch_filtering.php'; ?>
+                                <?php include '../config/branch_filtering.php'; ?>
                                 <div class="col-md-2">
                                     <label for="dateFrom" class="form-label">From Date</label>
                                     <input type="date" class="form-control" id="dateFrom">
@@ -38,13 +38,14 @@
                                         <option value="add_transaction">Add Transaction</option>
                                         <option value="delete_transaction">Delete Transaction</option>
                                         <!-- other action types -->
+                                        <!-- action types based on database -->
                                     </select>
                                 </div>
                                 <div class="col-md-2 d-flex align-items-end">
                                     <button class="btn btn-primary w-100 me-2" id="applyFilters">
                                         <i class="bi bi-filter me-1"></i> Apply Filters
                                     </button>
-                                    
+
                                 </div>
                                 <div class="col-md-2 d-flex align-items-end">
                                     <button class="btn btn-outline-secondary" id="resetFilters" title="Reset Filters">
@@ -65,14 +66,6 @@
                             <h5 class="card-title mb-0">
                                 <i class="bi bi-list-check me-2"></i>Audit Logs
                             </h5>
-                            <div class="btn-group">
-                                <button class="btn btn-sm btn-outline-secondary" id="refreshLogs">
-                                    <i class="bi bi-arrow-clockwise me-1"></i> Refresh
-                                </button>
-                                <button class="btn btn-sm btn-outline-secondary" id="exportLogs">
-                                    <i class="bi bi-download me-1"></i> Export
-                                </button>
-                            </div>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
@@ -80,90 +73,34 @@
                                     <thead>
                                         <tr>
                                             <th>No.</th>
+                                            <th>Date</th>
                                             <th>Action Type</th>
                                             <th>Description</th>
-                                            <th>Date & Time</th>
                                             <th>User</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                    
-                                        <!-- Sample Audit Log 3: Transaction -->
-                                        <tr>
-                                            <td>3</td>
-                                            <td>
-                                                <span class="badge badge-transaction">Transaction</span>
-                                            </td>
-                                            <td class="action-cell">
-                                                <div class="d-flex align-items-center">
-                                                    <div class="log-icon bg-info bg-opacity-10">
-                                                        <i class="bi bi-arrow-left-right text-info"></i>
-                                                    </div>
-                                                    <div>
-                                                        <div class="fw-medium">New transaction created</div>
-                                                        <small class="text-muted">GCash • ₱1,500.00 • Ref: 0123456</small>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td data-order="2023-12-05 15:00:00">
-                                                <div class="fw-medium">Dec 5, 2023</div>
-                                                <small class="text-muted">3:00 PM</small>
-                                            </td>
-                                            <td>
-                                                <div class="d-flex align-items-center">
-                                                    <div class="avatar-sm me-2">
-                                                        <span class="avatar-title rounded-circle bg-info bg-opacity-10 text-info">
-                                                            CU
-                                                        </span>
-                                                    </div>
-                                                    <div>
-                                                        <div class="fw-medium">Cashier User</div>
-                                                        <small class="text-muted">Cashier</small>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                        
-                                        </tr>
 
-                                        <!-- Sample Audit Log 4: Wallet -->
-                                        <tr>
-                                            <td>4</td>
+                                        <!-- Sample Audit Log : Transaction -->
+                                        <!-- <tr>
+                                            <td>1</td>
                                             <td>
-                                                <span class="badge badge-wallet">Wallet</span>
-                                            </td>
-                                            <td class="action-cell">
-                                                <div class="d-flex align-items-center">
-                                                    <div class="log-icon bg-purple bg-opacity-10" style="background-color: rgba(111, 66, 193, 0.1);">
-                                                        <i class="bi bi-wallet2" style="color: #6f42c1;"></i>
-                                                    </div>
-                                                    <div>
-                                                        <div class="fw-medium">New wallet account added</div>
-                                                        <small class="text-muted">Maya • 0985-987-6543 • Secondary Account</small>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td data-order="2023-12-04 11:20:00">
-                                                <div class="fw-medium">Dec 4, 2023</div>
-                                                <small class="text-muted">11:20 AM</small>
+                                                12/25/2025 08:30
                                             </td>
                                             <td>
-                                                <div class="d-flex align-items-center">
-                                                    <div class="avatar-sm me-2">
-                                                        <span class="avatar-title rounded-circle" style="background-color: rgba(111, 66, 193, 0.1); color: #6f42c1;">
-                                                            AU
-                                                        </span>
-                                                    </div>
-                                                    <div>
-                                                        <div class="fw-medium">Admin User</div>
-                                                        <small class="text-muted">Administrator</small>
-                                                    </div>
-                                                </div>
+                                                <span class="badge badge-transaction">Add Transaction</span>
                                             </td>
-                                           
-                                        </tr>
+                                            <td>
+                                                Added new transaction REF#123456789. GCash | Cashin : 1,000.00 , Charge:
+                                                10.00
+                                            </td>
 
-                                  
-                                      
+                                            <td>
+                                                Cashier
+                                            </td>
+
+                                        </tr> -->
+
                                     </tbody>
                                 </table>
                             </div>
@@ -171,11 +108,65 @@
                     </div>
                 </div>
             </div>
+
+
+
+
         </div>
     </div>
     <?php include '../views/scripts.php'; ?>
+    <script>
+        $(document).ready(function () {
 
-        <?php include '../views/footer.php'; ?>
+            const table = $('#auditLogsTable').DataTable({
+                processing: true,
+                serverSide: true,
+                responsive: true,
+                order: [[1, 'desc']], // default sort by date
+                ajax: {
+                    url: '../api/fetch_audit_logs.php',
+                    type: 'POST',
+                    data: function (d) {
+                        d.branch_id = $('#branchFilter').length ? $('#branchFilter').val() : '';
+                        d.date_from = $('#dateFrom').val();
+                        d.date_to = $('#dateTo').val();
+                        d.action_type = $('#actionType').val();
+                    }
+                },
+                columns: [
+                    { data: 'row_num', orderable: false },
+                    { data: 'created_at' },
+                    { data: 'action_type' },
+                    { data: 'description' },
+                    { data: 'name' }
+                ]
+            });
+
+            // Apply filters
+            $('#applyFilters').on('click', function () {
+                table.ajax.reload();
+            });
+
+            // Reset filters
+            $('#resetFilters').on('click', function () {
+                $('#branchFilter').val('all');
+                $('#dateFrom').val('');
+                $('#dateTo').val('');
+                $('#actionType').val('');
+                table.ajax.reload();
+            });
+
+            // Refresh button
+            $('#refreshLogs').on('click', function () {
+                table.ajax.reload(null, false);
+            });
+
+        });
+    </script>
+
+
+
+    <?php include '../views/footer.php'; ?>
 </body>
 
 </html>

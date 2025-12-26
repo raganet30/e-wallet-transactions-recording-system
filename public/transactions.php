@@ -80,8 +80,6 @@ require '../config/session_checker.php';
                 <div class="card">
                     <div class="card-body">
                         <!-- add excel & pdf import and  print option buttons -->
-
-
                         <div class="table-responsive">
                             <table id="transactionsTable" class="table table-hover" style="width:100%">
                                 <thead>

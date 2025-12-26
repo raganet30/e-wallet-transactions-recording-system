@@ -41,29 +41,30 @@ require '../config/helpers.php';
             <i class="bi bi-cash-stack"></i> <span class="menu-text">Cash on Hand</span>
         </a>
     <?php endif; ?>
-    <!-- Logs with Submenu -->
-    <div class="menu-item has-submenu">
-        <a href="javascript:void(0)" class="menu-link" onclick="toggleSubmenu(this)">
-            <i class="bi bi-clock-history"></i>
-            <span class="menu-text">Logs</span>
-            <i class="bi bi-chevron-down ms-auto submenu-icon"></i>
-        </a>
 
-        <div class="submenu">
-            <?php if (currentRole() === 'super_admin' || currentRole() === 'admin'): ?>
+    <?php if (currentRole() === 'super_admin' || currentRole() === 'admin'): ?>
+        <!-- Logs with Submenu -->
+        <div class="menu-item has-submenu">
+            <a href="javascript:void(0)" class="menu-link" onclick="toggleSubmenu(this)">
+                <i class="bi bi-clock-history"></i>
+                <span class="menu-text">Logs</span>
+                <i class="bi bi-chevron-down ms-auto submenu-icon"></i>
+            </a>
+
+            <div class="submenu">
+
                 <a href="audit_logs" class="submenu-item">
                     <i class="bi bi-journal-text"></i>
                     <span>Audit Logs</span>
                 </a>
-            <?php endif; ?>
+                <a href="login_logs" class="submenu-item">
+                    <i class="bi bi-box-arrow-in-right"></i>
+                    <span>Login Logs</span>
+                </a>
 
-            <a href="login_logs" class="submenu-item">
-                <i class="bi bi-box-arrow-in-right"></i>
-                <span>Login Logs</span>
-            </a>
+            </div>
         </div>
-    </div>
-
+    <?php endif; ?>
 
     <a href="reports" class="menu-item">
         <i class="bi bi-journal-text"></i> <span class="menu-text">Reports</span>

@@ -1,5 +1,5 @@
 <?php
-    require '../config/session_checker.php';
+require '../config/session_checker.php';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -11,7 +11,7 @@
     <!-- Main Content Area -->
     <?php include '../views/header.php'; ?>
 
-   <div class="content" id="mainContent">
+    <div class="content" id="mainContent">
         <div class="container-fluid">
             <h1 class="mb-4">Login Logs </h1>
 
@@ -20,9 +20,9 @@
                 <div class="col-12">
                     <div class="card filter-card">
                         <div class="card-body">
-                           
+
                             <div class="row g-2">
-                                 <?php include '../config/branch_filtering.php'; ?>
+                                <?php include '../config/branch_filtering.php'; ?>
                                 <div class="col-md-2">
                                     <label for="dateFrom" class="form-label">From Date</label>
                                     <input type="date" class="form-control" id="dateFrom">
@@ -43,7 +43,7 @@
                                     <button class="btn btn-primary w-100 me-2" id="applyFilters">
                                         <i class="bi bi-filter me-1"></i> Apply Filters
                                     </button>
-                                    
+
                                 </div>
                                 <div class="col-md-2 d-flex align-items-end">
                                     <button class="btn btn-outline-secondary" id="resetFilters" title="Reset Filters">
@@ -64,15 +64,15 @@
                             <h5 class="card-title mb-0">
                                 <i class="bi bi-list-check me-2"></i>Login Logs
                             </h5>
-                           
+
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
                                 <table id="auditLogsTable" class="table table-hover" style="width:100%">
                                     <thead>
                                         <tr>
-                                            <th>No.</th> 
-                                            <th>Date & Time</th>
+                                            <th>No.</th>
+                                            <th>Date</th>
                                             <th>Action Type</th>
                                             <th>Description</th>
                                             <th>User</th>
@@ -82,65 +82,37 @@
                                         <!-- Sample Audit Log 1: Login -->
                                         <tr>
                                             <td>1</td>
-                                             <td data-order="2023-12-05 14:30:00">
-                                                <div class="fw-medium">12-24-2025 08:00</div>
+                                            <td>
+                                                12-24-2025 08:00
                                             </td>
                                             <td>
                                                 <span class="badge badge-login">Login</span>
                                             </td>
-                                            <td class="action-cell">
-                                                <div class="d-flex align-items-center">
-                                                    <div class="log-icon bg-primary bg-opacity-10">
-                                                        <i class="bi bi-box-arrow-in-right text-primary"></i>
-                                                    </div>
-                                                    <div>
-                                                        <div class="fw-medium">User login | IP: </div>
-                                                       
-                                                    </div>
-                                                </div>
-                                            </td>
-                                           
                                             <td>
-                                                <div class="d-flex align-items-center">
-                                                    <div class="avatar-sm me-2">
-                                                    </div>
-                                                    <div>
-                                                        <div class="fw-medium">Admin User</div>
-                                                    </div>
-                                                </div>
+                                                Login successful | IP: 001
                                             </td>
-                                          
+
+                                            <td>
+                                                Admin
+                                            </td>
+
                                         </tr>
 
                                         <!-- Sample Audit Log 2: Logout -->
                                         <tr>
-                                            <td>2</td> 
-                                            <td data-order="2023-12-05 15:45:00">
-                                                <div class="fw-medium">12-24-2025 09:00</div>
+                                            <td>2</td>
+                                            <td>
+                                                12-24-2025 09:00
                                             </td>
                                             <td>
                                                 <span class="badge badge-logout">Logout</span>
                                             </td>
-                                            <td class="action-cell">
-                                                <div class="d-flex align-items-center">
-                                                    <div class="log-icon bg-secondary bg-opacity-10">
-                                                        <i class="bi bi-box-arrow-right text-secondary"></i>
-                                                    </div>
-                                                    <div>
-                                                        <div class="fw-medium">User logged out | IP: </div>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                           
                                             <td>
-                                                <div class="d-flex align-items-center">
-                                                    <div class="avatar-sm me-2">
-                                                        
-                                                    </div>
-                                                    <div>
-                                                        <div class="fw-medium">Admin User</div>
-                                                    </div>
-                                                </div>
+                                                Logout | IP: 001
+                                            </td>
+
+                                            <td>
+                                                Admin
                                             </td>
                                         </tr>
 
@@ -154,8 +126,50 @@
         </div>
     </div>
     <?php include '../views/scripts.php'; ?>
+    <script>
+        $(document).ready(function () {
 
-        <?php include '../views/footer.php'; ?>
+            const table = $('#auditLogsTable').DataTable({
+                processing: true,
+                serverSide: true,
+                responsive: true,
+                order: [[1, 'desc']], // sort by date
+                ajax: {
+                    url: '../api/fetch_login_logs.php',
+                    type: 'POST',
+                    data: function (d) {
+                        d.branch_id = $('#branchFilter').length ? $('#branchFilter').val() : '';
+                        d.date_from = $('#dateFrom').val();
+                        d.date_to = $('#dateTo').val();
+                        d.action_type = $('#actionType').val();
+                    }
+                },
+                columns: [
+                    { data: 'row_num', orderable: false },
+                    { data: 'created_at' },
+                    { data: 'login_type' },
+                    { data: 'description' },
+                    { data: 'name' }
+                ]
+            });
+
+            $('#applyFilters').on('click', function () {
+                table.ajax.reload();
+            });
+
+            $('#resetFilters').on('click', function () {
+                $('#branchFilter').val('all');
+                $('#dateFrom').val('');
+                $('#dateTo').val('');
+                $('#actionType').val('');
+                table.ajax.reload();
+            });
+
+        });
+    </script>
+
+
+    <?php include '../views/footer.php'; ?>
 </body>
 
 </html>
