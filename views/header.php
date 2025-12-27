@@ -1,5 +1,6 @@
 
 <nav class="navbar" id="navbar">
+    <div id="globalAlertArea"></div>
     <div class="container-fluid">
         <span class="navbar-brand">
             <i class="bi bi-wallet2 me-2"></i>E-Wallet Transaction Recording System
@@ -125,99 +126,138 @@
 <script>
 $(document).ready(function () {
 
-    const editModal = new bootstrap.Modal('#editProfileModal');
-    const confirmModal = new bootstrap.Modal('#confirmSaveProfileModal');
+    let openedFromError = false;
+
+    const editModalEl = document.getElementById('editProfileModal');
+    const confirmModalEl = document.getElementById('confirmSaveProfileModal');
+
+    const editModal = new bootstrap.Modal(editModalEl);
+    const confirmModal = new bootstrap.Modal(confirmModalEl);
+
+    const form = $('#editProfileForm');
+
+    function showFormAlert(type, message) {
+        form.find('.alert').remove();
+        const alert = $(`<div class="alert alert-${type}">${message}</div>`);
+        form.prepend(alert);
+
+        setTimeout(() => {
+            alert.fadeOut(400, () => alert.remove());
+        }, 5000);
+    }
+
+    function showGlobalAlert(type, message) {
+        const alert = $(`
+            <div class="alert alert-${type} alert-dismissible fade show mt-2">
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        `);
+
+        $('#globalAlertArea').html(alert);
+
+        setTimeout(() => {
+            alert.alert('close');
+        }, 5000);
+    }
 
     // ===============================
-    // OPEN EDIT PROFILE MODAL
+    // LOAD PROFILE DATA
     // ===============================
     $('#editProfileModal').on('show.bs.modal', function () {
-        $.getJSON('../api/fetch_profile.php', function (res) {
-            if (!res.success) return;
 
-            const f = $('#editProfileForm');
-            f.find('[name="name"]').val(res.data.name);
-            f.find('[name="username"]').val(res.data.username);
-            f.find('[name="password"]').val('');
-            f.find('[name="confirm_password"]').val('');
-            f.find('[name="current_password"]').val('');
+    const f = $('#editProfileForm');
 
-            // Remove previous alerts
-            f.find('.alert').remove();
-        });
+    //  DO NOT RESET if reopening due to error
+    if (openedFromError) {
+        openedFromError = false;
+        return;
+    }
+
+    $.getJSON('../api/fetch_profile.php', function (res) {
+        if (!res.success) return;
+
+        f.find('[name="name"]').val(res.data.name);
+        f.find('[name="username"]').val(res.data.username);
+        f.find('[name="password"]').val('');
+        f.find('[name="confirm_password"]').val('');
+        f.find('[name="current_password"]').val('');
+        f.find('.alert').remove();
     });
+});
 
     // ===============================
-    // FORM SUBMIT (SHOW CONFIRMATION)
+    // FORM SUBMIT → VALIDATION
     // ===============================
-    $('#editProfileForm').on('submit', function (e) {
+    form.on('submit', function (e) {
         e.preventDefault();
 
-        const password = $('[name="password"]').val();
-        const confirm = $('[name="confirm_password"]').val();
-        const current = $('[name="current_password"]').val();
-        const f = $(this);
+        const current = form.find('[name="current_password"]').val().trim();
+        const password = form.find('[name="password"]').val();
+        const confirm = form.find('[name="confirm_password"]').val();
 
-        // Remove previous alerts
-        f.find('.alert').remove();
+        form.find('.alert').remove();
 
-        // If changing password, require current password
-        if (password) {
-            if (!current) {
-                f.prepend('<div class="alert alert-danger">Current password is required.</div>');
+        // Current password ALWAYS required
+        if (!current) {
+            showFormAlert('danger', 'Current password is required to save changes.');
+            return;
+        }
+
+        if (password !== '') {
+
+            // Prevent same password reuse
+            if (password === current) {
+                showFormAlert('danger', 'New password cannot be the same as current password.');
                 return;
             }
 
-            const strongRegex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[\W_]).{8,}$/;
+            // Strong password validation
+            const strongRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
             if (!strongRegex.test(password)) {
-                f.prepend('<div class="alert alert-danger">Password must be at least 8 characters and include uppercase, lowercase, number, and symbol.</div>');
-                // hide after 5 seconds
-                setTimeout(() => {
-                    f.find('.alert').fadeOut(500, function() { $(this).remove(); });
-                }, 5000);
+                showFormAlert(
+                    'danger',
+                    'Password must be at least 8 characters and include uppercase, lowercase, number, and symbol.'
+                );
                 return;
             }
 
             if (password !== confirm) {
-                f.prepend('<div class="alert alert-danger">Passwords do not match.</div>');
-                // hide after 5 seconds
-                setTimeout(() => {
-                    f.find('.alert').fadeOut(500, function() { $(this).remove(); });
-                }, 5000);
+                showFormAlert('danger', 'New password and confirmation do not match.');
                 return;
             }
         }
 
-        confirmModal.show();
+        // Passed validation → confirm
         editModal.hide();
+        confirmModal.show();
     });
 
     // ===============================
     // CONFIRM SAVE
     // ===============================
     $('#confirmSaveProfileBtn').on('click', function () {
-        const formData = $('#editProfileForm').serialize();
+    const formData = $('#editProfileForm').serialize();
 
-        $.post('../processes/edit_profile.php', formData, function (res) {
+    $.post('../processes/edit_profile.php', formData, function (res) {
 
-            // Always close confirm modal
-            confirmModal.hide();
+        confirmModal.hide();
 
-            const f = $('#editProfileForm');
-            f.find('.alert').remove(); // clear previous alerts
+        if (res.success) {
+            editModal.hide();
+            showGlobalAlert('success', 'Profile updated successfully.');
+        } else {
+            openedFromError = true; //  KEY FIX
+            editModal.show();
 
-            if (res.success) {
-                f.prepend('<div class="alert alert-success">Profile updated successfully.</div>');
-                // Optionally reset password fields
-                f.find('[name="password"], [name="confirm_password"], [name="current_password"]').val('');
-            } else {
-                editModal.show(); // reopen edit modal for correction
-                 f.prepend('<div class="alert alert-danger">' + (res.message || 'Failed to update profile.') + '</div>');
-            }
+            $('#editProfileForm')
+                .prepend(`<div class="alert alert-danger">${res.message}</div>`);
+        }
 
-        }, 'json');
-    });
-
+    }, 'json');
 });
 
+
+});
 </script>
+

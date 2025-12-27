@@ -10,45 +10,43 @@ if (!isset($_SESSION['user_id'])) {
     exit;
 }
 
-$user_id = (int) $_SESSION['user_id'];
+$user_id = (int)$_SESSION['user_id'];
 $name = trim($_POST['name'] ?? '');
 $username = trim($_POST['username'] ?? '');
 $password = $_POST['password'] ?? '';
 $current_password = $_POST['current_password'] ?? '';
 
 if ($name === '' || $username === '') {
-    echo json_encode(['success' => false, 'message' => 'Required fields missing']);
+    echo json_encode(['success' => false, 'message' => 'Name and username are required.']);
     exit;
 }
 
-// ===============================
-// FETCH CURRENT PASSWORD HASH
-// ===============================
+if ($current_password === '') {
+    echo json_encode(['success' => false, 'message' => 'Current password is required.']);
+    exit;
+}
+
+// Fetch current password hash
 $stmt = $con->prepare("SELECT password FROM users WHERE id = ?");
 $stmt->bind_param("i", $user_id);
 $stmt->execute();
 $user = $stmt->get_result()->fetch_assoc();
 
-if (!$user) {
-    echo json_encode(['success' => false, 'message' => 'User not found']);
+if (!$user || !password_verify($current_password, $user['password'])) {
+    echo json_encode(['success' => false, 'message' => 'Current password is incorrect.']);
+    exit;
+}
+
+// Prevent same password reuse
+if ($password !== '' && password_verify($password, $user['password'])) {
+    echo json_encode(['success' => false, 'message' => 'New password cannot be the same as current password.']);
     exit;
 }
 
 // ===============================
-// UPDATE WITH PASSWORD CHANGE
+// UPDATE QUERY
 // ===============================
 if ($password !== '') {
-
-    if ($current_password === '') {
-        echo json_encode(['success' => false, 'message' => 'Current password is required']);
-        exit;
-    }
-
-    if (!password_verify($current_password, $user['password'])) {
-        echo json_encode(['success' => false, 'message' => 'Current password is incorrect']);
-        exit;
-    }
-
     $hashed = password_hash($password, PASSWORD_DEFAULT);
 
     $stmt = $con->prepare("
@@ -58,21 +56,8 @@ if ($password !== '') {
     ");
     $stmt->bind_param("sssi", $name, $username, $hashed, $user_id);
 
-    $success = $stmt->execute();
-
-    if ($success && !empty($_SESSION['branch_id'])) {
-        saveProfileAuditLog(
-            $_SESSION['user_id'],
-            $_SESSION['branch_id'],
-            'Updated user password'
-        );
-    }
-
+    $action = 'Updated profile and password';
 } else {
-
-    // ===============================
-    // UPDATE PROFILE ONLY
-    // ===============================
     $stmt = $con->prepare("
         UPDATE users
         SET name = ?, username = ?, updated_at = NOW()
@@ -80,15 +65,13 @@ if ($password !== '') {
     ");
     $stmt->bind_param("ssi", $name, $username, $user_id);
 
-    $success = $stmt->execute();
+    $action = 'Updated profile information';
+}
 
-    if ($success && !empty($_SESSION['branch_id'])) {
-        saveProfileAuditLog(
-            $_SESSION['user_id'],
-            $_SESSION['branch_id'],
-            'Updated profile information'
-        );
-    }
+$success = $stmt->execute();
+
+if ($success && !empty($_SESSION['branch_id'])) {
+    saveProfileAuditLog($_SESSION['user_id'], $_SESSION['branch_id'], $action);
 }
 
 echo json_encode(['success' => $success]);

@@ -57,6 +57,11 @@ require '../config/helpers.php';
                     <i class="bi bi-journal-text"></i>
                     <span>Audit Logs</span>
                 </a>
+                <!-- cash logs -->
+                <a href="cash_logs" class="submenu-item">
+                    <i class="bi bi-cash-coin"></i>
+                    <span>Cash Logs</span>
+                </a>
                 <a href="login_logs" class="submenu-item">
                     <i class="bi bi-box-arrow-in-right"></i>
                     <span>Login Logs</span>
