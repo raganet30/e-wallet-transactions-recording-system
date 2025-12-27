@@ -38,6 +38,7 @@ require '../config/session_checker.php';
                                         <option value="add_transaction">Add Transaction</option>
                                         <option value="delete_transaction">Delete Transaction</option>
                                         <option value="update_profile">Update Profile</option>
+                                        <option value="update_wallet">Update E-Wallet</option>
                                         <!-- other action types -->
                                         <!-- action types based on database -->
                                     </select>
