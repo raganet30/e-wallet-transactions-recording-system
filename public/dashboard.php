@@ -93,7 +93,7 @@ require '../config/session_checker.php';
                     </div>
 
                     <!-- grand total income (e-wallet income + cash income) -->
-                    <div class="col-md-4 mb-3">
+                    <!-- <div class="col-md-4 mb-3">
                         <div class="demo-content">
                             <h5><i class="bi bi-calculator me-2"></i>Grand Total Income </h5>
                             <div class="mt-3 text-center">
@@ -101,7 +101,7 @@ require '../config/session_checker.php';
                                 <small class="text-muted">Total income from all sources</small>
                             </div>
                         </div>
-                    </div>
+                    </div> -->
 
                 </div>
                 <hr>

@@ -15,6 +15,9 @@ $date_from = $_GET['date_from'] ?? '';  // custom
 $date_to   = $_GET['date_to'] ?? '';
 $wallet_id = $_GET['wallet_id'] ?? '';
 $type      = $_GET['transaction_type'] ?? '';
+$user_id   = $_GET['user_id'] ?? '';
+
+
 
 $where = ["t.is_deleted = 0"];
 $params = [];
@@ -79,6 +82,18 @@ if (!empty($type)) {
     $params[] = $type;
     $types .= "s";
 }
+
+/* =========================
+   USER FILTER
+========================= */
+if (!empty($user_id)) {
+    $where[] = "t.user_id = ?";
+    $params[] = $user_id;
+    $types .= "i";
+}
+
+
+
 
 /* =========================
    FINAL QUERY

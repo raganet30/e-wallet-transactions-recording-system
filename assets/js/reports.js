@@ -27,6 +27,25 @@ $(document).ready(function () {
         return el.length ? el.val() : null;
     }
 
+    function loadUsers(selector, branchSelector = null) {
+        const branchId = branchSelector ? $(branchSelector).val() : null;
+
+        $.getJSON('../api/fetch_users_for_reports.php', {
+            branch_id: branchId
+        }, function (res) {
+            let options = '<option value="">All Users</option>';
+            res.data.forEach(u => {
+                options += `<option value="${u.id}">${u.name}</option>`;
+            });
+            $(selector).html(options);
+        });
+    }
+
+
+
+
+
+
     function buildReportMeta(type) {
         const branch = getBranchId(type) ? getSelectedText(`#${type}Report #branchFilter`, 'All Branches') : CURRENT_BRANCH;
         let wallet = '', transactionType = '', dateRange = '';
@@ -65,28 +84,24 @@ $(document).ready(function () {
                     extend: 'excelHtml5',
                     text: '<i class="bi bi-file-earmark-excel"></i> Excel',
                     className: 'btn btn-success btn-sm',
-                    exportOptions: { columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9] }, // include all columns
+                    exportOptions: { columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10] },
                     title: () => buildReportMeta(type).title,
                     filename: () => buildReportMeta(type).filename,
                     customize: function (xlsx) {
                         const sheet = xlsx.xl.worksheets['sheet1.xml'];
-
-                        // find last row index
                         const rowNodes = sheet.getElementsByTagName('row');
                         const lastRow = rowNodes[rowNodes.length - 1];
 
-                        // create new row for totals
                         const totalAmount = $('#' + type + 'TotalAmount').text().replace(/₱|,/g, '');
                         const totalCharge = $('#' + type + 'TotalCharge').text().replace(/₱|,/g, '');
                         const grandTotal = $('#' + type + 'GrandTotal').text().replace(/₱|,/g, '');
 
-                        // Append a new row with totals
                         const newRowIndex = parseInt(lastRow.getAttribute('r')) + 1;
                         const newRow = `<row r="${newRowIndex}">
-                            <c t="inlineStr" r="F${newRowIndex}"><is><t>${totalAmount}</t></is></c>
-                            <c t="inlineStr" r="G${newRowIndex}"><is><t>${totalCharge}</t></is></c>
-                            <c t="inlineStr" r="H${newRowIndex}"><is><t>${grandTotal}</t></is></c>
-                        </row>`;
+                    <c t="inlineStr" r="G${newRowIndex}"><is><t>${totalAmount}</t></is></c>
+                    <c t="inlineStr" r="H${newRowIndex}"><is><t>${totalCharge}</t></is></c>
+                    <c t="inlineStr" r="I${newRowIndex}"><is><t>${grandTotal}</t></is></c>
+                </row>`;
 
                         sheet.getElementsByTagName('sheetData')[0].innerHTML += newRow;
                     }
@@ -97,7 +112,7 @@ $(document).ready(function () {
                     className: 'btn btn-danger btn-sm',
                     orientation: 'landscape',
                     pageSize: 'A4',
-                    exportOptions: { columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9] },
+                    exportOptions: { columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10] },
                     filename: () => buildReportMeta(type).filename,
                     customize: function (doc) {
                         doc.content.splice(0, 1);
@@ -129,13 +144,12 @@ $(document).ready(function () {
                             bold: true
                         });
 
-                        // append footer totals (exclude Tendered & Change)
                         const footerRow = [
-                            { text: 'Totals:', colSpan: 5, alignment: 'right' }, {}, {}, {}, {},
+                            { text: 'Totals:', colSpan: 6, alignment: 'right' }, {}, {}, {}, {}, {},
                             { text: $('#' + type + 'TotalAmount').text(), alignment: 'right' },
                             { text: $('#' + type + 'TotalCharge').text(), alignment: 'right' },
                             { text: $('#' + type + 'GrandTotal').text(), alignment: 'right' },
-                            {}, {} // empty cells for Tendered & Change
+                            {}, {}
                         ];
                         table.table.body.push(footerRow);
                     }
@@ -144,19 +158,19 @@ $(document).ready(function () {
                     extend: 'print',
                     text: '<i class="bi bi-printer"></i> Print',
                     className: 'btn btn-secondary btn-sm',
-                    exportOptions: { columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9] },
+                    exportOptions: { columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10] },
                     customize: function (win) {
                         $(win.document.body).find('h1').remove();
                         $(win.document.body).prepend(`<h4 style="text-align:center;margin-bottom:15px">${buildReportMeta(type).title}</h4>`);
 
                         const table = $(win.document.body).find('table');
                         const footerHtml = `<tr>
-                        <th colspan="5" style="text-align:right">Totals:</th>
-                        <th>${$('#' + type + 'TotalAmount').text()}</th>
-                        <th>${$('#' + type + 'TotalCharge').text()}</th>
-                        <th>${$('#' + type + 'GrandTotal').text()}</th>
-                        <th colspan="2"></th>
-                    </tr>`;
+                <th colspan="6" style="text-align:right">Totals:</th>
+                <th>${$('#' + type + 'TotalAmount').text()}</th>
+                <th>${$('#' + type + 'TotalCharge').text()}</th>
+                <th>${$('#' + type + 'GrandTotal').text()}</th>
+                <th colspan="2"></th>
+                </tr>`;
                         table.append(footerHtml);
                     }
                 }
@@ -172,16 +186,22 @@ $(document).ready(function () {
                         d.date = $('#dailyDate').val();
                         d.wallet_id = $('#dailyEwallet').val();
                         d.transaction_type = $('#dailyTransactionType').val();
-                    } else if (type === 'monthly') {
+                        d.user_id = $('#dailyUser').val();
+                    }
+                    else if (type === 'monthly') {
                         d.month = $('#monthlyMonth').val();
                         d.wallet_id = $('#monthlyEwallet').val();
                         d.transaction_type = $('#monthlyTransactionType').val();
-                    } else if (type === 'custom') {
+                        d.user_id = $('#monthlyUser').val();
+                    }
+                    else if (type === 'custom') {
                         d.date_from = $('#customDateFrom').val();
                         d.date_to = $('#customDateTo').val();
                         d.wallet_id = $('#customEwallet').val();
                         d.transaction_type = $('#customTransactionType').val();
+                        d.user_id = $('#customUser').val();
                     }
+
                 },
                 dataSrc: 'data'
             },
@@ -232,6 +252,7 @@ $(document).ready(function () {
                         return `<span class="badge ${badgeClass}">${d}</span>`;
                     }
                 },
+                { data: 'payment_thru' },
                 { data: 'amount', render: (d, t) => t === 'sort' ? d : '₱' + Number(d).toLocaleString(undefined, { minimumFractionDigits: 2 }) },
                 { data: 'charge', render: (d, t) => t === 'sort' ? d : '₱' + Number(d).toLocaleString(undefined, { minimumFractionDigits: 2 }) },
                 { data: 'total', render: (d, t) => t === 'sort' ? d : '₱' + Number(d).toLocaleString(undefined, { minimumFractionDigits: 2 }) },
@@ -342,6 +363,7 @@ $(document).ready(function () {
                 d.transaction_type = $('#summaryTransactionType').val();
                 d.date_from = $('#summaryDateFrom').val();
                 d.date_to = $('#summaryDateTo').val();
+                 d.user_id = $('#summaryUser').val();
             },
             dataSrc: 'data'
         },
@@ -379,6 +401,7 @@ $(document).ready(function () {
         $('#dailyEwallet').val('');
         $('#dailyTransactionType').val('');
         $('#dailyReport #branchFilter').val('all');
+        $('#dailyUser').val('');
         dailyTable.ajax.reload();
     });
 
@@ -387,6 +410,7 @@ $(document).ready(function () {
         $('#monthlyEwallet').val('');
         $('#monthlyTransactionType').val('');
         $('#monthlyReport #branchFilter').val('all');
+        $('#monthlyUser').val('');
         monthlyTable.ajax.reload();
     });
 
@@ -396,6 +420,7 @@ $(document).ready(function () {
         $('#customEwallet').val('');
         $('#customTransactionType').val('');
         $('#customReport #branchFilter').val('all');
+        $('#customUser').val('');
         customTable.ajax.reload();
     });
 
@@ -405,8 +430,35 @@ $(document).ready(function () {
         $('#summaryEwallet').val('');
         $('#summaryTransactionType').val('');
         $('#summaryReport #branchFilter').val('all');
+        $('#summaryUser').val('');
         summaryTable.ajax.reload();
     });
+
+
+    // Reload users when branch changes (super_admin)
+
+    $(document).on('change', '#dailyReport #branchFilter', function () {
+        loadUsers('#dailyUser', '#dailyReport #branchFilter');
+    });
+
+    $(document).on('change', '#monthlyReport #branchFilter', function () {
+        loadUsers('#monthlyUser', '#monthlyReport #branchFilter');
+    });
+
+    $(document).on('change', '#customReport #branchFilter', function () {
+        loadUsers('#customUser', '#customReport #branchFilter');
+    });
+
+    $(document).on('change', '#summaryReport #branchFilter', function () {
+        loadUsers('#summaryUser', '#summaryReport #branchFilter');
+    });
+
+    $(document).on('change', '#summaryReport #branchFilter', function () {
+        loadUsers('#summaryUser', '#summaryReport #branchFilter');
+    });
+
+
+
 
     // Load E-wallets for each tab
     function loadEwallets(selector) {
@@ -421,4 +473,10 @@ $(document).ready(function () {
     loadEwallets('#monthlyEwallet');
     loadEwallets('#customEwallet');
     loadEwallets('#summaryEwallet');
+
+    loadUsers('#dailyUser', '#dailyReport #branchFilter');
+    loadUsers('#monthlyUser', '#monthlyReport #branchFilter');
+    loadUsers('#customUser', '#customReport #branchFilter');
+    loadUsers('#summaryUser', '#summaryReport #branchFilter');
+
 });

@@ -41,6 +41,13 @@ require '../config/session_checker.php';
                     <div class="row g-2 mb-3">
                         <?php include '../config/branch_filtering.php'; ?>
                         <div class="col-md-2">
+                            <label class="form-label">User:</label>
+                            <select class="form-select userFilter" id="dailyUser">
+                                <option value="">All Users</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-2">
                             <label class="form-label">Date:</label>
                             <input type="date" class="form-control" id="dailyDate">
                         </div>
@@ -58,6 +65,8 @@ require '../config/session_checker.php';
                                 <option value="Cash-out">Cash-out</option>
                             </select>
                         </div>
+                        <!-- users -->
+
                         <div class="col-md-2 d-flex align-items-end">
                             <button class="btn btn-primary w-100" id="dailyApplyFilters"><i
                                     class="bi bi-filter me-2"></i>Apply Filters</button>
@@ -79,6 +88,7 @@ require '../config/session_checker.php';
                                             <th>Reference No.</th>
                                             <th>E-wallet</th>
                                             <th>Type</th>
+                                            <th>Fee thru</th>
                                             <th>Amount</th>
                                             <th>Transaction Fee</th>
                                             <th>Total</th>
@@ -91,7 +101,7 @@ require '../config/session_checker.php';
                                     </tbody>
                                     <tfoot>
                                         <tr>
-                                            <th colspan="5" class="text-end">Totals:</th>
+                                            <th colspan="6" class="text-end">Totals:</th>
                                             <th id="dailyTotalAmount">0.00</th>
                                             <th id="dailyTotalCharge">0.00</th>
                                             <th id="dailyGrandTotal">0.00</th>
@@ -108,6 +118,13 @@ require '../config/session_checker.php';
                 <div class="tab-pane fade" id="monthlyReport" role="tabpanel">
                     <div class="row g-2 mb-3">
                         <?php include '../config/branch_filtering.php'; ?>
+                        <div class="col-md-2">
+                            <label class="form-label">User:</label>
+                            <select class="form-select userFilter" id="monthlyUser">
+                                <option value="">All Users</option>
+                            </select>
+                        </div>
+
                         <div class="col-md-2">
                             <label class="form-label">Month:</label>
                             <input type="month" class="form-control" id="monthlyMonth">
@@ -147,6 +164,7 @@ require '../config/session_checker.php';
                                             <th>Reference No.</th>
                                             <th>E-wallet</th>
                                             <th>Type</th>
+                                            <th>Fee thru</th>
                                             <th>Amount</th>
                                             <th>Transaction Fee</th>
                                             <th>Total</th>
@@ -158,7 +176,7 @@ require '../config/session_checker.php';
                                     </tbody>
                                     <tfoot>
                                         <tr>
-                                            <th colspan="5" class="text-end">Totals:</th>
+                                            <th colspan="6" class="text-end">Totals:</th>
                                             <th id="monthlyTotalAmount">0.00</th>
                                             <th id="monthlyTotalCharge">0.00</th>
                                             <th id="monthlyGrandTotal">0.00</th>
@@ -175,6 +193,13 @@ require '../config/session_checker.php';
                 <div class="tab-pane fade" id="customReport" role="tabpanel">
                     <div class="row g-2 mb-3">
                         <?php include '../config/branch_filtering.php'; ?>
+                        <div class="col-md-2">
+                            <label class="form-label">User:</label>
+                            <select class="form-select userFilter" id="customUser">
+                                <option value="">All Users</option>
+                            </select>
+                        </div>
+
                         <div class="col-md-2">
                             <label class="form-label">From Date:</label>
                             <input type="date" class="form-control" id="customDateFrom">
@@ -218,6 +243,7 @@ require '../config/session_checker.php';
                                             <th>Reference No.</th>
                                             <th>E-wallet</th>
                                             <th>Type</th>
+                                            <th>Fee thru</th>
                                             <th>Amount</th>
                                             <th>Transaction Fee</th>
                                             <th>Total</th>
@@ -229,7 +255,7 @@ require '../config/session_checker.php';
                                     </tbody>
                                     <tfoot>
                                         <tr>
-                                            <th colspan="5" class="text-end">Totals:</th>
+                                            <th colspan="6" class="text-end">Totals:</th>
                                             <th id="customTotalAmount">0.00</th>
                                             <th id="customTotalCharge">0.00</th>
                                             <th id="customGrandTotal">0.00</th>
@@ -250,6 +276,13 @@ require '../config/session_checker.php';
                     <div class="card-body">
                         <div class="row g-3">
                             <?php include '../config/branch_filtering.php'; ?>
+                            <div class="col-md-2">
+                                <label class="form-label">User:</label>
+                                <select class="form-select userFilter" id="summaryUser">
+                                    <option value="">All Users</option>
+                                </select>
+                            </div>
+
                             <div class="col-md-2">
                                 <label class="form-label">E-wallet:</label>
                                 <select class="form-select" id="summaryEwallet">
@@ -297,7 +330,7 @@ require '../config/session_checker.php';
                                         <th>E-wallet</th>
                                         <th>Transaction Type</th>
                                         <th>Total Amount</th>
-                                        <th>Total Charge</th>
+                                        <th>Total Accumulated Fee</th>
                                         <th>Grand Total</th>
                                     </tr>
                                 </thead>

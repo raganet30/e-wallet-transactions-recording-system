@@ -7,6 +7,9 @@ header('Content-Type: application/json');
 $role = $_SESSION['role'] ?? null;
 $session_branch = $_SESSION['branch_id'] ?? null;
 
+$user_id = $_GET['user_id'] ?? '';
+
+
 $branch_id = $_GET['branch_id'] ?? '';
 $wallet_id = $_GET['wallet_id'] ?? '';
 $type      = $_GET['transaction_type'] ?? '';
@@ -55,6 +58,17 @@ if(!empty($date_to)){
     $params[] = $date_to;
     $types .= "s";
 }
+
+/* =========================
+   USER FILTER
+========================= */
+if (!empty($user_id)) {
+    $where[] = "t.user_id = ?";
+    $params[] = $user_id;
+    $types .= "i";
+}
+
+
 
 $whereSQL = count($where) ? "WHERE ".implode(" AND ", $where) : "";
 
