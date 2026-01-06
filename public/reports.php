@@ -49,7 +49,8 @@ require '../config/session_checker.php';
 
                         <div class="col-md-2">
                             <label class="form-label">Date:</label>
-                            <input type="date" class="form-control" id="dailyDate">
+                            <!-- set default date is today -->
+                            <input type="date" class="form-control" id="dailyDate" value="<?php echo date('Y-m-d'); ?>">
                         </div>
                         <div class="col-md-2">
                             <label class="form-label">E-wallet:</label>
@@ -127,7 +128,7 @@ require '../config/session_checker.php';
 
                         <div class="col-md-2">
                             <label class="form-label">Month:</label>
-                            <input type="month" class="form-control" id="monthlyMonth">
+                            <input type="month" class="form-control" id="monthlyMonth" value="<?php echo date('Y-m'); ?>">
                         </div>
                         <div class="col-md-2">
                             <label class="form-label">E-wallet:</label>
