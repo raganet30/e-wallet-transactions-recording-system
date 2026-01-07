@@ -542,7 +542,7 @@ $(document).ready(function () {
                 searchable: false,
                 render: row => {
 
-                    const canDelete = window.CURRENT_ROLE === 'admin';
+                    const canDelete = window.CURRENT_ROLE === 'super_admin';
 
                     return `
                     <button class="btn btn-sm btn-outline-primary view-btn" data-id="${row.id}">

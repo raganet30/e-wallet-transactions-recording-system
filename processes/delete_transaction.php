@@ -10,13 +10,23 @@ if (!isset($_SESSION['user_id'], $_SESSION['branch_id'])) {
 }
 
 $user_id   = (int) $_SESSION['user_id'];
-$branch_id = (int) $_SESSION['branch_id'];
 $tx_id     = (int) ($_POST['id'] ?? 0);
 
 if (!$tx_id) {
     echo json_encode(["success" => false, "message" => "Invalid transaction ID"]);
     exit;
 }
+
+// add a query to get branch_id based on the transaction id
+$stmt = $con->prepare("
+    SELECT branch_id
+    FROM transactions
+    WHERE id = ? AND is_deleted = 0
+");
+
+$stmt->bind_param("i", $tx_id);
+$stmt->execute();
+$branch_id = $stmt->get_result()->fetch_assoc()['branch_id'];
 
 $con->begin_transaction();
 
@@ -154,10 +164,10 @@ try {
     ========================== */
     saveAuditLog(
         $user_id,
-        $branch_id,
+        0,
         $tx_id,
         "Deleted $type transaction of " . number_format($amount, 2) .
-        " via $thru | Reversed balances",
+        " via $thru with Reference # $tx[reference_no] | Reversed balances",
         'delete_transaction'
     );
 
