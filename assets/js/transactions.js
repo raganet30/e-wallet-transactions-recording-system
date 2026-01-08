@@ -1,6 +1,157 @@
 $(document).ready(function () {
 
-    // Fetch e-wallet accounts for this branch and populate selector
+    /*********************************************************
+     * GLOBAL STATE (NEW)
+     *********************************************************/
+    let CURRENT_COH = 0;
+    let CURRENT_WALLET_BALANCE = 0;
+    let HAS_DAILY_BALANCE = true;
+
+    /*********************************************************
+     * HELPER: SHOW ERROR INSIDE ADD MODAL (NEW)
+     *********************************************************/
+    function showAddModalError(message) {
+        $("#addTransactionModal .alert").remove();
+
+        $("#addTransactionModal .modal-body").prepend(`
+            <div class="alert alert-danger fade show" role="alert">
+                ${message}
+            </div>
+        `);
+        setTimeout(() => $(".alert").alert('close'), 5000);
+    }
+
+    function clearAddModalError() {
+        $("#addTransactionModal .alert").remove();
+    }
+
+    /*********************************************************
+     * FETCH DAILY BALANCE STATUS + COH (NEW)
+     *********************************************************/
+    function loadBranchBalances() {
+        $.getJSON('../api/fetch_current_cash_wallet_logs.php', function (res) {
+            if (!res.success) {
+                HAS_DAILY_BALANCE = false;
+                showAddModalError(res.message || 'Please set initial COH and e-wallet balance for today first before adding transaction.');
+                return;
+            }
+
+            CURRENT_COH = parseFloat(res.coh) || 0;
+            HAS_DAILY_BALANCE = true;
+            clearAddModalError();
+        });
+    }
+
+    /*********************************************************
+     * FETCH WALLET BALANCE (NEW)
+     *********************************************************/
+    function loadWalletBalance(walletId) {
+        if (!walletId) return;
+
+        $.getJSON('../api/fetch_wallet_balance.php', { wallet_id: walletId }, function (res) {
+            if (res.success) {
+                CURRENT_WALLET_BALANCE = parseFloat(res.balance) || 0;
+            }
+        });
+    }
+
+    /*********************************************************
+     * LIVE BALANCE VALIDATION (NEW)
+     *********************************************************/
+    function validateBalancesLive() {
+        const type = $('input[name="transaction_type"]:checked').val();
+        const amount = parseFloat($('input[name="amount"]').val()) || 0;
+
+        if (!HAS_DAILY_BALANCE) {
+            showAddModalError('Please set initial COH and e-wallet balance for today first before adding transaction.');
+            return false;
+        }
+
+        if (type === 'Cash-out') {
+            if (amount > CURRENT_COH) {
+                showAddModalError('Insufficient cash on hand. Current COH: ' + '₱'+CURRENT_COH.toFixed(2));
+                return false;
+            }
+        }
+
+        if (type === 'Cash-in') {
+            if (amount > CURRENT_WALLET_BALANCE) {
+                showAddModalError('Insufficient e-wallet balance. Current Wallet Balance: ' + '₱'+CURRENT_WALLET_BALANCE.toFixed(2));
+                return false;
+            }
+        }
+
+
+        // live validation for tendered amount
+        const feeThru = $('select[name="transaction_fee_thru"]').val();
+        const tendered = parseFloat($('input[name="tendered_amount"]').val());
+        const charge = parseFloat($('input[name="transaction_charge"]').val());
+
+
+        // add validation to check transaction fee based on the entered amount, charge must not exceed the computation of amount * 0.015
+        const maxCharge = amount * 0.015;
+        if (charge > maxCharge) {
+            showAddModalError('Transaction charge exceeds the maximum allowed amount.');
+            return false;
+        }
+
+        // Guard: wait until inputs are meaningful
+        if (
+            !feeThru ||
+            isNaN(tendered) ||
+            isNaN(amount) ||
+            isNaN(charge)
+        ) {
+            return true; // skip validation for now
+        }
+
+        /**
+         * CASH-IN (Cash payment)
+         * tendered >= amount + charge
+         */
+        if (
+            type === 'Cash-in' &&
+            feeThru !== 'Cash' &&
+            tendered < amount
+        ) {
+            showAddModalError('Tendered amount must be equal or more than transaction amount.');
+            return false;
+        }
+
+        if (
+            type === 'Cash-in' &&
+            feeThru === 'Cash' &&
+            tendered < (amount + charge)
+        ) {
+            showAddModalError('Tendered amount must be equal or more than transaction amount.');
+            return false;
+        }
+
+        /**
+         * CASH-OUT (Cash payment)
+         * tendered >= charge
+         */
+        if (
+            type === 'Cash-out' &&
+            feeThru === 'Cash' &&
+            tendered < charge
+        ) {
+            showAddModalError('Tendered amount must be equal or more than transaction charge.');
+            return false;
+        }
+
+
+
+        clearAddModalError();
+        return true;
+
+
+
+    }
+
+    /*********************************************************
+     * FETCH E-WALLET ACCOUNTS (UNCHANGED)
+     *********************************************************/
     function loadEwalletAccounts() {
         $.ajax({
             url: "../api/fetch_active_e-wallet.php",
@@ -10,7 +161,11 @@ $(document).ready(function () {
                 $selector.empty().append('<option value="">Select E-wallet Account</option>');
                 if (response.data && response.data.length) {
                     response.data.forEach(wallet => {
-                        $selector.append(`<option value="${wallet.id}" data-name="${wallet.account_name}">${wallet.account_name} (${wallet.account_number})</option>`);
+                        $selector.append(`
+                            <option value="${wallet.id}" data-name="${wallet.account_name}">
+                                ${wallet.account_name} (${wallet.account_number})
+                            </option>
+                        `);
                     });
                 }
             },
@@ -20,29 +175,34 @@ $(document).ready(function () {
         });
     }
 
-    loadEwalletAccounts(); // populate on modal open
-    // Auto-adjust Transaction Fee Thru options based on selected wallet
+    loadEwalletAccounts();
+
+    /*********************************************************
+     * WALLET CHANGE (EXTENDED  SAFE)
+     *********************************************************/
     $('select[name="e_wallet_account"]').on('change', function () {
         const selectedOption = $(this).find('option:selected');
         const walletName = selectedOption.data('name');
+        const walletId = $(this).val();
         const $feeThru = $('select[name="transaction_fee_thru"]');
+
+        loadWalletBalance(walletId); // NEW
+
         $feeThru.empty().append('<option value="">Select Type</option>');
 
         if (!walletName) return;
 
-        if (walletName) {
-            $feeThru.append(`<option value="Cash">Cash</option>`);
-            $feeThru.append(`<option value="${walletName}">${walletName}</option>`);
-        }
-        else {
-            $feeThru.append('<option value="Cash">Cash</option>');
-        }
+        $feeThru.append('<option value="Cash">Cash</option>');
+        $feeThru.append(`<option value="${walletName}">${walletName}</option>`);
 
         $feeThru.val('');
         handleTenderedState();
+        validateBalancesLive(); // NEW
     });
 
-    //  NEW: Handle tendered amount behavior
+    /*********************************************************
+     * TENDERED STATE (UNCHANGED)
+     *********************************************************/
     function handleTenderedState() {
         const transType = $('input[name="transaction_type"]:checked').val();
         const feeThru = $('select[name="transaction_fee_thru"]').val();
@@ -61,7 +221,9 @@ $(document).ready(function () {
         calculateChange();
     }
 
-    // Function to calculate change based on transaction type
+    /*********************************************************
+     * CHANGE CALCULATION (UNCHANGED)
+     *********************************************************/
     function calculateChange() {
         const amount = parseFloat($('input[name="amount"]').val()) || 0;
         const charge = parseFloat($('input[name="transaction_charge"]').val()) || 0;
@@ -72,43 +234,59 @@ $(document).ready(function () {
         let change = 0;
 
         if (transType === "Cash-in") {
-            // Cash-in: total = amount + transaction fee
             const total = amount + charge;
             change = tendered - total;
 
             if (transFeeThru && transFeeThru !== 'Cash') {
-                // If fee is thru e-wallet, tendered must cover only amount
                 change = tendered - amount;
-
             }
 
         } else if (transType === "Cash-out") {
-            // Cash-out: customer only pays transaction fee
             change = tendered - charge;
 
             if (transFeeThru && transFeeThru !== 'Cash') {
-                // If fee is thru e-wallet, tendered must cover only amount
                 change = tendered - amount;
-
             }
         }
 
         $('input[name="change_amount"]').val(change >= 0 ? change.toFixed(2) : '0.00');
     }
 
-    // Trigger calculation & tendered logic
+    /*********************************************************
+     * LIVE TRIGGERS (EXTENDED)
+     *********************************************************/
     $('input[name="amount"], input[name="transaction_charge"], input[name="tendered_amount"]')
-        .on('input', calculateChange);
+        .on('input', function () {
+            calculateChange();
+            validateBalancesLive();
+        });
 
-    $('input[name="transaction_type"]').on('change', handleTenderedState);
+    $('input[name="transaction_type"]').on('change', function () {
+        handleTenderedState();
+        validateBalancesLive();
+    });
+
     $('select[name="transaction_fee_thru"]').on('change', handleTenderedState);
 
-    // Show confirmation modal on form submit
+    /*********************************************************
+     * MODAL OPEN (NEW)
+     *********************************************************/
+    $('#addTransactionModal').on('shown.bs.modal', function () {
+        loadBranchBalances();
+    });
+
+    /*********************************************************
+     * FORM SUBMIT (MINIMALLY EXTENDED)
+     *********************************************************/
     $('#addTransactionForm').on('submit', function (e) {
         e.preventDefault();
 
+        if (!validateBalancesLive()) {
+            return;
+        }
 
-        // Get form values
+
+
         const walletName = $('select[name="e_wallet_account"] option:selected').data('name') || '';
         const referenceNo = $('input[name="reference_no"]').val();
         const amount = parseFloat($('input[name="amount"]').val() || 0).toFixed(2);
@@ -119,45 +297,24 @@ $(document).ready(function () {
         const feeThru = $('select[name="transaction_fee_thru"]').val();
         const transType = $('input[name="transaction_type"]:checked').val();
 
+        // if (
+        //     (transType === 'Cash-in') &&
+        //     (feeThru && feeThru !== 'Cash') &&
+        //     (parseFloat(tendered) < parseFloat(amount))
+        // ) {
+        //     showAddModalError("Insufficient tendered amount.");
+        //     return;
+        // }
 
+        // if (
+        //     (transType === 'Cash-in') &&
+        //     (feeThru && feeThru === 'Cash') &&
+        //     (parseFloat(tendered) < parseFloat(total))
+        // ) {
+        //     showAddModalError("Insufficient tendered amount.");
+        //     return;
+        // }
 
-        // add validation before showing confirmation modal
-        // if feThru is e-wallet and tendered is less than amount for cash-in
-        if (
-            (transType === 'Cash-in') &&
-            (feeThru && feeThru !== 'Cash') &&
-            (parseFloat(tendered) < parseFloat(amount))
-        ) {
-            let alertHtml = `
-                                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                        ${"Insufficient tendered amount."}
-                                    </div>
-                                `;
-
-            $("#addTransactionModal .modal-body").prepend(alertHtml);
-            setTimeout(() => $(".alert").alert('close'), 3000);
-            return;
-        }
-
-        if (
-            (transType === 'Cash-in') &&
-            (feeThru && feeThru === 'Cash') &&
-            (parseFloat(tendered) < parseFloat(total))
-        ) {
-            let alertHtml = `
-                                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                        ${"Insufficient tendered amount."}
-                                    </div>
-                                `;
-
-            $("#addTransactionModal .modal-body").prepend(alertHtml);
-            setTimeout(() => $(".alert").alert('close'), 3000);
-            return;
-        }
-
-
-
-        // Populate confirmation modal
         $('#c_eWallet').text(walletName);
         $('#c_reference').text(referenceNo);
         $('#c_amount').text(amount);
@@ -168,9 +325,7 @@ $(document).ready(function () {
         $('#c_tendered').text(tendered);
         $('#c_change').text(change);
 
-        // close add modal
         $('#addTransactionModal').modal('hide');
-        // Show modal
         $('#confirmAddModal').modal('show');
     });
 
@@ -241,7 +396,10 @@ $(document).ready(function () {
         });
     });
 
+
+
 });
+
 
 
 
@@ -655,7 +813,7 @@ $(document).ready(function () {
             `;
                 $('#transactionsTable').DataTable().ajax.reload(null, false);
                 $("#globalAlertArea").html(alertHtml);
-                 setTimeout(() => $(".alert").alert('close'), 3000);
+                setTimeout(() => $(".alert").alert('close'), 3000);
 
 
             } else {

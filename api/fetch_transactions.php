@@ -31,6 +31,11 @@ if ($role === "super_admin") {
     $types .= "i";
 }
 
+// show default transactions for today
+if (empty($date_from) && empty($date_to)) {
+    $where .= " AND DATE(t.created_at) = CURDATE()";
+}
+
 /* =========================
    DATE FILTER
 ========================= */

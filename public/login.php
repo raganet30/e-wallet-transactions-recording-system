@@ -3,6 +3,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <?php include '../views/head.php'; ?>
+<?php include '../processes/session_checker.php'; ?>
 
 <!-- Bootstrap 5 CSS -->
 <link rel="stylesheet" href="../assets/css/bootstrap.min.css">
@@ -19,6 +20,13 @@
         <h4 class="text-center mb-3">
             <i class="bi bi-shield-lock-fill text-primary"></i> Login
         </h4>
+
+        <?php if (isset($_SESSION['expired'])): ?>
+            <div class="alert alert-warning" id="loginAlert">
+                <?= htmlspecialchars($_SESSION['expired']) ?>
+            </div>
+            <?php unset($_SESSION['expired']); ?>
+        <?php endif; ?>
 
         <?php if (isset($_SESSION['error'])): ?>
             <div class="alert alert-danger" id="loginAlert">

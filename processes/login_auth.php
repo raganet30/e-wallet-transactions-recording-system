@@ -73,6 +73,9 @@ try {
             addLoginLogs('login');
 
 
+            // Initialize last activity timestamp for session timeout
+            $_SESSION['last_activity'] = time();
+
             // if user is super_admin, redirect to super_admin dashboard
             if ($user['role'] === 'super_admin') {
                 header('Location: ../public/super_admin_dashboard');

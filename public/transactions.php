@@ -4,6 +4,7 @@ require '../config/session_checker.php';
 <!DOCTYPE html>
 <html lang="en">
 <?php include '../views/head.php'; ?>
+<?php include '../processes/session_checker.php'; ?>
 
 <body>
     <?php include '../views/sidebar.php'; ?>
@@ -141,7 +142,7 @@ require '../config/session_checker.php';
                                     <!-- Reference Number -->
                                     <div class="col-md-6">
                                         <label class="form-label">Reference Number</label>
-                                        <input type="text" class="form-control" name="reference_no">
+                                        <input type="text" class="form-control" name="reference_no" maxlength="15">
                                     </div>
 
                                     <!-- Transaction Fee Thru -->
@@ -254,7 +255,7 @@ require '../config/session_checker.php';
 
             <!-- Add Transaction Confirmation Modal -->
             <div class="modal fade" id="confirmAddModal" tabindex="-1">
-                <div class="modal-dialog modal-dialog-scrollable modal-lg modal-dialog-centered">
+                <div class="modal-dialog modal-dialog-scrollable modal-lg">
                     <div class="modal-content">
 
                         <div class="modal-header">
