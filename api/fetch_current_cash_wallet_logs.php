@@ -33,17 +33,21 @@ $has_coh = $stmt->get_result()->num_rows;
 
 /**
  * CHECK TODAY'S E-WALLET INITIAL BALANCE
+ * Both GCash and Maya must exist today
  */
 $stmt = $con->prepare("
-    SELECT id
+    SELECT COUNT(DISTINCT wallet_type) AS wallet_count
     FROM e_wallet_logs
     WHERE branch_id = ?
+      AND wallet_type IN ('GCash', 'Maya')
       AND DATE(created_at) = CURDATE()
-    LIMIT 1
 ");
 $stmt->bind_param("i", $branch_id);
 $stmt->execute();
-$has_wallet = $stmt->get_result()->num_rows;
+
+$row = $stmt->get_result()->fetch_assoc();
+$has_wallet = ((int) $row['wallet_count'] === 2);
+
 
 /**
  * IF EITHER IS MISSING → BLOCK TRANSACTIONS
@@ -51,7 +55,7 @@ $has_wallet = $stmt->get_result()->num_rows;
 if (!$has_coh && !$has_wallet) {
     echo json_encode([
         'success' => false,
-        'message' => 'Please set initial COH and e-wallet balance for today first before adding transaction.'
+        'message' => 'Please set initial COH and e-wallet balance for today before adding transaction.'
     ]);
     exit;
 }
@@ -60,14 +64,14 @@ if (!$has_coh && !$has_wallet) {
 if (!$has_coh) {
     echo json_encode([
         'success' => false,
-        'message' => 'Please set initial COH for today first before adding transaction.'
+        'message' => 'Please set initial COH for today before adding transaction.'
     ]);
     exit;
 }
 if (!$has_wallet) {
     echo json_encode([
         'success' => false,
-        'message' => 'Please set initial e-wallet balance for today first before adding transaction.'
+        'message' => 'Please set initial e-wallet balance for all wallet types before adding transaction.'
     ]);
     exit;
 }

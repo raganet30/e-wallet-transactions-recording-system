@@ -38,24 +38,19 @@ if ($row = $result->fetch_assoc()) {
     $old_balance = $row['current_balance'];
 }
 
+
+// update wallet balance only
 $stmt = $con->prepare("
     UPDATE wallet_accounts 
-    SET account_name = ?, 
-        account_number = ?, 
-        label = ?, 
+    SET 
         current_balance = ?, 
-        status = ?, 
         updated_at = NOW()
     WHERE id = ?
 ");
 
 $stmt->bind_param(
-    "sssddi",
-    $walletName,
-    $accountNumber,
-    $accountLabel,
+    "ss",
     $balance,
-    $status,
     $id
 );
 
@@ -92,15 +87,16 @@ if ($stmt->execute()) {
     // Insert into e_wallet_logs
     $logStmt = $con->prepare("
     INSERT INTO e_wallet_logs
-    (branch_id, user_id, type, amount, previous_balance, new_balance, note, created_at)
-    VALUES (?, ?, ?, ?, ?, ?, ?, NOW())
+    (branch_id, user_id, type, wallet_type, amount, previous_balance, new_balance, note, created_at)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, NOW())
 ");
 
     $logStmt->bind_param(
-        "iissdds",
+        "iisssdds",
         $branch_id,
         $user_id,
         $type,
+        $walletName,
         $amount,
         $old_balance,
         $balance,
