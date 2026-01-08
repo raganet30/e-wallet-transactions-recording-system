@@ -80,6 +80,7 @@ require '../config/session_checker.php';
                 <div class="card">
                     <div class="card-body">
                         <!-- add excel & pdf import and  print option buttons -->
+                         
                         <div class="table-responsive">
                             <table id="transactionsTable" class="table table-hover" style="width:100%">
                                 <thead>
@@ -141,7 +142,7 @@ require '../config/session_checker.php';
                                     <!-- Reference Number -->
                                     <div class="col-md-6">
                                         <label class="form-label">Reference Number</label>
-                                        <input type="text" class="form-control" name="reference_no" maxlength="15">
+                                        <input type="text" class="form-control" name="reference_no">
                                     </div>
 
                                     <!-- Transaction Fee Thru -->
@@ -254,7 +255,7 @@ require '../config/session_checker.php';
 
             <!-- Add Transaction Confirmation Modal -->
             <div class="modal fade" id="confirmAddModal" tabindex="-1">
-                <div class="modal-dialog modal-dialog-scrollable modal-lg">
+                <div class="modal-dialog modal-dialog-scrollable modal-lg modal-dialog-centered">
                     <div class="modal-content">
 
                         <div class="modal-header">
