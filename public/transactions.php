@@ -142,7 +142,7 @@ require '../config/session_checker.php';
                                     <!-- Reference Number -->
                                     <div class="col-md-6">
                                         <label class="form-label">Reference Number</label>
-                                        <input type="text" class="form-control" name="reference_no">
+                                        <input type="text" class="form-control" name="reference_no" maxlength="12">
                                     </div>
 
                                     <!-- Transaction Fee Thru -->
@@ -202,7 +202,7 @@ require '../config/session_checker.php';
                                         <label class="form-label">Amount</label>
                                         <div class="input-group">
                                             <span class="input-group-text">₱</span>
-                                            <input type="number" class="form-control" name="amount" step="0.01" min="0"
+                                            <input type="number" class="form-control" name="amount" step="0.01" min="100" max="999999"
                                                 required>
                                         </div>
                                     </div>
@@ -255,7 +255,7 @@ require '../config/session_checker.php';
 
             <!-- Add Transaction Confirmation Modal -->
             <div class="modal fade" id="confirmAddModal" tabindex="-1">
-                <div class="modal-dialog modal-dialog-scrollable modal-lg modal-dialog-centered">
+                <div class="modal-dialog modal-dialog-scrollable modal-lg">
                     <div class="modal-content">
 
                         <div class="modal-header">
