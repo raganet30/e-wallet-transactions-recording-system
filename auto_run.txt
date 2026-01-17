@@ -1,0 +1,25 @@
+' auto_run_php.vbs
+Option Explicit
+
+Dim objShell, projectName, localhostURL, xamppPath
+
+' Set your project folder name here
+projectName = "e-wallet-transactions-recording-system"  ' <-- change this to your folder name in htdocs
+
+' Set the path to your XAMPP installation
+xamppPath = "C:\xampp\" ' <-- change if using WAMP or different location
+
+' URL to open
+localhostURL = "http://localhost/" & projectName & "/"
+
+' Create shell object
+Set objShell = CreateObject("WScript.Shell")
+
+' Start Apache if using XAMPP
+objShell.Run """" & xamppPath & "xampp_start.exe" & """", 1, False
+
+' Wait a few seconds for Apache to start
+WScript.Sleep 5000
+
+' Open default browser with project URL
+objShell.Run localhostURL, 1, False
