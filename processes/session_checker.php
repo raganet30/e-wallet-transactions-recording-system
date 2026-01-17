@@ -7,7 +7,7 @@ require_once "../config/db.php"; // adjust path if needed
 
 
 // Convert to seconds
-$timeout = 30 * 60; // 30 minutes
+$timeout = 15 * 60; // 30 minutes
 
 // Check if user has last activity recorded
 if (isset($_SESSION['last_activity'])) {

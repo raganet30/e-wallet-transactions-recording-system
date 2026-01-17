@@ -5,6 +5,7 @@ require '../config/session_checker.php';
 <html lang="en">
 <?php include '../views/head.php'; ?>
 <?php include '../processes/session_checker.php'; ?>
+
 <body>
     <?php include '../views/sidebar.php'; ?>
 
@@ -19,25 +20,43 @@ require '../config/session_checker.php';
             <div class="row mt-4">
                 <!-- DAILY INCOME IN E-WALLETS (GCash, Maya) -->
                 <div class="col-md-4 mb-3">
-                    <div class="demo-content">
-                        <h5><i class="bi bi-graph-up me-2"></i>Daily E-wallet Income </h5>
-                        <div class="mt-3">
-                            <div class="d-flex justify-content-between mb-2">
-                                <span>GCash Income</span>
-                                <span class="fw-bold text-secondary" id="gcashIncome">₱0.00</span>
+                    <div class="demo-content h-100">
+                        <h5><i class="bi bi-graph-up me-2"></i>Daily E-wallet Income</h5>
+
+                        <div class="row mt-3">
+
+                            <!-- GCASH INCOME -->
+                            <div class="col-6">
+                                <div class="text-center p-3 rounded bg-light shadow-sm h-100">
+                                    <div class="fw-semibold">
+                                        <i class="bi bi-wallet"></i>
+                                        GCash
+                                    </div>
+                                    <div class="h4 fw-bold text-secondary mt-2" id="gcashIncome">
+                                        ₱0.00
+                                    </div>
+                                    <small class="text-muted">Today</small>
+                                </div>
                             </div>
-                            <div class="d-flex justify-content-between">
-                                <span>Maya Income</span>
-                                <span class="fw-bold text-secondary" id="mayaIncome">₱0.00</span>
+
+                            <!-- MAYA INCOME -->
+                            <div class="col-6">
+                                <div class="text-center p-3 rounded bg-light shadow-sm h-100">
+                                    <div class="fw-semibold">
+                                        <i class="bi bi-wallet2"></i>
+                                        Maya
+                                    </div>
+                                    <div class="h4 fw-bold text-secondary mt-2" id="mayaIncome">
+                                        ₱0.00
+                                    </div>
+                                    <small class="text-muted">Today</small>
+                                </div>
                             </div>
-                            <!-- others -->
-                            <div class="d-flex justify-content-between mt-2">
-                                <span>Other E-wallets Income</span>
-                                <span class="fw-bold text-secondary" id="otherEwalletIncome">₱0.00</span>
-                            </div>
+
                         </div>
                     </div>
                 </div>
+
 
                 <!-- E-wallet balance (Gcash, Maya) -->
                 <!-- Dynamic E-wallet Balances -->
@@ -45,10 +64,10 @@ require '../config/session_checker.php';
                 <!-- DAILY INCOME IN CASH -->
                 <div class="col-md-4 mb-3">
                     <div class="demo-content">
-                        <h5><i class="bi bi-cash-stack me-2"></i>Daily Cash Income </h5>
                         <div class="mt-3 text-center">
+                            <h5><i class="bi bi-cash-stack me-2"></i>Daily Cash Income </h5>
                             <div class="h3 fw-bold text-secondary" id="cashIncome">₱0.00</div>
-                            <small class="text-muted">Cash transactions today</small>
+                            <small class="text-muted">Cash income today</small>
                         </div>
                     </div>
                 </div>
@@ -56,8 +75,8 @@ require '../config/session_checker.php';
                 <!-- TOTAL DAILY INCOME (Cash + E-wallets income) -->
                 <div class="col-md-4 mb-3">
                     <div class="demo-content">
-                        <h5><i class="bi bi-bar-chart me-2"></i>Total Daily Income </h5>
                         <div class="mt-3 text-center">
+                            <h5><i class="bi bi-bar-chart me-2"></i>Total Daily Income </h5>
                             <div class="h3 fw-bold text-secondary" id="totalIncome">₱0.00</div>
                             <div class="mt-2">
                                 <span class="badge bg-success me-2" id="cashBadge">Cash: ₱0.00</span>
@@ -71,28 +90,49 @@ require '../config/session_checker.php';
 
                 <div class="row mt-3">
 
+                    <!-- GCASH -->
                     <div class="col-md-4 mb-3">
-                        <div class="demo-content">
-                            <h5><i class="bi bi-phone me-2"></i>E-wallet Balance </h5>
-                            <div class="mt-3" id="ewalletBalances">
-                                <!-- Wallet balances will be dynamically injected here -->
+                        <div class="demo-content text-center h-100">
+                            <h5>
+                                <i class="bi bi-wallet"></i>
+                                GCash Balance
+                            </h5>
+                            <div class="mt-3">
+                                <div class="h3 fw-bold text-secondary" id="gcashAmount">₱0.00</div>
+                                <small class="text-muted">E-wallet</small>
                             </div>
                         </div>
                     </div>
 
-                    <!-- CASH ON HAND (remains static structure) -->
+                    <!-- MAYA -->
                     <div class="col-md-4 mb-3">
-                        <div class="demo-content">
-                            <h5><i class="bi-cash-coin me-2"></i>Cash on Hand </h5>
-                            <div class="mt-3 text-center">
+                        <div class="demo-content text-center h-100">
+                            <h5>
+                                <i class="bi bi-wallet2"></i>
+                                Maya Balance
+                            </h5>
+                            <div class="mt-3">
+                                <div class="h3 fw-bold text-secondary" id="mayaAmount">₱0.00</div>
+                                <small class="text-muted">E-wallet</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- CASH ON HAND -->
+                    <div class="col-md-4 mb-3">
+                        <div class="demo-content text-center h-100">
+                            <h5><i class="bi bi-cash-coin me-2"></i>Cash on Hand</h5>
+                            <div class="mt-3">
                                 <div class="h3 fw-bold text-secondary" id="cohAmount">₱0.00</div>
                                 <small class="text-muted" id="cohLastCount">Last count: Today</small>
                             </div>
                         </div>
                     </div>
 
-                    <!-- grand total income (e-wallet income + cash income) -->
-                    <!-- <div class="col-md-4 mb-3">
+                </div>
+
+                <!-- grand total income (e-wallet income + cash income) -->
+                <!-- <div class="col-md-4 mb-3">
                         <div class="demo-content">
                             <h5><i class="bi bi-calculator me-2"></i>Grand Total Income </h5>
                             <div class="mt-3 text-center">
@@ -102,7 +142,6 @@ require '../config/session_checker.php';
                         </div>
                     </div> -->
 
-                </div>
                 <hr>
                 <!-- add trendS chart for monthy income -->
                 <div class="row mt-4">
@@ -142,47 +181,30 @@ require '../config/session_checker.php';
                     type: "GET",
                     dataType: "json",
                     success: function (response) {
-                        const container = $("#ewalletBalances");
-                        container.empty();
 
-                        let totalBalance = 0;
+                        let gcash = 0;
+                        let maya = 0;
 
                         if (response.data && response.data.length > 0) {
                             response.data.forEach(wallet => {
                                 const balance = parseFloat(wallet.current_balance.replace(/,/g, '')) || 0;
-                                totalBalance += balance;
+                                const name = wallet.account_name.toLowerCase();
 
-                                const row = `
-                                  <div class="d-flex justify-content-between align-items-center mb-2 p-2 rounded bg-light shadow-sm wallet-row">
-                                    <div>
-                                        <span class="fw-semibold">${wallet.account_name}</span>
-                                        <small class="text-muted ms-1">${wallet.label ? `(${wallet.label})` : ''}</small>
-                                    </div>
-                                    <div>
-                                        <span class="fw-bold text-secondary">₱${balance.toLocaleString("en-PH", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
-                                    </div>
-                                </div>
-
-                                `;
-                                container.append(row);
+                                if (name.includes("gcash")) gcash += balance;
+                                if (name.includes("maya")) maya += balance;
                             });
-
-                            // Add total row at the bottom
-                            const totalRow = `
-                                <hr>
-                                <div class="d-flex justify-content-between fw-bold">
-                                    <span>Total E-wallet balance</span>
-                                    <span>₱${totalBalance.toLocaleString("en-PH", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
-                                </div>
-                            `;
-                            container.append(totalRow);
-
-                        } else {
-                            container.append(`<div class="text-muted">No e-wallet accounts available.</div>`);
                         }
+
+                        $("#gcashAmount").text(
+                            "₱" + gcash.toLocaleString("en-PH", { minimumFractionDigits: 2 })
+                        );
+
+                        $("#mayaAmount").text(
+                            "₱" + maya.toLocaleString("en-PH", { minimumFractionDigits: 2 })
+                        );
                     },
                     error: function () {
-                        $("#ewalletBalances").html(`<div class="text-danger">Failed to load e-wallet balances.</div>`);
+                        $("#gcashAmount, #mayaAmount").text("₱0.00");
                     }
                 });
             }
