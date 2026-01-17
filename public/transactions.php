@@ -202,7 +202,7 @@ require '../config/session_checker.php';
                                         <label class="form-label">Amount</label>
                                         <div class="input-group">
                                             <span class="input-group-text">₱</span>
-                                            <input type="number" class="form-control" name="amount" step="0.01" min="100" max="999999"
+                                            <input type="number" class="form-control" name="amount" step="0.01" min="1" max="999999"
                                                 required>
                                         </div>
                                     </div>

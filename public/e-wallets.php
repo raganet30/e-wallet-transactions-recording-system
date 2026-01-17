@@ -543,10 +543,10 @@ require '../config/session_checker.php';
             ) || 0;
 
             
-            if (!amount || amount <= 0) {
-                alert("Please enter a valid amount greater than zero.");
-                return;
-            }
+            // if (!amount || amount <= 0) {
+            //     alert("Please enter a valid amount greater than zero.");
+            //     return;
+            // }
             if (!changeReason) {
                 alert("Please select a reason for the balance change.");
                 return;

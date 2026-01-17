@@ -89,7 +89,7 @@ $(document).ready(function () {
 
 
         // add validation to check transaction fee based on the entered amount, charge must not exceed the computation of amount * 0.015
-        const maxCharge = amount * 0.015;
+        const maxCharge = amount * 0.020;
         if (charge > maxCharge) {
             showAddModalError('Transaction charge exceeds the maximum allowed amount.');
             return false;
