@@ -69,14 +69,14 @@ $(document).ready(function () {
 
         if (type === 'Cash-out') {
             if (amount > CURRENT_COH) {
-                showAddModalError('Insufficient cash on hand. Current COH: ' + '₱'+CURRENT_COH.toFixed(2));
+                showAddModalError('Insufficient cash on hand. Current COH: ' + '₱' + CURRENT_COH.toFixed(2));
                 return false;
             }
         }
 
         if (type === 'Cash-in') {
             if (amount > CURRENT_WALLET_BALANCE) {
-                showAddModalError('Insufficient e-wallet balance. Current Wallet Balance: ' + '₱'+CURRENT_WALLET_BALANCE.toFixed(2));
+                showAddModalError('Insufficient e-wallet balance. Current Wallet Balance: ' + '₱' + CURRENT_WALLET_BALANCE.toFixed(2));
                 return false;
             }
         }
@@ -88,12 +88,34 @@ $(document).ready(function () {
         const charge = parseFloat($('input[name="transaction_charge"]').val());
 
 
-        // add validation to check transaction fee based on the entered amount, charge must not exceed the computation of amount * 0.015
-        const maxCharge = amount * 0.020;
+        // add validation to check transaction fee based on the entered amount, charge must not exceed the computation of charge amount
+
+        function getMaxCharge(amount) {
+            if (amount <= 0) return 0;
+
+            if (amount <= 200) {
+                return 4.00;
+            } else if (amount <= 500) {
+                return 8.00;
+            } else if (amount <= 800) {
+                return 12.00;
+            } else if (amount <= 1000) {
+                return 15.00;
+            } else if (amount < 10000) {
+                return Math.ceil(amount / 1000) * 15.00;
+            } else {
+                return Math.ceil(amount / 1000) * 12.00;
+            }
+        }
+
+
+        const maxCharge = getMaxCharge(amount);
+
         if (charge > maxCharge) {
             showAddModalError('Transaction charge exceeds the maximum allowed amount.');
             return false;
         }
+
 
         // Guard: wait until inputs are meaningful
         if (
