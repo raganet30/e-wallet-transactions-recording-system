@@ -22,8 +22,8 @@ require '../config/session_checker.php';
                 <div class="col-md-12">
                     <div class="d-flex justify-content-between align-items-center">
                         <div>
-                            <h5 class="mb-0">Manage your e-wallet accounts</h5>
-                            <p class="text-muted mb-0">Add or edit wallet accounts for transactions</p>
+                            <!-- <h5 class="mb-0">Manage your e-wallet accounts</h5> -->
+                            <p class="text-muted mb-0">Edit wallet balance for transactions</p>
                         </div>
 
                         <?php include '../config/branch_filtering.php'; ?>
@@ -38,40 +38,149 @@ require '../config/session_checker.php';
                 </div>
             </div>
 
-            <!-- Wallet Accounts Table -->
+
+            <!-- <div class="row" id="walletCards"></div> -->
+
             <div class="row">
+                <!-- LEFT: Wallet Cards -->
+                <div class="col-lg-6">
+                    <div class="row">
+                        <!-- Wallet Card Template -->
+                        <div id="walletCardTemplate" class="col-md-6 mb-3 d-none">
+                            <div class="card h-100 shadow-sm">
+                                <div class="card-body">
+
+                                    <div class="d-flex align-items-center mb-3">
+                                        <span class="avatar-title rounded-circle me-3 wallet-icon">
+                                            <i class="bi"></i>
+                                        </span>
+                                        <div>
+                                            <h6 class="mb-0 wallet-name"></h6>
+                                            <small class="text-muted wallet-number"></small>
+                                        </div>
+                                    </div>
+
+                                    <div class="mb-2">
+                                        <div class="fw-bold text-success fs-5 wallet-balance"></div>
+                                        <small class="text-muted wallet-updated"></small>
+                                    </div>
+
+                                    <div class="d-flex justify-content-end mt-3">
+                                        <button class="btn btn-sm btn-outline-warning edit-wallet-btn">
+                                            <i class="bi bi-pencil"></i> Edit balance
+                                        </button>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row" id="walletCards"></div>
+
+
+
+                    </div>
+                </div>
+
+                <!-- RIGHT: Recent Updates -->
+                <div class="col-lg-6">
+                    <div class="card h-100">
+                        <div class="card-body d-flex flex-column">
+
+                            <h6 class="card-title mb-3">
+                                <i class="bi bi-clock-history me-2"></i> Recent wallet balance updates
+                            </h6>
+
+                            <!-- Scrollable container -->
+                            <div class="list-group list-group-flush flex-grow-1 overflow-auto" id="updateHistory"
+                                style="max-height: 260px;">
+
+                                <!-- Update Item -->
+
+                                <!-- more items -->
+                            </div>
+                            <!-- Recent Update Template -->
+                            <div id="updateItemTemplate" class="list-group-item px-0 d-none">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div>
+                                        <small class="text-muted update-type"></small>
+                                        <div class="fw-semibold update-balance"></div>
+                                    </div>
+                                    <small class="text-muted text-end update-datetime"></small>
+                                </div>
+
+                                <div class="mt-1">
+                                    <small class="text-muted">
+                                        <i class="bi bi-person-circle me-1"></i>
+                                        <span class="update-user"></span>
+                                    </small>
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Total Balance -->
+            <div class="row mt-3">
+                <div class="col-12">
+                    <h5>
+                        Total Balance:
+                        <span id="totalWalletBalance" class="fw-bold text-success">₱0.00</span>
+                    </h5>
+                </div>
+            </div>
+
+            <hr>
+
+            <!-- E-wallet Logs expandale table which will show the wallet logs such as No.	Date & Time	Transaction Type.	Previous Balance	New Balance	Updated By	Remarks   -->
+            <div class="row mt-4">
                 <div class="col-md-12">
                     <div class="card">
 
-                        <div class="card-body">
-                            <div class="table-responsive">
-                                <table id="walletTable" class="table table-hover" style="width:100%">
+                        <!-- Header (Toggle) -->
+                        <div class="card-header d-flex justify-content-between align-items-center" role="button"
+                            data-bs-toggle="collapse" data-bs-target="#walletLogsCollapse" aria-expanded="false">
+
+                            <h6 class="mb-0">
+                                <i class="bi bi-list-ul me-2"></i>
+                                E-Wallet Logs
+                            </h6>
+
+                            <i class="bi bi-chevron-down toggle-icon"></i>
+                        </div>
+
+                        <!-- Collapsible Body -->
+                        <div id="walletLogsCollapse" class="collapse">
+                            <div class="card-body">
+
+                                <table id="walletLogsTable" class="table table-striped table-hover w-100">
                                     <thead>
                                         <tr>
-                                            <th>No</th>
-                                            <th>Wallet Name</th>
-                                            <th>Account No./Label</th>
-                                            <th>Current Balance</th>
-                                            <th>Status</th>
-                                            <th>Actions</th>
+                                            <th>No.</th>
+                                            <th>Date & Time</th>
+                                            <th>Transaction Type</th>
+                                            <th>Previous Balance</th>
+                                            <th>New Balance</th>
+                                            <th>Updated By</th>
+                                            <th>Remarks</th>
                                         </tr>
                                     </thead>
-                                    <tbody>
-                                        <!-- Data -->
-                                    </tbody>
-                                    <tfoot>
-                                        <tr>
-                                            <th colspan="3" class="text-end">Total Balance:</th>
-                                            <th></th>
-                                            <th colspan="2"></th>
-                                        </tr>
-                                    </tfoot>
+                                    <tbody></tbody>
                                 </table>
+
                             </div>
                         </div>
+
                     </div>
                 </div>
             </div>
+
+
+
+
         </div>
     </div>
 
@@ -169,11 +278,12 @@ require '../config/session_checker.php';
                             </div>
                         </div>
                         <!-- current amount -->
-                         <div class="mb-3">
+                        <div class="mb-3">
                             <label class="form-label">Current Balance</label>
                             <div class="input-group">
                                 <span class="input-group-text">₱</span>
-                                <input type="number" class="form-control" id="currentBalance" step="0.01" min="0" readonly>
+                                <input type="number" class="form-control" id="currentBalance" step="0.01" min="0"
+                                    readonly>
                             </div>
                         </div>
 
@@ -321,109 +431,191 @@ require '../config/session_checker.php';
     <?php include '../views/scripts.php'; ?>
     <?php include '../views/footer.php'; ?>
     <script>
-        // populate wallet accounts datatable
+        let walletLogsTable;
+
+        // populate wallet accounts
         $(document).ready(function () {
 
-            let userRole = $("#userRole").val();
-            let sessionBranch = $("#sessionBranch").val();
+            const userRole = $("#userRole").val();
+            const sessionBranch = $("#sessionBranch").val();
+            const initialBranchID = (userRole === "super_admin") ? "all" : sessionBranch;
 
-            //  DEFAULT BRANCH ID FOR INITIAL LOAD
-            let initialBranchID = (userRole === "super_admin") ? "all" : sessionBranch;
+            function loadWalletCards(branchId) {
 
-            const walletTable = $("#walletTable").DataTable({
-                ajax: {
-                    url: "../api/fetch_e-wallets.php?branch_id=" + initialBranchID,
-                    dataSrc: "data"
-                },
-                scrollX: true,
-                autoWidth: false,
-                responsive: true,
-                order: [[0, "asc"]],
+                $.getJSON("../api/fetch_e-wallets.php", { branch_id: branchId }, function (res) {
 
-                columns: [
-                    { data: "no" },
-                    {
-                        data: "account_name",
-                        render: function (data, type, row) {
-                            let iconClass = row.account_name.toLowerCase() === "gcash" ? "bi-wallet2" : "bi-credit-card";
-                            let colorClass = row.account_name.toLowerCase() === "gcash" ? "bg-primary bg-opacity-10 text-primary" : "bg-info bg-opacity-10 text-info";
+                    const $container = $("#walletCards");
+                    const $template = $("#walletCardTemplate");
+                    let totalBalance = 0;
 
-                            return `
-                        <div class="d-flex align-items-center">
-                            <div class="avatar-sm me-3">
-                                <span class="avatar-title rounded-circle ${colorClass}">
-                                    <i class="bi ${iconClass}"></i>
-                                </span>
-                            </div>
-                            <div>
-                                <h6 class="mb-0">${row.account_name}</h6>
-                            </div>
-                        </div>`;
-                        }
-                    },
-                    {
-                        data: "account_number",
-                        render: function (data, type, row) {
-                            return `
-                        <div>
-                            <div class="fw-medium">${row.account_number}</div>
-                            <small class="text-muted">${row.label}</small>
-                        </div>`;
-                        }
-                    },
-                    {
-                        data: "current_balance",
-                        render: function (data, type, row) {
-                            return `
-                        <div class="fw-bold text-success">₱${data}</div>
-                        <small class="text-muted">Last updated: ${row.updated_at}</small>
-                    `;
-                        },
-                        className: "text-end"
-                    },
-                    { data: "status", orderable: false },
-                    {
-                        data: "id",
-                        render: function (data) {
-                            return `
-                        <button class="btn btn-sm btn-outline-warning edit-wallet-btn" data-id="${data}">
-                            <i class="bi bi-pencil"></i> Edit Balance
-                        </button>`;
-                        },
-                        orderable: false
-                    }
-                ],
-                footerCallback: function (row, data, start, end, display) {
-                    let api = this.api();
+                    $container.empty();
 
-                    // Column index of balance (0-based)
-                    let balanceColumn = 3;
+                    res.data.forEach(w => {
 
-                    // Compute total balance on current page
-                    let total = api.column(balanceColumn, { page: 'current' }).data().reduce(function (a, b) {
-                        return parseFloat(a.toString().replace(/,/g, '')) + parseFloat(b.toString().replace(/,/g, ''));
-                    }, 0);
+                        const balance = parseFloat(
+                            (w.current_balance || "0").toString().replace(/,/g, "")
+                        );
 
-                    // Update the footer cell (the <th> under balance column)
-                    $(api.column(balanceColumn).footer()).html(
-                        "₱" + total.toLocaleString("en-PH", { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+                        totalBalance += balance;
+
+                        const isGcash = w.account_name.toLowerCase() === "gcash";
+                        const iconClass = isGcash ? "bi-wallet2" : "bi-credit-card";
+                        const colorClass = isGcash
+                            ? "bg-primary bg-opacity-10 text-primary"
+                            : "bg-info bg-opacity-10 text-info";
+
+                        const $card = $template.clone().removeAttr("id").removeClass("d-none");
+
+                        // Populate fields
+                        $card.find(".wallet-name").text(w.account_name);
+                        $card.find(".wallet-number").text(w.account_number);
+                        $card.find(".wallet-balance").text(
+                            "₱" + balance.toLocaleString("en-PH", { minimumFractionDigits: 2 })
+                        );
+                        $card.find(".wallet-updated").text(
+                            "Last updated: " +
+                            new Date(w.updated_at)
+                                .toLocaleString("en-US", { hour12: true })
+                                .replace(",", "")
+                        );
+
+                        // Icon
+                        $card.find(".wallet-icon")
+                            .addClass(colorClass)
+                            .find("i")
+                            .addClass(iconClass);
+
+                        // Button
+                        $card.find(".edit-wallet-btn").attr("data-id", w.id);
+
+                        $container.append($card);
+                    });
+
+                    $("#totalWalletBalance").text(
+                        "₱" + totalBalance.toLocaleString("en-PH", {
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2
+                        })
                     );
-                }
+                });
+            }
+
+            function loadRecentUpdates() {
+
+                $.getJSON("../api/fetch_e-wallet_logs.php", function (res) {
+
+                    const $container = $("#updateHistory");
+                    const $template = $("#updateItemTemplate");
+
+                    $container.empty();
+
+                    if (!res.data || res.data.length === 0) {
+                        $container.append(`
+                <div class="text-center text-muted py-3">
+                    No recent updates
+                </div>
+            `);
+                        return;
+                    }
+
+                    // Show latest 10 only
+                    res.data.slice(0, 10).forEach(log => {
+
+                        const $item = $template.clone().removeAttr("id").removeClass("d-none");
+
+                        const prev = log.previous_balance;
+                        const next = log.new_balance;
+
+                        // Detect increase / decrease
+                        const prevVal = parseFloat(prev.replace(/[₱,]/g, ""));
+                        const nextVal = parseFloat(next.replace(/[₱,]/g, ""));
+
+                        let balanceClass = "";
+                        if (nextVal > prevVal) balanceClass = "text-secondary";
+                        else if (nextVal < prevVal) balanceClass = "text-danger";
+
+                        // Populate fields
+                        $item.find(".update-type").text(log.wallet_type);
+                        $item.find(".update-balance")
+                            .addClass(balanceClass)
+                            .html(`
+                    ${prev}
+                    <i class="bi bi-arrow-right mx-1"></i>
+                    ${next}
+                `);
+
+                        const d = new Date(log.datetime);
+
+                        const datePart = d.toLocaleDateString("en-US", {
+                            month: "2-digit",
+                            day: "2-digit",
+                            year: "numeric"
+                        });
+
+                        const timePart = d.toLocaleTimeString("en-US", {
+                            hour: "2-digit",
+                            minute: "2-digit",
+                            hour12: true
+                        });
+
+                        $item.find(".update-datetime").html(`${datePart}<br>${timePart}`);
 
 
+                        $item.find(".update-user").text(log.updated_by);
+
+                        $container.append($item);
+                    });
+                });
+            }
+
+
+
+            let walletLogsTableInitialized = false;
+
+            $("#walletLogsCollapse").on("shown.bs.collapse", function () {
+
+                if (walletLogsTableInitialized) return;
+
+                $("#walletLogsTable").DataTable({
+                    ajax: {
+                        url: "../api/fetch_e-wallet_logs.php",
+                        dataSrc: "data"
+                    },
+                    order: [[1, "desc"]],
+                    pageLength: 10,
+                    responsive: true,
+                    columns: [
+                        { data: "no" },
+                        { data: "datetime" },
+                        { data: "type" },
+                        { data: "previous_balance" },
+                        { data: "new_balance" },
+                        { data: "updated_by" },
+                        {
+                            data: "remarks",
+                            defaultContent: "",
+                            render: data => data || "-"
+                        }
+                    ]
+                });
+
+                walletLogsTableInitialized = true;
             });
 
 
 
-            //  Branch filter change
+            // load recent updates
+            loadRecentUpdates();
+
+            // Initial load
+            loadWalletCards(initialBranchID);
+
+            // Branch filter
             $("#branchFilter").on("change", function () {
-                let branch = $(this).val();
-                walletTable.ajax.url("../api/fetch_e-wallets.php?branch_id=" + branch).load();
+                loadWalletCards($(this).val());
             });
 
         });
-
-
 
         // add new wallet
         $(document).ready(function () {
@@ -542,7 +734,7 @@ require '../config/session_checker.php';
                 $("#editWalletModal").data("current-balance")
             ) || 0;
 
-            
+
             // if (!amount || amount <= 0) {
             //     alert("Please enter a valid amount greater than zero.");
             //     return;
@@ -619,19 +811,19 @@ require '../config/session_checker.php';
 
                         $("#walletTable").DataTable().ajax.reload(null, false);
 
-                                $("#globalAlertArea").html(`
+                        $("#globalAlertArea").html(`
                             <div class="alert alert-success alert-dismissible fade show">
                                 ${response.message || "Wallet updated successfully."}
                                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                             </div>
                         `);
 
-                        setTimeout(() => $(".alert").alert('close'), 2000);
-                     
-                    // reload page after 3 seconds
-                    setTimeout(() => {
-                        location.reload();
-                    }, 2000);
+                        setTimeout(() => $(".alert").alert('close'), 1000);
+
+                        // reload page after 3 seconds
+                        setTimeout(() => {
+                            location.reload();
+                        }, 1000);
 
                     } else {
                         alert(response.message || "Failed to update wallet.");

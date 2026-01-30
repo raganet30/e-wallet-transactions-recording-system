@@ -138,7 +138,12 @@ require '../config/session_checker.php';
                 },
                 columns: [
                     { data: 'row_num', orderable: false },
-                    { data: 'created_at' },
+                    {
+                        data: 'created_at',
+                        render: d => new Date(d)
+                            .toLocaleString('en-US', { hour12: true })
+                            .replace(',', '')
+                    },
                     { data: 'action_type' },
                     { data: 'description' },
                     { data: 'name' }

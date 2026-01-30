@@ -478,16 +478,17 @@ $(document).ready(function () {
         processing: true,
         serverSide: false,
         dom: `
-        <'row mb-3'
-            <'col-md-6'B>
-            <'col-md-6'f>
+        <'row mb-3 align-items-center'
+            <'col-md-3'l>
+            <'col-md-5'B>
+            <'col-md-4'f>
         >
         rt
         <'row mt-3'
             <'col-md-5'i>
             <'col-md-7'p>
         >
-    `,
+        `,
         buttons: [
             {
                 extend: 'excelHtml5',
@@ -683,7 +684,13 @@ $(document).ready(function () {
 
         columns: [
             { data: null, render: (d, t, r, m) => m.row + 1 },
-            { data: 'created_at' },
+            {
+                data: 'created_at',
+                render: d => new Date(d)
+                    .toLocaleString('en-US', { hour12: true })
+                    .replace(',', '')
+            }
+            ,
             { data: 'reference_no' },
             {
 

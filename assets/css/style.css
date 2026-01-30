@@ -495,3 +495,13 @@
 .demo-content h5 {
     font-weight: 600;
 }
+
+
+/* style for expandable wallet logs */
+.toggle-icon {
+    transition: transform 0.2s ease;
+}
+
+.card-header[aria-expanded="true"] .toggle-icon {
+    transform: rotate(180deg);
+}

@@ -236,7 +236,10 @@ $(document).ready(function () {
             },
             columns: [
                 { data: null, render: (d, t, r, m) => m.row + 1 },
-                { data: 'created_at' },
+                { data: 'created_at',
+                render: d => new Date(d)
+                    .toLocaleString('en-US', { hour12: true })
+                    .replace(',', '') },
                 { data: 'reference_no' },
                 {
                     data: 'wallet_name', render: d => {

@@ -128,7 +128,12 @@ require '../config/session_checker.php';
                         data: null,
                         render: (data, type, row, meta) => meta.row + 1
                     },
-                    { data: 'created_at' },
+                    {
+                        data: 'created_at',
+                        render: d => new Date(d)
+                            .toLocaleString('en-US', { hour12: true })
+                            .replace(',', '')
+                    },
                     {
                         data: 'type',
                         render: type => `<span class="badge bg-secondary">${type}</span>`
