@@ -78,7 +78,15 @@ $(document).ready(function () {
         return $(tableSelector).DataTable({
             processing: true,
             serverSide: false,
-            dom: `<'row mb-3'<'col-md-6'B><'col-md-6'f>>rt<'row mt-3'<'col-md-5'i><'col-md-7'p>>`,
+            dom: `<'row mb-3'
+                <'col-md-6 d-flex align-items-center gap-2' l B>
+                <'col-md-6'f>
+            >
+            rt
+            <'row mt-3'
+                <'col-md-5'i>
+                <'col-md-7'p>
+            >`,
             buttons: [
                 {
                     extend: 'excelHtml5',
@@ -236,10 +244,12 @@ $(document).ready(function () {
             },
             columns: [
                 { data: null, render: (d, t, r, m) => m.row + 1 },
-                { data: 'created_at',
-                render: d => new Date(d)
-                    .toLocaleString('en-US', { hour12: true })
-                    .replace(',', '') },
+                {
+                    data: 'created_at',
+                    render: d => new Date(d)
+                        .toLocaleString('en-US', { hour12: true })
+                        .replace(',', '')
+                },
                 { data: 'reference_no' },
                 {
                     data: 'wallet_name', render: d => {
@@ -366,7 +376,7 @@ $(document).ready(function () {
                 d.transaction_type = $('#summaryTransactionType').val();
                 d.date_from = $('#summaryDateFrom').val();
                 d.date_to = $('#summaryDateTo').val();
-                 d.user_id = $('#summaryUser').val();
+                d.user_id = $('#summaryUser').val();
             },
             dataSrc: 'data'
         },

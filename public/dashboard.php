@@ -21,41 +21,42 @@ require '../config/session_checker.php';
                 <!-- DAILY INCOME IN E-WALLETS (GCash, Maya) -->
                 <div class="col-md-4 mb-3">
                     <div class="demo-content h-100">
-                        <h5><i class="bi bi-graph-up me-2"></i>Daily E-wallet Income</h5>
-
-                        <div class="row mt-3">
+                        <div class="row h-100">
 
                             <!-- GCASH INCOME -->
                             <div class="col-6">
-                                <div class="text-center p-3 rounded bg-light shadow-sm h-100">
-                                    <div class="fw-semibold">
-                                        <i class="bi bi-wallet"></i>
-                                        GCash
+                                <div class="demo-content h-100">
+                                    <div class="mt-3 text-center">
+                                        <h5>
+                                            <i class="bi bi-wallet me-2"></i>GCash Income
+                                        </h5>
+                                        <div class="h3 fw-bold text-secondary" id="gcashIncome">
+                                            ₱0.00
+                                        </div>
+                                        <small class="text-muted">Today</small>
                                     </div>
-                                    <div class="h4 fw-bold text-secondary mt-2" id="gcashIncome">
-                                        ₱0.00
-                                    </div>
-                                    <small class="text-muted">Today</small>
                                 </div>
                             </div>
 
                             <!-- MAYA INCOME -->
                             <div class="col-6">
-                                <div class="text-center p-3 rounded bg-light shadow-sm h-100">
-                                    <div class="fw-semibold">
-                                        <i class="bi bi-wallet2"></i>
-                                        Maya
+                                <div class="demo-content h-100">
+                                    <div class="mt-3 text-center">
+                                        <h5>
+                                            <i class="bi bi-wallet2 me-2"></i>Maya Income
+                                        </h5>
+                                        <div class="h3 fw-bold text-secondary" id="mayaIncome">
+                                            ₱0.00
+                                        </div>
+                                        <small class="text-muted">Today</small>
                                     </div>
-                                    <div class="h4 fw-bold text-secondary mt-2" id="mayaIncome">
-                                        ₱0.00
-                                    </div>
-                                    <small class="text-muted">Today</small>
                                 </div>
                             </div>
 
                         </div>
                     </div>
                 </div>
+
 
 
                 <!-- E-wallet balance (Gcash, Maya) -->
