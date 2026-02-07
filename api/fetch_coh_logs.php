@@ -12,7 +12,7 @@ $branch_id = $_SESSION['branch_id'];
 
 // Fetch all logs for the branch
 $stmt = $con->prepare("
-    SELECT c.id, c.created_at, c.type, c.previous_balance, c.new_balance, c.note, u.name AS updated_by
+    SELECT c.id, c.created_at, c.type, c.amount as amount_adjustment, c.previous_balance, c.new_balance, c.note, u.name AS updated_by
     FROM coh_logs c
     LEFT JOIN users u ON c.user_id = u.id
     WHERE c.branch_id = ?
@@ -29,6 +29,7 @@ while ($row = $result->fetch_assoc()) {
         "no" => $no++,
         "datetime" => (new DateTime($row['created_at']))->format("M j, Y, g:i A"),
         "type" => ucfirst(str_replace("_", " ", $row['type'])),
+        "amount_adjustment" => "₱" . number_format($row['amount_adjustment'], 2),
         "previous_balance" => "₱" . number_format($row['previous_balance'], 2),
         "new_balance" => "₱" . number_format($row['new_balance'], 2),
         "updated_by" => $row['updated_by'] ?? "Unknown",

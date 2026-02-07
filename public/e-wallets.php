@@ -161,7 +161,9 @@ require '../config/session_checker.php';
                                         <tr>
                                             <th>No.</th>
                                             <th>Date & Time</th>
+                                            <th>Wallet Type</th>
                                             <th>Transaction Type</th>
+                                            <th>Amount Adjustment</th>
                                             <th>Previous Balance</th>
                                             <th>New Balance</th>
                                             <th>Updated By</th>
@@ -587,7 +589,9 @@ require '../config/session_checker.php';
                     columns: [
                         { data: "no" },
                         { data: "datetime" },
+                        { data: "wallet_type" },
                         { data: "type" },
+                        {data: "amount_adjustment"},
                         { data: "previous_balance" },
                         { data: "new_balance" },
                         { data: "updated_by" },
