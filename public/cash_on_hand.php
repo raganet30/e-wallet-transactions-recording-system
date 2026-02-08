@@ -92,8 +92,10 @@ require '../config/session_checker.php';
                                 <i class="bi bi-archive me-2"></i>Cash Logs
                             </h5>
                             <button class="btn btn-sm btn-outline-secondary" id="toggleHistory">
-                                <i class="bi bi-chevron-down"></i> Expand
+                                <i class="bi bi-chevron-down"></i>
+                                <span class="label">Expand</span>
                             </button>
+
                         </div>
                         <div class="card-body" id="historyDetails" style="display: none;">
                             <div class="table-responsive">
@@ -264,13 +266,13 @@ require '../config/session_checker.php';
             const cohTable = $("#historyDetails table").DataTable({
                 ajax: { url: "../api/fetch_coh_logs.php", dataSrc: "data" },
                 columns: [
-                    { data: "no" }, 
-                    { data: "datetime" }, 
+                    { data: "no" },
+                    { data: "datetime" },
                     { data: "type" },
-                    {data: "amount_adjustment"},
-                    { data: "previous_balance" }, 
+                    { data: "amount_adjustment" },
+                    { data: "previous_balance" },
                     { data: "new_balance" },
-                    { data: "updated_by" }, 
+                    { data: "updated_by" },
                     { data: "remarks" }
                 ],
                 order: [[1, "desc"]],
@@ -283,18 +285,26 @@ require '../config/session_checker.php';
 
             // --- Toggle expand ---
             $("#toggleHistory").click(function () {
+
                 $("#historyDetails").slideToggle(400, function () {
+
+                    const icon = $("#toggleHistory i");
+                    const label = $("#toggleHistory .label");
+
+                    if ($("#historyDetails").is(":visible")) {
+                        icon.attr("class", "bi bi-chevron-up");
+                        label.text("Collapse");
+                    } else {
+                        icon.attr("class", "bi bi-chevron-down");
+                        label.text("Expand");
+                    }
+
                     cohTable.columns.adjust().draw();
                 });
-                const icon = $(this).find("i");
-                if ($("#historyDetails").is(":visible")) {
-                    icon.removeClass("bi-chevron-down").addClass("bi-chevron-up");
-                    $(this).contents().filter(function () { return this.nodeType === 3; }).first().replaceWith(" Collapse");
-                } else {
-                    icon.removeClass("bi-chevron-up").addClass("bi-chevron-down");
-                    $(this).contents().filter(function () { return this.nodeType === 3; }).first().replaceWith(" Expand");
-                }
+
             });
+
+
 
             // --- Open Edit Cash Modal ---
             $("#editCashBtn").click(function () {
